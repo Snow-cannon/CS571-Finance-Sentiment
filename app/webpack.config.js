@@ -25,6 +25,10 @@ const webpackOptions = {
     ],
   },
   mode: "development",
+  watch: true,
+  watchOptions: {
+    ignored: /node_modules/,
+  },
 };
 
 // Export webpack options

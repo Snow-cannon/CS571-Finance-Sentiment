@@ -1,8 +1,6 @@
 import whoa from "./testModule.js";
 const testBtn = document.getElementById("testBtn");
 
-
-
 testBtn.onclick = (e) => {
   fetch("http://localhost:3000/data/test")
     .then((response) => {
@@ -20,4 +18,4 @@ testBtn.onclick = (e) => {
     });
 };
 
-whoa();
+console.log(whoa());
