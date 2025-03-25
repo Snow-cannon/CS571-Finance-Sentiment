@@ -4,7 +4,7 @@ import path from "path";
 const router = express.Router();
 
 // Route for data files
-const dataRoot = path.join("src", "data");
+const dataRoot = path.join("data");
 
 // For serving static data files
 router.use(express.static(dataRoot));

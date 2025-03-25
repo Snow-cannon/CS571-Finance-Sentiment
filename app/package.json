@@ -4,7 +4,8 @@
   "description": "Final project for CS571 focused on financial statements and news sentiment",
   "main": "index.js",
   "scripts": {
-    "start": "node ./src/backend/server.js"
+    "start": "node ./backend/server.js",
+    "bundle": "npx webpack"
   },
   "repository": {
     "type": "git",
@@ -21,5 +22,13 @@
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.27.0",
+    "@babel/core": "^7.26.10",
+    "@babel/preset-env": "^7.26.9",
+    "babel-loader": "^10.0.0",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
   }
 }

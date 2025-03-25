@@ -7,7 +7,7 @@ import dataRouter from "./dataRoute.js";
 const app = express();
 
 // Set up path information
-const staticRoot = path.join("src", "frontend");
+const staticRoot = path.join("frontend", "public");
 
 // Allow static file serving (serves all static files in the "frontend" directory)
 app.use(express.static(staticRoot));
@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
     root: staticRoot,
   };
 
-  res.sendFile("index.html", options);
+  res.sendFile(path.join("html", "index.html"), options);
 });
 
 // Start the server
