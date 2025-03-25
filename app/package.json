@@ -1,0 +1,25 @@
+{
+  "name": "cs571-finance-sentiment",
+  "version": "1.0.0",
+  "description": "Final project for CS571 focused on financial statements and news sentiment",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/backend/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Snow-cannon/CS571-Finance-Sentiment.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Snow-cannon/CS571-Finance-Sentiment/issues"
+  },
+  "homepage": "https://github.com/Snow-cannon/CS571-Finance-Sentiment#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}
