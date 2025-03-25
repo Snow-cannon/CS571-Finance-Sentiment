@@ -1,0 +1,39 @@
+{
+  "name": "cs571-finance-sentiment",
+  "version": "1.0.0",
+  "description": "Final project for CS571 focused on financial statements and news sentiment",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev-server\" \"npm run watch\"",
+    "dev-server": "nodemon --watch backend ./backend/server.js",
+    "start": "node ./backend/server.js",
+    "watch": "webpack --mode development",
+    "bundle": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Snow-cannon/CS571-Finance-Sentiment.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/Snow-cannon/CS571-Finance-Sentiment/issues"
+  },
+  "homepage": "https://github.com/Snow-cannon/CS571-Finance-Sentiment#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.27.0",
+    "@babel/core": "^7.26.10",
+    "@babel/preset-env": "^7.26.9",
+    "babel-loader": "^10.0.0",
+    "concurrently": "^9.1.2",
+    "nodemon": "^3.1.9",
+    "webpack": "^5.98.0",
+    "webpack-cli": "^6.0.1"
+  }
+}
