@@ -1,6 +1,9 @@
 import requests
 from datetime import datetime
 import sqlite3
+import pandas as pd
+
+from io import StringIO
 
 def fetch_company_overview(ticker, api_key):
 
@@ -152,6 +155,35 @@ def fetch_intraday_data(ticker, api_key, interval='60min', year=2016, month=12):
 
 
     return company_data
+
+
+# Function to fetch intraday data for a single ticker
+def fetch_intraday_data_bulk_csv(ticker, api_key, interval='60min'):
+    url = f"https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol={ticker}&interval={interval}&apikey={api_key}&datatype=csv&outputsize=full"
+    
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        # Read the CSV response into a DataFrame
+        try:
+            df = pd.read_csv(StringIO(response.text))
+            
+            # Check if the expected column is in the DataFrame
+            if 'timestamp' not in df.columns:
+                print(f"Timestamp column not found in the response for {ticker}.")
+                print("Columns found:", df.columns)
+                return pd.DataFrame()  # Return an empty DataFrame if the structure is unexpected
+            
+            # Convert timestamp to datetime
+            df["timestamp"] = pd.to_datetime(df["timestamp"])
+            return df
+        except Exception as e:
+            print(f"Error processing data for {ticker}: {e}")
+            return pd.DataFrame()  # Return an empty DataFrame on failure
+    else:
+        print(f"Failed to fetch data for {ticker}. Status code: {response.status_code}")
+        return pd.DataFrame()  # Return an empty DataFrame on failure
+
 
 
 # Function to store data in the database

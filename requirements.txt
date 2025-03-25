@@ -2,3 +2,4 @@ ipykernel
 requests
 python-dotenv
 pysqlite3
+pandas
