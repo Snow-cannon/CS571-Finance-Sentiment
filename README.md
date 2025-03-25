@@ -53,6 +53,18 @@ npm run dev
 
 This will allow you to modify your scripts and see the updates live as you work all from one terminal, and you can close it with `Ctrl+c` like normal.
 
+If you want to run them seperately, you can run the following to run the frontend development
+
+```bash
+npm run watch
+```
+
+and the following to run the server development:
+
+```bash
+npm run dev-server
+```
+
 ### Styling
 
 To prevent styling mismatches, there is also a `.prettierrc` file that enforces specific formatting choices. It is encouraged to install the [`prettier`](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension if you are using VSCode to be able to use the enfoced auto-formatting.
