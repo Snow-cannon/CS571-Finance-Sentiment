@@ -13,7 +13,7 @@ Process book is in the `processBook` folder.
 ## Development Instructions
 
 Prerequisites:
-- NodeJS Installed
+- [NodeJS](https://nodejs.org/en/download)
 
 ### Setup
 
