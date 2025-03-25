@@ -1,4 +1,4 @@
 ipykernel
 requests
 python-dotenv
-pysqlite3 
+pysqlite3

@@ -109,13 +109,30 @@ def fetch_intraday_data(ticker, api_key, interval='60min', year=2016, month=12):
     base_url = f"https://www.alphavantage.co/query"
     company_data = []
 
+    # Check if data already exists in the database
+    conn = sqlite3.connect('finance_data.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+    SELECT COUNT(*) FROM company_intraday_data
+    WHERE symbol = ? AND strftime('%Y-%m', datetime) = ?
+    ''', (ticker, f"{year}-{month:02d}"))
+    exists = cursor.fetchone()[0] > 0
+
+    conn.close()
+
+    if exists:
+        print(f"Data for {ticker} for {year}-{month:02d} already exists. Skipping fetch.")
+        return 'data exists'
+
     url = f"{base_url}?function=TIME_SERIES_INTRADAY&symbol={ticker}&interval={interval}&month={year}-{month:02d}&apikey={api_key}"
     print(f"Fetching data for {ticker} for {year}-{month:02d}...")
     response = requests.get(url)
     data = response.json()
 
+    
+
     if 'Time Series (60min)' not in data:
-        # print(f"Error: {data.get('Error Message', 'Unknown error')} for {ticker} in {year}-{month:02d}")
         return 'no data'
 
     # Parse the data
