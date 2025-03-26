@@ -74,39 +74,6 @@ def fetch_company_overview(ticker, api_key):
     return overview
 
 
-# def fetch_intraday_data(ticker, api_key, interval='60min', start_year=2016, end_year=2024):
-#     base_url = f"https://www.alphavantage.co/query"
-#     company_data = []
-
-#     for year in range(start_year, end_year + 1):
-#         month = 1
-#         while month <= 12:
-#             # Fetch data for a specific year-month
-#             url = f"{base_url}?function=TIME_SERIES_INTRADAY&symbol={ticker}&interval={interval}&month={year}-{month:02d}&apikey={api_key}"
-#             print(f"Fetching data for {ticker} for {year}-{month:02d}...")
-#             response = requests.get(url)
-#             data = response.json()
-
-#             if 'Time Series (60min)' not in data:
-#                 print(f"Error: {data.get('Error Message', 'Unknown error')} for {ticker} in {year}-{month:02d}")
-#                 break
-
-#             # Parse the data
-#             for timestamp, values in data['Time Series (60min)'].items():
-#                 timestamp = datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
-#                 company_data.append({
-#                     'symbol': ticker,
-#                     'datetime': timestamp,
-#                     'open': values['1. open'],
-#                     'high': values['2. high'],
-#                     'low': values['3. low'],
-#                     'close': values['4. close'],
-#                     'volume': values['5. volume']
-#                 })
-            
-#             month += 1
-
-#     return company_data
 
 def fetch_intraday_data(ticker, api_key, interval='60min', year=2016, month=12):
     base_url = f"https://www.alphavantage.co/query"
@@ -212,3 +179,515 @@ def store_intraday_data(company_data):
 
     conn.commit()
     conn.close()
+
+
+def base_function_fetch_call(function, ticker, api_key):
+    base_url = f'https://www.alphavantage.co/query?function={function}&symbol={ticker}&apikey={api_key}'
+
+    # Check if data already exists in the database
+    conn = sqlite3.connect('finance_data.db')
+    cursor = conn.cursor()
+
+    cursor.execute(f'''
+    SELECT COUNT(*) FROM {function.lower()}
+    WHERE symbol = ? 
+    ''', (ticker,))
+    exists = cursor.fetchone()[0] > 0
+
+    conn.close()
+
+    if exists:
+        print(f"{function} Data for {ticker} already exists. Skipping fetch.")
+        return 'data exists'
+
+
+    print(f"Fetching data for {ticker} for function {function}...")
+    response = requests.get(base_url)
+    data = response.json()
+    if response.status_code == 200:
+        if not data or 'symbol' not in data:
+            return 'no data'
+        else:
+            return data
+    else:
+        print(f"Failed to fetch data for {ticker}. Status code: {response.status_code}")
+
+
+def fetch_income_statement(ticker, api_key):
+    """
+    Fetches the income statement data for a given ticker from Alpha Vantage.
+    Returns the JSON data if successful, otherwise returns 'no data'.
+    """
+    print(f"Fetching income statement for {ticker} using API key {api_key}...")
+    data = base_function_fetch_call('INCOME_STATEMENT', ticker, api_key)
+    
+    # Check if the data contains the expected key
+    if data == 'data exists':
+        return 'data exists'
+    if not data or 'annualReports' not in data:
+        print(f"Skipped {ticker} (no income statement data returned)")
+        return 'no data'
+    
+    return data
+
+def fetch_balance_sheet(ticker, api_key):
+    """
+    Fetches the balance sheet data for a given ticker from Alpha Vantage.
+    Returns the JSON data if successful, otherwise returns 'no data'.
+    """
+    print(f"Fetching balance sheet for {ticker} using API key {api_key}...")
+    data = base_function_fetch_call('BALANCE_SHEET', ticker, api_key)
+    
+    # Check if the data contains the expected key
+    if data == 'data exists':
+        return 'data exists'
+    if not data or 'annualReports' not in data:
+        print(f"Skipped {ticker} (no balance sheet data returned)")
+        return 'no data'
+    
+    return data
+
+def fetch_cash_flow(ticker, api_key):
+    """
+    Fetches the cash flow data for a given ticker from Alpha Vantage.
+    Returns the JSON data if successful, otherwise returns 'no data'.
+    """
+    print(f"Fetching cash flow for {ticker} using API key {api_key}...")
+    data = base_function_fetch_call('CASH_FLOW', ticker, api_key)
+    
+    # Check if the data contains the expected key
+    if data == 'data exists':
+        return 'data exists'
+    if not data or 'annualReports' not in data:
+        print(f"Skipped {ticker} (no cash flow data returned)")
+        return 'no data'
+    
+    return data
+
+
+def store_income_statement(income_data):
+    """
+    Stores income statement reports (both annual and quarterly) into the finance_db.
+    Expects income_data to be the JSON result from the income statement API.
+    """
+    import sqlite3
+
+    # Connect to the finance database
+    conn = sqlite3.connect('finance_data.db')
+    cursor = conn.cursor()
+
+    # Create table with a composite primary key (symbol, fiscalDateEnding, reportType)
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS income_statement (
+        symbol TEXT,
+        fiscalDateEnding TEXT,
+        reportType TEXT,
+        reportedCurrency TEXT,
+        operatingCashflow TEXT,
+        paymentsForOperatingActivities TEXT,
+        proceedsFromOperatingActivities TEXT,
+        changeInOperatingLiabilities TEXT,
+        changeInOperatingAssets TEXT,
+        depreciationDepletionAndAmortization TEXT,
+        capitalExpenditures TEXT,
+        changeInReceivables TEXT,
+        changeInInventory TEXT,
+        profitLoss TEXT,
+        cashflowFromInvestment TEXT,
+        cashflowFromFinancing TEXT,
+        proceedsFromRepaymentsOfShortTermDebt TEXT,
+        paymentsForRepurchaseOfCommonStock TEXT,
+        paymentsForRepurchaseOfEquity TEXT,
+        paymentsForRepurchaseOfPreferredStock TEXT,
+        dividendPayout TEXT,
+        dividendPayoutCommonStock TEXT,
+        dividendPayoutPreferredStock TEXT,
+        proceedsFromIssuanceOfCommonStock TEXT,
+        proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet TEXT,
+        proceedsFromIssuanceOfPreferredStock TEXT,
+        proceedsFromRepurchaseOfEquity TEXT,
+        proceedsFromSaleOfTreasuryStock TEXT,
+        changeInCashAndCashEquivalents TEXT,
+        changeInExchangeRate TEXT,
+        netIncome TEXT,
+        PRIMARY KEY (symbol, fiscalDateEnding, reportType)
+    )
+    ''')
+
+    symbol = income_data.get('symbol', '')
+
+    # Process both annual and quarterly reports
+    for report_type, reports in [('annual', income_data.get('annualReports', [])), 
+                                 ('quarterly', income_data.get('quarterlyReports', []))]:
+        rows_to_insert = []
+        for report in reports:
+            fiscal_date = report.get("fiscalDateEnding", "")
+            # Check if the record already exists
+            cursor.execute('''
+                SELECT COUNT(*) FROM income_statement
+                WHERE symbol = ? AND fiscalDateEnding = ? AND reportType = ?
+            ''', (symbol, fiscal_date, report_type))
+            exists = cursor.fetchone()[0] > 0
+
+            if exists:
+                print(f"Income statement ({report_type}) for {symbol} on {fiscal_date} already exists. Skipping insert.")
+                continue
+
+            # Prepare a tuple of values, defaulting missing fields to empty strings
+            row = (
+                symbol,
+                fiscal_date,
+                report_type,
+                report.get("reportedCurrency", ""),
+                report.get("operatingCashflow", ""),
+                report.get("paymentsForOperatingActivities", ""),
+                report.get("proceedsFromOperatingActivities", ""),
+                report.get("changeInOperatingLiabilities", ""),
+                report.get("changeInOperatingAssets", ""),
+                report.get("depreciationDepletionAndAmortization", ""),
+                report.get("capitalExpenditures", ""),
+                report.get("changeInReceivables", ""),
+                report.get("changeInInventory", ""),
+                report.get("profitLoss", ""),
+                report.get("cashflowFromInvestment", ""),
+                report.get("cashflowFromFinancing", ""),
+                report.get("proceedsFromRepaymentsOfShortTermDebt", ""),
+                report.get("paymentsForRepurchaseOfCommonStock", ""),
+                report.get("paymentsForRepurchaseOfEquity", ""),
+                report.get("paymentsForRepurchaseOfPreferredStock", ""),
+                report.get("dividendPayout", ""),
+                report.get("dividendPayoutCommonStock", ""),
+                report.get("dividendPayoutPreferredStock", ""),
+                report.get("proceedsFromIssuanceOfCommonStock", ""),
+                report.get("proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet", ""),
+                report.get("proceedsFromIssuanceOfPreferredStock", ""),
+                report.get("proceedsFromRepurchaseOfEquity", ""),
+                report.get("proceedsFromSaleOfTreasuryStock", ""),
+                report.get("changeInCashAndCashEquivalents", ""),
+                report.get("changeInExchangeRate", ""),
+                report.get("netIncome", "")
+            )
+            rows_to_insert.append(row)
+
+        if rows_to_insert:
+            try:
+                cursor.executemany('''
+                    INSERT INTO income_statement (
+                        symbol, fiscalDateEnding, reportType, reportedCurrency, operatingCashflow,
+                        paymentsForOperatingActivities, proceedsFromOperatingActivities,
+                        changeInOperatingLiabilities, changeInOperatingAssets,
+                        depreciationDepletionAndAmortization, capitalExpenditures,
+                        changeInReceivables, changeInInventory, profitLoss,
+                        cashflowFromInvestment, cashflowFromFinancing,
+                        proceedsFromRepaymentsOfShortTermDebt,
+                        paymentsForRepurchaseOfCommonStock, paymentsForRepurchaseOfEquity,
+                        paymentsForRepurchaseOfPreferredStock, dividendPayout,
+                        dividendPayoutCommonStock, dividendPayoutPreferredStock,
+                        proceedsFromIssuanceOfCommonStock,
+                        proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet,
+                        proceedsFromIssuanceOfPreferredStock, proceedsFromRepurchaseOfEquity,
+                        proceedsFromSaleOfTreasuryStock, changeInCashAndCashEquivalents,
+                        changeInExchangeRate, netIncome
+                    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                ''', rows_to_insert)
+                conn.commit()
+                print(f"Inserted {len(rows_to_insert)} new income statement ({report_type}) records for {symbol}.")
+            except sqlite3.IntegrityError:
+                print(f"Some income statement records for {symbol} ({report_type}) already exist. Skipping duplicates.")
+                conn.rollback()
+        else:
+            print(f"No new income statement ({report_type}) records to insert.")
+    
+    conn.close()
+
+
+def store_balance_sheet(balance_data):
+    """
+    Stores balance sheet reports (both annual and quarterly) into the finance_db.
+    Expects balance_data to be the JSON result from the balance sheet API.
+    """
+    import sqlite3
+
+    conn = sqlite3.connect('finance_data.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS balance_sheet (
+        symbol TEXT,
+        fiscalDateEnding TEXT,
+        reportType TEXT,
+        reportedCurrency TEXT,
+        totalAssets TEXT,
+        totalCurrentAssets TEXT,
+        cashAndCashEquivalentsAtCarryingValue TEXT,
+        cashAndShortTermInvestments TEXT,
+        inventory TEXT,
+        currentNetReceivables TEXT,
+        totalNonCurrentAssets TEXT,
+        propertyPlantEquipment TEXT,
+        accumulatedDepreciationAmortizationPPE TEXT,
+        intangibleAssets TEXT,
+        intangibleAssetsExcludingGoodwill TEXT,
+        goodwill TEXT,
+        investments TEXT,
+        longTermInvestments TEXT,
+        shortTermInvestments TEXT,
+        otherCurrentAssets TEXT,
+        otherNonCurrentAssets TEXT,
+        totalLiabilities TEXT,
+        totalCurrentLiabilities TEXT,
+        currentAccountsPayable TEXT,
+        deferredRevenue TEXT,
+        currentDebt TEXT,
+        shortTermDebt TEXT,
+        totalNonCurrentLiabilities TEXT,
+        capitalLeaseObligations TEXT,
+        longTermDebt TEXT,
+        currentLongTermDebt TEXT,
+        longTermDebtNoncurrent TEXT,
+        shortLongTermDebtTotal TEXT,
+        otherCurrentLiabilities TEXT,
+        otherNonCurrentLiabilities TEXT,
+        totalShareholderEquity TEXT,
+        treasuryStock TEXT,
+        retainedEarnings TEXT,
+        commonStock TEXT,
+        commonStockSharesOutstanding TEXT,
+        PRIMARY KEY (symbol, fiscalDateEnding, reportType)
+    )
+    ''')
+
+    symbol = balance_data.get('symbol', '')
+
+    # Process both annual and quarterly reports
+    for report_type, reports in [('annual', balance_data.get('annualReports', [])), 
+                                    ('quarterly', balance_data.get('quarterlyReports', []))]:
+        rows_to_insert = []
+        for report in reports:
+            fiscal_date = report.get("fiscalDateEnding", "")
+            cursor.execute('''
+                SELECT COUNT(*) FROM balance_sheet
+                WHERE symbol = ? AND fiscalDateEnding = ? AND reportType = ?
+            ''', (symbol, fiscal_date, report_type))
+            exists = cursor.fetchone()[0] > 0
+
+            if exists:
+                print(f"Balance sheet ({report_type}) for {symbol} on {fiscal_date} already exists. Skipping insert.")
+                continue
+
+            row = (
+                symbol,
+                fiscal_date,
+                report_type,
+                report.get("reportedCurrency", ""),
+                report.get("totalAssets", ""),
+                report.get("totalCurrentAssets", ""),
+                report.get("cashAndCashEquivalentsAtCarryingValue", ""),
+                report.get("cashAndShortTermInvestments", ""),
+                report.get("inventory", ""),
+                report.get("currentNetReceivables", ""),
+                report.get("totalNonCurrentAssets", ""),
+                report.get("propertyPlantEquipment", ""),
+                report.get("accumulatedDepreciationAmortizationPPE", ""),
+                report.get("intangibleAssets", ""),
+                report.get("intangibleAssetsExcludingGoodwill", ""),
+                report.get("goodwill", ""),
+                report.get("investments", ""),
+                report.get("longTermInvestments", ""),
+                report.get("shortTermInvestments", ""),
+                report.get("otherCurrentAssets", ""),
+                report.get("otherNonCurrentAssets", ""),
+                report.get("totalLiabilities", ""),
+                report.get("totalCurrentLiabilities", ""),
+                report.get("currentAccountsPayable", ""),
+                report.get("deferredRevenue", ""),
+                report.get("currentDebt", ""),
+                report.get("shortTermDebt", ""),
+                report.get("totalNonCurrentLiabilities", ""),
+                report.get("capitalLeaseObligations", ""),
+                report.get("longTermDebt", ""),
+                report.get("currentLongTermDebt", ""),
+                report.get("longTermDebtNoncurrent", ""),
+                report.get("shortLongTermDebtTotal", ""),
+                report.get("otherCurrentLiabilities", ""),
+                report.get("otherNonCurrentLiabilities", ""),
+                report.get("totalShareholderEquity", ""),
+                report.get("treasuryStock", ""),
+                report.get("retainedEarnings", ""),
+                report.get("commonStock", ""),
+                report.get("commonStockSharesOutstanding", "")
+            )
+            rows_to_insert.append(row)
+
+        if rows_to_insert:
+            try:
+                cursor.executemany('''
+                    INSERT INTO balance_sheet (
+                        symbol, fiscalDateEnding, reportType, reportedCurrency, totalAssets, totalCurrentAssets,
+                        cashAndCashEquivalentsAtCarryingValue, cashAndShortTermInvestments, inventory,
+                        currentNetReceivables, totalNonCurrentAssets, propertyPlantEquipment,
+                        accumulatedDepreciationAmortizationPPE, intangibleAssets,
+                        intangibleAssetsExcludingGoodwill, goodwill, investments, longTermInvestments,
+                        shortTermInvestments, otherCurrentAssets, otherNonCurrentAssets, totalLiabilities,
+                        totalCurrentLiabilities, currentAccountsPayable, deferredRevenue, currentDebt,
+                        shortTermDebt, totalNonCurrentLiabilities, capitalLeaseObligations, longTermDebt,
+                        currentLongTermDebt, longTermDebtNoncurrent, shortLongTermDebtTotal,
+                        otherCurrentLiabilities, otherNonCurrentLiabilities, totalShareholderEquity,
+                        treasuryStock, retainedEarnings, commonStock, commonStockSharesOutstanding
+                    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                ''', rows_to_insert)
+                conn.commit()
+                print(f"Inserted {len(rows_to_insert)} new balance sheet ({report_type}) records for {symbol}.")
+            except sqlite3.IntegrityError:
+                print(f"Some balance sheet records for {symbol} ({report_type}) already exist. Skipping duplicates.")
+                conn.rollback()
+        else:
+            print(f"No new balance sheet ({report_type}) records to insert.")
+
+    conn.close()
+
+
+def store_cash_flow(cash_flow_data):
+    """
+    Stores cash flow reports (both annual and quarterly) into the finance_db.
+    Expects cash_flow_data to be the JSON result from the cash flow API.
+    """
+    import sqlite3
+
+    conn = sqlite3.connect('finance_data.db')
+    cursor = conn.cursor()
+
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS cash_flow (
+        symbol TEXT,
+        fiscalDateEnding TEXT,
+        reportType TEXT,
+        reportedCurrency TEXT,
+        operatingCashflow TEXT,
+        paymentsForOperatingActivities TEXT,
+        proceedsFromOperatingActivities TEXT,
+        changeInOperatingLiabilities TEXT,
+        changeInOperatingAssets TEXT,
+        depreciationDepletionAndAmortization TEXT,
+        capitalExpenditures TEXT,
+        changeInReceivables TEXT,
+        changeInInventory TEXT,
+        profitLoss TEXT,
+        cashflowFromInvestment TEXT,
+        cashflowFromFinancing TEXT,
+        proceedsFromRepaymentsOfShortTermDebt TEXT,
+        paymentsForRepurchaseOfCommonStock TEXT,
+        paymentsForRepurchaseOfEquity TEXT,
+        paymentsForRepurchaseOfPreferredStock TEXT,
+        dividendPayout TEXT,
+        dividendPayoutCommonStock TEXT,
+        dividendPayoutPreferredStock TEXT,
+        proceedsFromIssuanceOfCommonStock TEXT,
+        proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet TEXT,
+        proceedsFromIssuanceOfPreferredStock TEXT,
+        proceedsFromRepurchaseOfEquity TEXT,
+        proceedsFromSaleOfTreasuryStock TEXT,
+        changeInCashAndCashEquivalents TEXT,
+        changeInExchangeRate TEXT,
+        netIncome TEXT,
+        PRIMARY KEY (symbol, fiscalDateEnding, reportType)
+    )
+    ''')
+
+    symbol = cash_flow_data.get('symbol', '')
+
+    # Process both annual and quarterly reports
+    for report_type, reports in [('annual', cash_flow_data.get('annualReports', [])), 
+                                    ('quarterly', cash_flow_data.get('quarterlyReports', []))]:
+        rows_to_insert = []
+        for report in reports:
+            fiscal_date = report.get("fiscalDateEnding", "")
+            cursor.execute('''
+                SELECT COUNT(*) FROM cash_flow
+                WHERE symbol = ? AND fiscalDateEnding = ? AND reportType = ?
+            ''', (symbol, fiscal_date, report_type))
+            exists = cursor.fetchone()[0] > 0
+
+            if exists:
+                print(f"Cash flow statement ({report_type}) for {symbol} on {fiscal_date} already exists. Skipping insert.")
+                continue
+
+            row = (
+                symbol,
+                fiscal_date,
+                report_type,
+                report.get("reportedCurrency", ""),
+                report.get("operatingCashflow", ""),
+                report.get("paymentsForOperatingActivities", ""),
+                report.get("proceedsFromOperatingActivities", ""),
+                report.get("changeInOperatingLiabilities", ""),
+                report.get("changeInOperatingAssets", ""),
+                report.get("depreciationDepletionAndAmortization", ""),
+                report.get("capitalExpenditures", ""),
+                report.get("changeInReceivables", ""),
+                report.get("changeInInventory", ""),
+                report.get("profitLoss", ""),
+                report.get("cashflowFromInvestment", ""),
+                report.get("cashflowFromFinancing", ""),
+                report.get("proceedsFromRepaymentsOfShortTermDebt", ""),
+                report.get("paymentsForRepurchaseOfCommonStock", ""),
+                report.get("paymentsForRepurchaseOfEquity", ""),
+                report.get("paymentsForRepurchaseOfPreferredStock", ""),
+                report.get("dividendPayout", ""),
+                report.get("dividendPayoutCommonStock", ""),
+                report.get("dividendPayoutPreferredStock", ""),
+                report.get("proceedsFromIssuanceOfCommonStock", ""),
+                report.get("proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet", ""),
+                report.get("proceedsFromIssuanceOfPreferredStock", ""),
+                report.get("proceedsFromRepurchaseOfEquity", ""),
+                report.get("proceedsFromSaleOfTreasuryStock", ""),
+                report.get("changeInCashAndCashEquivalents", ""),
+                report.get("changeInExchangeRate", ""),
+                report.get("netIncome", "")
+            )
+            rows_to_insert.append(row)
+
+        if rows_to_insert:
+            try:
+                cursor.executemany('''
+                    INSERT INTO cash_flow (
+                        symbol, fiscalDateEnding, reportType, reportedCurrency, operatingCashflow,
+                        paymentsForOperatingActivities, proceedsFromOperatingActivities,
+                        changeInOperatingLiabilities, changeInOperatingAssets,
+                        depreciationDepletionAndAmortization, capitalExpenditures,
+                        changeInReceivables, changeInInventory, profitLoss,
+                        cashflowFromInvestment, cashflowFromFinancing,
+                        proceedsFromRepaymentsOfShortTermDebt,
+                        paymentsForRepurchaseOfCommonStock, paymentsForRepurchaseOfEquity,
+                        paymentsForRepurchaseOfPreferredStock, dividendPayout,
+                        dividendPayoutCommonStock, dividendPayoutPreferredStock,
+                        proceedsFromIssuanceOfCommonStock,
+                        proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet,
+                        proceedsFromIssuanceOfPreferredStock, proceedsFromRepurchaseOfEquity,
+                        proceedsFromSaleOfTreasuryStock, changeInCashAndCashEquivalents,
+                        changeInExchangeRate, netIncome
+                    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                ''', rows_to_insert)
+                conn.commit()
+                print(f"Inserted {len(rows_to_insert)} new cash flow ({report_type}) records for {symbol}.")
+            except sqlite3.IntegrityError:
+                print(f"Some cash flow records for {symbol} ({report_type}) already exist. Skipping duplicates.")
+                conn.rollback()
+        else:
+            print(f"No new cash flow ({report_type}) records to insert.")
+    
+    conn.close()
+
+def store_financial_data(ticker, income_statement, balance_sheet, cash_flow):
+    print("Storing all financial data for", ticker)
+    # Check if data already exists in the database
+    if income_statement == 'data exists' and balance_sheet == 'data exists' and cash_flow == 'data exists':
+        return 'data exists'
+    if income_statement == 'no data' or balance_sheet == 'no data' or cash_flow == 'no data':
+        return 'no data'
+    if income_statement != 'data exists':
+        store_income_statement(income_statement)
+    if balance_sheet != 'data exists':
+        store_balance_sheet(balance_sheet)
+    if cash_flow != 'data exists':
+        store_cash_flow(cash_flow)
