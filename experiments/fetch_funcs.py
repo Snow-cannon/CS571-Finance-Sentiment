@@ -691,3 +691,185 @@ def store_financial_data(ticker, income_statement, balance_sheet, cash_flow):
         store_balance_sheet(balance_sheet)
     if cash_flow != 'data exists':
         store_cash_flow(cash_flow)
+
+# Function to fetch news sentiment data from Alpha Vantage
+def fetch_news_sentiment(ticker, time_from, time_to, api_key):
+    """
+    Fetch news sentiment data from Alpha Vantage API
+    """
+    url = "https://www.alphavantage.co/query"
+    
+    # Build parameters
+    params = {
+        "function": "NEWS_SENTIMENT",
+        "tickers": ticker,
+        "time_from": time_from,
+        "time_to": time_to,
+        "sort": "RELEVANCE",
+        "limit": 1000,  # Maximum allowed by API
+        "apikey": api_key
+    }
+    
+    try:
+        built_url = f"{url}?{'&'.join([f'{key}={value}' for key, value in params.items()])}"
+        # print(f"Making request to URL: {built_url}")
+        response = requests.get(url, params=params)
+        data = response.json()
+        
+        # Check if response contains error message
+        if "Error Message" in data:
+            print(f"API Error: {data['Error Message']}")
+            return "no data"
+        if "Information" in data:
+            print(f"API Information: {data['Information']}")
+            # Check if data is actually present
+            if "feed" not in data or len(data["feed"]) == 0:
+                return "no data"
+        if "Note" in data:
+            print(f"API Note: {data['Note']}")
+            return "limit reached"
+            
+        if "feed" in data and len(data["feed"]) > 0:
+            # Check if we have valid data
+            return data
+        else:
+            print(f"No news data found for {ticker} in specified time range")
+            return "no data"
+            
+    except Exception as e:
+        print(f"Error fetching news sentiment data: {str(e)}")
+        return "error"
+    
+# Function to check if data already exists
+def check_existing_news(ticker, start_date, end_date, conn):
+    cursor = conn.cursor()
+    
+    # Convert dates to match the format stored in database
+    start_date_obj = datetime.strptime(start_date, "%Y%m%dT%H%M")
+    end_date_obj = datetime.strptime(end_date, "%Y%m%dT%H%M")
+    
+    # Format for SQL query
+    start_date_str = start_date_obj.strftime("%Y%m%d")
+    end_date_str = end_date_obj.strftime("%Y%m%d")
+    
+    # Check if we already have news articles for this ticker and date range
+    query = """
+    SELECT COUNT(*) 
+    FROM news_articles a
+    JOIN news_ticker_sentiment s ON a.id = s.article_id
+    WHERE s.ticker_symbol = ?
+    AND SUBSTR(a.time_published, 1, 8) BETWEEN ? AND ?
+    """
+    
+    cursor.execute(query, (ticker, start_date_str, end_date_str))
+    count = cursor.fetchone()[0]
+    
+    # If we have a significant number of articles for this period, consider it covered
+    if count > 20:
+        return "data exists"
+    return "needs data"
+    
+# Function to store news sentiment data in the database
+def store_news_sentiment(ticker, data, conn):
+    """
+    Store news sentiment data in the SQLite database
+    """
+    if not data or "feed" not in data:
+        print("No valid data to store")
+        return False
+    
+    cursor = conn.cursor()
+    articles_stored = 0
+    articles_already_exist = 0
+    
+    try:
+        fetch_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        
+        for article in data["feed"]:
+            # Prepare article data
+            title = article.get("title")
+            url = article.get("url")
+            time_published = article.get("time_published")
+            
+            # Handle authors - can be a list or already a string
+            authors_data = article.get("authors", [])
+            if isinstance(authors_data, list):
+                authors = ",".join(authors_data)
+            else:
+                authors = str(authors_data)
+                
+            summary = article.get("summary")
+            banner_image = article.get("banner_image")
+            source = article.get("source")
+            category_within_source = article.get("category_within_source")
+            source_domain = article.get("source_domain")
+            
+            # Handle topics properly - extract just the topic names from the objects
+            topics_data = article.get("topics", [])
+            if isinstance(topics_data, list):
+                # Extract just the topic name from each dictionary
+                topic_names = []
+                for topic_item in topics_data:
+                    if isinstance(topic_item, dict) and "topic" in topic_item:
+                        topic_names.append(topic_item["topic"])
+                topics = ",".join(topic_names)
+            else:
+                topics = str(topics_data)
+                
+            overall_sentiment_score = article.get("overall_sentiment_score")
+            overall_sentiment_label = article.get("overall_sentiment_label")
+            
+            # Insert article data and get the article_id
+            try:
+                cursor.execute('''
+                INSERT INTO news_articles (
+                    title, url, time_published, authors, summary, banner_image, source, 
+                    category_within_source, source_domain, topics, 
+                    overall_sentiment_score, overall_sentiment_label, fetch_date
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (
+                    title, url, time_published, authors, summary, banner_image, source,
+                    category_within_source, source_domain, topics,
+                    overall_sentiment_score, overall_sentiment_label, fetch_date
+                ))
+                
+                article_id = cursor.lastrowid
+                articles_stored += 1
+                
+                # Insert ticker sentiment data if available
+                if "ticker_sentiment" in article:
+                    for ticker_data in article["ticker_sentiment"]:
+                        ticker_symbol = ticker_data.get("ticker")
+                        relevance_score = ticker_data.get("relevance_score")
+                        ticker_sentiment_score = ticker_data.get("ticker_sentiment_score")
+                        ticker_sentiment_label = ticker_data.get("ticker_sentiment_label")
+                        
+                        cursor.execute('''
+                        INSERT INTO news_ticker_sentiment (
+                            article_id, ticker_symbol, relevance_score, 
+                            ticker_sentiment_score, ticker_sentiment_label
+                        ) VALUES (?, ?, ?, ?, ?)
+                        ''', (
+                            article_id, ticker_symbol, relevance_score,
+                            ticker_sentiment_score, ticker_sentiment_label
+                        ))
+                
+            except sqlite3.IntegrityError:
+                # URL already exists in database
+                articles_already_exist += 1
+                continue
+                
+        conn.commit()
+        print(f"Stored {articles_stored} new articles, {articles_already_exist} already existed for {ticker}")
+        return articles_stored > 0 or articles_already_exist > 0
+        
+    except Exception as e:
+        print(f"Error storing news sentiment data: {str(e)}")
+        conn.rollback()
+        return False
+# Get all tickers from database
+def get_tickers_from_db(conn):
+    cursor = conn.cursor()
+    cursor.execute("SELECT DISTINCT symbol FROM company_overview ORDER BY symbol")
+    tickers = [row[0] for row in cursor.fetchall()]
+    return tickers
