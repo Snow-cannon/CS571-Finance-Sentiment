@@ -7,14 +7,16 @@ testBtn.onclick = (e) => {
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-      return response.text();
+      console.log(response);
+      return response.json();
     })
-    .then((data) => {
-      console.log("Data retrieved:", data);
-      // Process the data as needed
+    .then((jsonData) => {
+      // Print the JSON data to the console
+      console.log(jsonData); // This will print the JSON data in the console
     })
     .catch((error) => {
-      console.error("Fetch error:", error);
+      // Handle any errors
+      console.error("There was an error:", error);
     });
 };
 
