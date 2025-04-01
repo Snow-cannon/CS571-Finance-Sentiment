@@ -1,1 +1,0 @@
-'AAPL','MSFT','NVDA','AMZN','GOOG','GOOGL','META','BRK-A','BRK-B','TSM','AVGO','TSLA','LLY','WMT','JPM','V','XOM','MA','UNH','ORCL','NFLX','COST','JNJ','PG','ABBV','HD','BABA','BAC','SAP','KO','TMUS','CVX','ASML','CRM','NVO','TM','CSCO','WFC','PM','MRK','AZN','IBM','NVS','ABT','GE','MCD','LIN','SHEL','PLTR','ACN','HSBC','PEP','TMO','T','MS','AXP','VZ','BX','DIS','RTX'
