@@ -42,7 +42,7 @@ router.post("/table_schema", async (req, res) => {
     res.status(500).json({ error: "An error occurred while querying the database." });
   }
 });
-
+  
 // Return the table schema
 router.get("/symbols", async (req, res) => {
   try {

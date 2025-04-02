@@ -1,10 +1,7 @@
 import queryData from "./makeQuery.js";
+import { makeTable } from "./makeTable.js";
 
-const testBtn = document.getElementById("testBtn");
+const selectionData = await queryData("symbols");
+console.log(selectionData);
 
-testBtn.onclick = async (e) => {
-  const symbols = await queryData("symbols");
-  console.log(symbols);
-  const data = await queryData("table_schema", { table: "company_overview" });
-  console.log(data);
-};
+makeTable("selection_table", selectionData);
