@@ -1,8 +1,6 @@
 import sqlite3 from "sqlite3";
 import path from "path";
 
-const databasePath = path.resolve();
-
 export class DB {
   #_path;
   #_db;
