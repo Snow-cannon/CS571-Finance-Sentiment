@@ -39,7 +39,7 @@ export class PageState {
     this.#_symbol = symbol;
 
     // Dispatch the created event
-    this.#dispatch(PageState.Events.SYMBOL);
+    this.dispatch(PageState.Events.SYMBOL);
   }
 
   /**
