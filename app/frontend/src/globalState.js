@@ -100,7 +100,7 @@ export class PageState {
    * specified event.
    * @param {String} evtName
    */
-  #dispatch(evtName) {
+  dispatch(evtName) {
     /**
      * Contains all callbacks for the specified event
      * @type {(function(): void)[]}
