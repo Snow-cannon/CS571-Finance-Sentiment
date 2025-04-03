@@ -1,7 +1,24 @@
+import { PageState } from "./globalState.js";
 import queryData from "./makeQuery.js";
-import { makeTable } from "./makeTable.js";
+import { makeSelectionTable } from "./makeTable.js";
 
 const selectionData = await queryData("symbols");
-console.log(selectionData);
+export const state = new PageState(selectionData[0].Symbol || "WFC");
 
-makeTable("selection_table", selectionData, "Name");
+// Function for what to do on
+const selectRow = (obj) => {
+  state.symbol = obj.Symbol;
+};
+
+makeSelectionTable("selection_table", selectionData, {
+  sortby: "Symbol",
+  asc: false,
+  selectRow: selectRow,
+});
+
+const newListen = () => {
+  console.log(state.symbol);
+  state.removeListener(PageState.Events.SYMBOL, newListen);
+};
+
+state.addListener(PageState.Events.SYMBOL, newListen);
