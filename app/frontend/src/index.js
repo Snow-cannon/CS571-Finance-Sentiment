@@ -1,23 +1,24 @@
-import whoa from "./testModule.js";
-const testBtn = document.getElementById("testBtn");
+import { PageState } from "./globalState.js";
+import queryData from "./makeQuery.js";
+import { makeSelectionTable } from "./makeTable.js";
 
-testBtn.onclick = (e) => {
-  fetch("http://localhost:3000/data/test")
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-      console.log(response);
-      return response.json();
-    })
-    .then((jsonData) => {
-      // Print the JSON data to the console
-      console.log(jsonData); // This will print the JSON data in the console
-    })
-    .catch((error) => {
-      // Handle any errors
-      console.error("There was an error:", error);
-    });
+const selectionData = await queryData("symbols");
+export const state = new PageState(selectionData[0].Symbol || "WFC");
+
+// Function for what to do on
+const selectRow = (obj) => {
+  state.symbol = obj.Symbol;
 };
 
-console.log(whoa());
+makeSelectionTable("selection_table", selectionData, {
+  sortby: "Symbol",
+  asc: false,
+  selectRow: selectRow,
+});
+
+const newListen = () => {
+  console.log(state.symbol);
+  state.removeListener(PageState.Events.SYMBOL, newListen);
+};
+
+state.addListener(PageState.Events.SYMBOL, newListen);

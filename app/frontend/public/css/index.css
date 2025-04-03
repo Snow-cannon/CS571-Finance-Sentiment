@@ -1,0 +1,32 @@
+body {
+  background-color: rgb(255, 255, 255);
+}
+
+table {
+  border: 2px solid black;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+    background-color: #dbdbdb;
+}
+
+tr.selected {
+    background-color: #d6abab;
+}
+
+th {
+  background-color: #8304aa;
+  color: white;
+}
