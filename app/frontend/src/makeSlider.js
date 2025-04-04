@@ -64,7 +64,6 @@ export function makeSlider(containerID, minYear, maxYear) {
 
   /** Creates a set of equally sized ticker values */
   const createRowSelection = () => {
-    console.log("message");
     row.selectAll("td").remove();
     row
       .selectAll("td")
@@ -74,7 +73,6 @@ export function makeSlider(containerID, minYear, maxYear) {
       .text((d) => d)
       .classed("time-selection-ticker", true)
       .classed("selected-slider-value", (d) => {
-        console.log(state.quarter, d, state.quarter === d);
         return state.quarter === d;
       })
       .attr("width", `${100 / (dates + 1)}%`);

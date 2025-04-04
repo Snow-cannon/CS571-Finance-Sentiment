@@ -42,12 +42,34 @@ router.post("/table_schema", async (req, res) => {
     res.status(500).json({ error: "An error occurred while querying the database." });
   }
 });
-  
+
 // Return the table schema
 router.get("/symbols", async (req, res) => {
   try {
     // Execute the query and get the result
     const result = await db.query(`SELECT Symbol, Name, Sector FROM company_overview`);
+
+    // Send JSON result
+    res.json(result);
+  } catch (err) {
+    // Handle any errors
+    console.error("Error executing query:", err);
+    res.status(500).json({ error: "An error occurred while querying the database." });
+  }
+});
+
+// Return the table schema
+router.post("/overview", async (req, res) => {
+  try {
+    // Get table parameter
+    const { symbol } = req.body;
+
+    // Execute the query and get the result
+    const result = await db.query(
+      // `SELECT Symbol, Name, Description, Country, Sector, Industry FROM company_overview WHERE Symbol = :symbol`,
+      `SELECT Symbol, Name, Sector FROM company_overview WHERE Symbol = ?`,
+      [symbol]
+    );
 
     // Send JSON result
     res.json(result);

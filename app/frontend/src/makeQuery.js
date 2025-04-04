@@ -5,7 +5,7 @@
  * Returns null on error.
  * @param {String[]} path
  * @param {Object} params
- * @returns {JSON|null} Returns query result on success and null on error
+ * @returns {Promise<JSON|null>} Returns query result on success and null on error
  */
 async function queryData(path, params) {
   // Create URL for data fetching
