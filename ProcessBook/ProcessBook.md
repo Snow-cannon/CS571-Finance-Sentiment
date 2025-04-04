@@ -15,6 +15,10 @@ The backend uses a `node.js` and `express.js` backend. We went with this method 
 
 After initializing the selection table, we realized we needed a way to update all the visuals interactively and efficiently. We developed a cusom event bus that could accept listeners for custom events, such as updating quarters and the selected company, and would dispatch events when the global state it stored was updated. This allowed us to make the visuals more dynamic and based on a current global state controlled by multiple visual elements.
 
+## Data Collection
+
+***Section for describing data collection***
+
 ## Date Slider
 
 This is the visual for selecting the quarter and year, as well as whether to look at a quarter or an entire year of data.
