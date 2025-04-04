@@ -1,3 +1,4 @@
+import { PageState } from "./globalState.js";
 import { state } from "./index.js";
 import * as d3 from "d3";
 // import { sliderBottom } from "d3-simple-slider";
@@ -34,7 +35,11 @@ export function makeSlider(containerID, minYear, maxYear) {
 
   // Add slider wrapped table row
   const topRow = sliderTable.append("tr");
+
+  // Add centering cell
   topRow.append("td").attr("width", `${getCellWidthPercent()}%`);
+
+  // Add slider in merged cell
   topRow
     .append("td")
     .attr("colspan", dates)
@@ -43,21 +48,40 @@ export function makeSlider(containerID, minYear, maxYear) {
     .attr("min", 0)
     .attr("max", dates)
     .attr("step", 1)
+
+    // TODO: Correct for true date values
+    .attr("value", 0)
     .on("input", (evt) => {
-      console.log("New value:", evt.target.value);
+      state.quarter = Number(evt.target.value);
     });
+
+  // Add centering cell
   topRow.append("td").attr("width", `${getCellWidthPercent()}%`);
 
   // Add grid under slider
   const row = ticksTable.append("tr");
 
-  // Add contents to row
-  row
-    .selectAll("td")
-    .data(d3.range(dates + 1))
-    .enter()
-    .append("td")
-    .text((d) => d)
-    .classed("time-selection-ticker", true)
-    .attr("width", `${100 / (dates + 1)}%`);
+  /** Creates a set of equally sized ticker values */
+  const createRowSelection = () => {
+    console.log("message");
+    row.selectAll("td").remove();
+    row
+      .selectAll("td")
+      .data(d3.range(dates + 1))
+      .enter()
+      .append("td")
+      .text((d) => d)
+      .classed("time-selection-ticker", true)
+      .classed("selected-slider-value", (d) => {
+        console.log(state.quarter, d, state.quarter === d);
+        return state.quarter === d;
+      })
+      .attr("width", `${100 / (dates + 1)}%`);
+  };
+
+  // Add set of date grid cells
+  createRowSelection();
+
+  // Add a listener to visually change the currently selected values
+  state.addListener(PageState.Events.TIME, createRowSelection);
 }

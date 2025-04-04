@@ -1,6 +1,10 @@
 export class PageState {
   /** Currently selected symbol */
   #_symbol;
+  /** If the page is using quarterly or annual data */
+  #_isQuarter;
+  /** Currently selected quarter */
+  #_quarter;
 
   /**
    * A list of all callback functions hashed by
@@ -14,12 +18,17 @@ export class PageState {
    * A list of all valid events to listen to
    *
    * - SYMBOL: when the symbol updates
+   * - TIME: when the quarterly / annually setting and
+   * quarter/year are updated
    */
   static Events = {
     SYMBOL: "symbol",
+    TIME: "time",
   };
 
   constructor(symbol) {
+    this.#_quarter = 0;
+    this.#_isQuarter = false;
     this.#_callbacks = {};
     this.#_symbol = symbol;
   }
@@ -40,6 +49,28 @@ export class PageState {
 
     // Dispatch the created event
     this.dispatch(PageState.Events.SYMBOL);
+  }
+
+  /** returns the currently selected quarter */
+  get quarter() {
+    return this.#_quarter;
+  }
+
+  /** Sets the current quarter */
+  set quarter(quarter) {
+    this.#_quarter = quarter;
+    this.dispatch(PageState.Events.TIME);
+  }
+
+  /** returns the currently selected quarter */
+  get isQuarter() {
+    return this.#_isQuarter;
+  }
+
+  /** Sets the current quarter */
+  set isQuarter(isQuarter) {
+    this.#_isQuarter = isQuarter;
+    this.dispatch(PageState.Events.TIME);
   }
 
   /**

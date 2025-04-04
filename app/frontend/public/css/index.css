@@ -59,3 +59,7 @@ input[type="range"] {
   margin: 0;
   padding: 0;
 }
+
+.selected-slider-value {
+  border: 2px dashed green;
+}
