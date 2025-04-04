@@ -8,6 +8,7 @@ body {
   border: 2px solid black;
   border-collapse: collapse;
   width: 100%;
+  position: relative;
 }
 
 .symbol-selection-table th,
@@ -28,9 +29,29 @@ body {
   background-color: #d6abab;
 }
 
-.symbol-selection-table th {
+.symbol-selection-table thead {
   background-color: #8304aa;
   color: white;
+}
+
+.symbol-selection-table tbody {
+  display: block;
+  height: 200px;
+  overflow: auto;
+}
+
+.symbol-selection-table thead {
+  box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);
+  position: sticky; /* Makes the thead stick to the top */
+  top: 0; /* Keep it at the top */
+  z-index: 1; /* Ensure it stays above tbody */
+}
+
+.symbol-selection-table thead,
+.symbol-selection-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed; /* even columns width , fix width of table too*/
 }
 
 /* Slider CSS */
