@@ -4,11 +4,11 @@ Final project for CS571 focused on financial statements and news sentiment
 
 ## Repository Structure
 
-All development happens within the `app` folder.
+All development and commands should run from within the `app` folder.
 
 Project proposal is the the `Proposal` folder.
 
-Process book is in the `processBook` folder.
+Process book is in the `ProcessBook` folder.
 
 ## Development Instructions
 
@@ -25,7 +25,7 @@ npm i
 
 ### Building
 
-The compiled frontend is not int he git repo, and must be built to use the frontend. Run the following script to compile the app.
+The compiled frontend is not in the git repo, and must be built to use the frontend. Run the following script to compile the app.
 
 ```bash
 npm run build
@@ -68,3 +68,17 @@ npm run dev-server
 ### Styling
 
 To prevent styling mismatches, there is also a `.prettierrc` file that enforces specific formatting choices. It is encouraged to install the [`prettier`](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode) extension if you are using VSCode to be able to use the enfoced auto-formatting.
+
+### Process Book
+
+The process book is set up so each visual and each major section (data processing / server APIs) are under a `##` heading. At the top of the file we are using a table of contents, and each heading is linked from there.
+
+There is a screenshot folder `screenshots` where each subfolder contains images of the related visual that can be referenced from the process book file.
+
+To build the process book into a `PDF` file, run the following command:
+
+```bash
+npm run book
+```
+
+The resulting PDF is what will be submitted for grading.
