@@ -55,6 +55,12 @@ And the ability to click a box and highlight the selected entry with a different
 
 ![Initial Selection Table - Selected](./screenshots/company-select-table/cst-initial-select.png)
 
+### CSS Upgrades
+
+The next iteration involved upgrading the CSS to make it feel more interactive. We added arrows to display the direction the user was sorting the companies, and by which column. We also added a darker shade of purple to show which header the user would be clicking. On top of that, we also shrunk the table to be only 200px tall, and made it scrollable. This allows us to fit more visuals on the page, while still letting users select from the entire set of provided companies.
+
+![Selection Table CSS Upgrade](./screenshots/company-select-table/cst-css-upgrade.png)
+
 ## Company Overview
 
 This displays textual information about the currently selected company.

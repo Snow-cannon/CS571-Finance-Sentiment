@@ -2,7 +2,7 @@ body {
   background-color: rgb(255, 255, 255);
 }
 
-/* Table CSS */
+/* Company Selection Table */
 
 .symbol-selection-table {
   border: 2px solid black;
@@ -21,17 +21,25 @@ body {
   background-color: #f2f2f2;
 }
 
-.symbol-selection-table tr:hover {
+.symbol-selection-table tr.selected {
+  background-color: #d6abab;
+}
+
+.symbol-selection-table tbody tr:hover {
   background-color: #dbdbdb;
 }
 
-.symbol-selection-table tr.selected {
-  background-color: #d6abab;
+.symbol-selection-table tbody tr.selected:hover {
+  background-color: #bb7b7b;
 }
 
 .symbol-selection-table thead {
   background-color: #8304aa;
   color: white;
+}
+
+.symbol-selection-table thead th:hover {
+  background-color: #700092;
 }
 
 .symbol-selection-table tbody {
@@ -42,9 +50,9 @@ body {
 
 .symbol-selection-table thead {
   box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);
-  position: sticky; /* Makes the thead stick to the top */
-  top: 0; /* Keep it at the top */
-  z-index: 1; /* Ensure it stays above tbody */
+  position: sticky;
+  z-index: 1;
+  top: 0;
 }
 
 .symbol-selection-table thead,
@@ -54,7 +62,7 @@ body {
   table-layout: fixed; /* even columns width , fix width of table too*/
 }
 
-/* Slider CSS */
+/* Slider */
 
 .slider_container {
   width: 100%;
