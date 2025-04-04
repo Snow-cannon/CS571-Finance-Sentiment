@@ -48,7 +48,7 @@ export function makeSelectionTable(containerID, data, options) {
   container.selectAll("table").remove();
 
   // Create empty table
-  const table = container.append("table");
+  const table = container.append("table").classed("symbol-selection-table", true);
 
   // Do nothing if there are no entries
   if (!data.length) {
