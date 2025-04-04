@@ -17,6 +17,7 @@ export function makeSlider(containerID, minYear, maxYear) {
   const sliderTable = container.append("table").classed("slider_table_wrapper", true);
   const ticksTable = container.append("table").classed("slider_table_wrapper", true);
 
+  // TODO: Make non-linear / decide count and make look good
   const interpolate = (x) => {
     // Visual testing provided initial values to interpolate between
     const x1 = 28;
