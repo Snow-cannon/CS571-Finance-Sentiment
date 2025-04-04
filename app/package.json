@@ -8,7 +8,8 @@
     "dev-server": "nodemon --watch backend ./backend/server.js",
     "start": "node ./backend/server.js",
     "watch": "webpack --mode development",
-    "bundle": "webpack --mode production"
+    "bundle": "webpack --mode production",
+    "book": "npx md-to-pdf ../ProcessBook/ProcessBook.md --basedir .."
   },
   "repository": {
     "type": "git",
