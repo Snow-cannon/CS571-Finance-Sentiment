@@ -1,5 +1,6 @@
 import { PageState } from "./globalState.js";
 import queryData from "./makeQuery.js";
+import { makeSlider } from "./makeSlider.js";
 import { makeSelectionTable } from "./makeTable.js";
 
 const selectionData = await queryData("symbols");
@@ -22,3 +23,6 @@ const newListen = () => {
 };
 
 state.addListener(PageState.Events.SYMBOL, newListen);
+
+// Initialize markers and display the default value
+makeSlider("slider_container", 2016, 2028);
