@@ -68,36 +68,37 @@ body {
   width: 100%;
 }
 
-.slider_container td {
-  padding: 0px;
-  margin: 0px;
-  background-color: #8304aa;
-}
-
 .slider_table_wrapper {
   width: 100%;
 }
 
+.ticker-row {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
 .time-selection-ticker {
+  color: rgb(156, 156, 156);
   text-align: center;
 }
 
-input[type="range"] {
-  border: 1px solid red;
-  width: 100%;
-  margin: 0;
-  padding: 0;
+.selected-slider-value {
+  color: black;
+  background-color: #dccedd;
+  text-align: center;
+  border-radius: 3px;
 }
 
-.selected-slider-value {
-  border: 2px dashed green;
+input[type="range"] {
+  width: 100%;
 }
 
 /* Company Overview */
 
 .overview-container {
-  border: 2px solid #d6abab;
+  border: 2px solid #d2b5db;
   border-radius: 5px;
   padding-left: 5px;
-  background-color: blanchedalmond;
+  background-color: rgb(253, 205, 255);
 }

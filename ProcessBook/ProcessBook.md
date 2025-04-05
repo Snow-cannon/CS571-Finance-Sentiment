@@ -34,8 +34,14 @@ First iteration was to allow functionality only. We went with a raw html look, a
 
 This step does not account for actual dates, but sets the groundwork for adding quarters and years under each ticker for future selection. Additionally, the slider text tickers are not properly centered on all ticker counts or screen widths. This needs to be updated to accomadate more screen sizes.
 
+### CSS Upgrade
+
+We updated the slider to add a more modern and easy to read view. A rounded highlight of the selected tick plus a desaturated text color on un-selected ticks makes it much easier to identify the current selection. We also made it putple to go with the overall color scheme we are aiming towards.
+
+![Slider Update 1](./screenshots/slider/slider-update-1.png)
+
 <!-- Page Break in PDF -->
-<div style="page-break-after: always;"></div>
+<!-- <div style="page-break-after: always;"></div> -->
 
 ## Company Selection Table
 
