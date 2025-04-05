@@ -58,6 +58,18 @@ export function makeSelectionTable(containerID, data, options) {
   // Get names of the table cols
   const colNames = Object.keys(data[0]);
 
+  const getArrow = (col) => {
+    if (col !== sortby) {
+      return "";
+    }
+
+    if (asc) {
+      return "▲";
+    } else {
+      return "▼";
+    }
+  };
+
   // Generate header row
   table
     .append("thead")
@@ -66,7 +78,7 @@ export function makeSelectionTable(containerID, data, options) {
     .data(colNames)
     .enter()
     .append("th")
-    .text((col) => col)
+    .text((col) => `${col} ${getArrow(col)}`)
 
     // Add event listener for sorting cols based on the column
     .on("click", (evt, col) => {

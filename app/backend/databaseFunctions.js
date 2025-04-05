@@ -51,14 +51,14 @@ export class DB {
    * @param {String} query
    * @returns
    */
-  async query(query) {
+  async query(query, sanitize = {}) {
     if (this.#_db !== null) {
       // Create empty returnable row object
       const rows = [];
 
       // Use a promise to guarentee the data is pushed
       await new Promise((resolve, reject) => {
-        this.#_db.all(query, (err, res) => {
+        this.#_db.all(query, sanitize, (err, res) => {
           if (err) {
             reject(err); // Fail on an error
           } else {

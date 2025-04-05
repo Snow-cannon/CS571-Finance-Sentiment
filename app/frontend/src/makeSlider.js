@@ -35,13 +35,17 @@ export function makeSlider(containerID, minYear, maxYear) {
   };
 
   // Add slider wrapped table row
-  const topRow = sliderTable.append("tr");
+  const sliderRow = sliderTable.append("tr");
 
-  // Add centering cell
-  topRow.append("td").attr("width", `${getCellWidthPercent()}%`);
+  const sidebar = getCellWidthPercent();
+
+  if (sidebar > 0.2) {
+    // Add centering cell
+    sliderRow.append("td").attr("width", `${sidebar}%`);
+  }
 
   // Add slider in merged cell
-  topRow
+  sliderRow
     .append("td")
     .attr("colspan", dates)
     .append("input")
@@ -56,17 +60,18 @@ export function makeSlider(containerID, minYear, maxYear) {
       state.quarter = Number(evt.target.value);
     });
 
-  // Add centering cell
-  topRow.append("td").attr("width", `${getCellWidthPercent()}%`);
+  if (sidebar > 0.2) {
+    // Add centering cell
+    sliderRow.append("td").attr("width", `${sidebar}%`);
+  }
 
   // Add grid under slider
-  const row = ticksTable.append("tr");
+  const tickerRow = ticksTable.append("tr").classed("ticker-row", true);
 
   /** Creates a set of equally sized ticker values */
   const createRowSelection = () => {
-    console.log("message");
-    row.selectAll("td").remove();
-    row
+    tickerRow.selectAll("td").remove();
+    tickerRow
       .selectAll("td")
       .data(d3.range(dates + 1))
       .enter()
@@ -74,7 +79,6 @@ export function makeSlider(containerID, minYear, maxYear) {
       .text((d) => d)
       .classed("time-selection-ticker", true)
       .classed("selected-slider-value", (d) => {
-        console.log(state.quarter, d, state.quarter === d);
         return state.quarter === d;
       })
       .attr("width", `${100 / (dates + 1)}%`);
