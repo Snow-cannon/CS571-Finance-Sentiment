@@ -3,6 +3,7 @@ import { makeOverview } from "./makeOverview.js";
 import queryData from "./makeQuery.js";
 import { makeSlider } from "./makeSlider.js";
 import { makeSelectionTable } from "./makeTable.js";
+import {makeBalanceSheetSenkey} from "./makeBalanceSheetSenkey.js"
 
 // ---------- Init ---------- //
 
@@ -40,3 +41,7 @@ makeSlider("slider_container", 2016, 2028);
 // ---------- Make Company Overview ---------- //
 
 makeOverview("company_overview");
+
+// ---------- Make Balance Sheet Senkey ---------- //
+
+makeBalanceSheetSenkey("balance_sheet_senkey");
