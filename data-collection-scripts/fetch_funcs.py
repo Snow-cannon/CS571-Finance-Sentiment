@@ -264,7 +264,6 @@ def fetch_cash_flow(ticker, api_key):
     
     return data
 
-
 def store_income_statement(income_data):
     """
     Stores income statement reports (both annual and quarterly) into the finance_db.
@@ -278,42 +277,38 @@ def store_income_statement(income_data):
 
     # Create table with a composite primary key (symbol, fiscalDateEnding, reportType)
     cursor.execute('''
-    CREATE TABLE IF NOT EXISTS income_statement (
-        symbol TEXT,
-        fiscalDateEnding TEXT,
-        reportType TEXT,
-        reportedCurrency TEXT,
-        operatingCashflow TEXT,
-        paymentsForOperatingActivities TEXT,
-        proceedsFromOperatingActivities TEXT,
-        changeInOperatingLiabilities TEXT,
-        changeInOperatingAssets TEXT,
-        depreciationDepletionAndAmortization TEXT,
-        capitalExpenditures TEXT,
-        changeInReceivables TEXT,
-        changeInInventory TEXT,
-        profitLoss TEXT,
-        cashflowFromInvestment TEXT,
-        cashflowFromFinancing TEXT,
-        proceedsFromRepaymentsOfShortTermDebt TEXT,
-        paymentsForRepurchaseOfCommonStock TEXT,
-        paymentsForRepurchaseOfEquity TEXT,
-        paymentsForRepurchaseOfPreferredStock TEXT,
-        dividendPayout TEXT,
-        dividendPayoutCommonStock TEXT,
-        dividendPayoutPreferredStock TEXT,
-        proceedsFromIssuanceOfCommonStock TEXT,
-        proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet TEXT,
-        proceedsFromIssuanceOfPreferredStock TEXT,
-        proceedsFromRepurchaseOfEquity TEXT,
-        proceedsFromSaleOfTreasuryStock TEXT,
-        changeInCashAndCashEquivalents TEXT,
-        changeInExchangeRate TEXT,
-        netIncome TEXT,
-        PRIMARY KEY (symbol, fiscalDateEnding, reportType)
-    )
-    ''')
-
+        CREATE TABLE IF NOT EXISTS income_statement (
+            symbol TEXT,
+            fiscalDateEnding TEXT,
+            reportType TEXT,
+            reportedCurrency TEXT,
+            grossProfit TEXT,
+            totalRevenue TEXT,
+            costOfRevenue TEXT,
+            costofGoodsAndServicesSold TEXT,
+            operatingIncome TEXT,
+            sellingGeneralAndAdministrative TEXT,
+            researchAndDevelopment TEXT,
+            operatingExpenses TEXT,
+            investmentIncomeNet TEXT,
+            netInterestIncome TEXT,
+            interestIncome TEXT,
+            interestExpense TEXT,
+            nonInterestIncome TEXT,
+            otherNonOperatingIncome TEXT,
+            depreciation TEXT,
+            depreciationAndAmortization TEXT,
+            incomeBeforeTax TEXT,
+            incomeTaxExpense TEXT,
+            interestAndDebtExpense TEXT,
+            netIncomeFromContinuingOperations TEXT,
+            comprehensiveIncomeNetOfTax TEXT,
+            ebit TEXT,
+            ebitda TEXT,
+            netIncome TEXT,
+            PRIMARY KEY (symbol, fiscalDateEnding, reportType)
+        )
+        ''')
     symbol = income_data.get('symbol', '')
 
     # Process both annual and quarterly reports
@@ -339,32 +334,29 @@ def store_income_statement(income_data):
                 fiscal_date,
                 report_type,
                 report.get("reportedCurrency", ""),
-                report.get("operatingCashflow", ""),
-                report.get("paymentsForOperatingActivities", ""),
-                report.get("proceedsFromOperatingActivities", ""),
-                report.get("changeInOperatingLiabilities", ""),
-                report.get("changeInOperatingAssets", ""),
-                report.get("depreciationDepletionAndAmortization", ""),
-                report.get("capitalExpenditures", ""),
-                report.get("changeInReceivables", ""),
-                report.get("changeInInventory", ""),
-                report.get("profitLoss", ""),
-                report.get("cashflowFromInvestment", ""),
-                report.get("cashflowFromFinancing", ""),
-                report.get("proceedsFromRepaymentsOfShortTermDebt", ""),
-                report.get("paymentsForRepurchaseOfCommonStock", ""),
-                report.get("paymentsForRepurchaseOfEquity", ""),
-                report.get("paymentsForRepurchaseOfPreferredStock", ""),
-                report.get("dividendPayout", ""),
-                report.get("dividendPayoutCommonStock", ""),
-                report.get("dividendPayoutPreferredStock", ""),
-                report.get("proceedsFromIssuanceOfCommonStock", ""),
-                report.get("proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet", ""),
-                report.get("proceedsFromIssuanceOfPreferredStock", ""),
-                report.get("proceedsFromRepurchaseOfEquity", ""),
-                report.get("proceedsFromSaleOfTreasuryStock", ""),
-                report.get("changeInCashAndCashEquivalents", ""),
-                report.get("changeInExchangeRate", ""),
+                report.get("grossProfit", ""),
+                report.get("totalRevenue", ""),
+                report.get("costOfRevenue", ""),
+                report.get("costofGoodsAndServicesSold", ""),
+                report.get("operatingIncome", ""),
+                report.get("sellingGeneralAndAdministrative", ""),
+                report.get("researchAndDevelopment", ""),
+                report.get("operatingExpenses", ""),
+                report.get("investmentIncomeNet", ""),
+                report.get("netInterestIncome", ""),
+                report.get("interestIncome", ""),
+                report.get("interestExpense", ""),
+                report.get("nonInterestIncome", ""),
+                report.get("otherNonOperatingIncome", ""),
+                report.get("depreciation", ""),
+                report.get("depreciationAndAmortization", ""),
+                report.get("incomeBeforeTax", ""),
+                report.get("incomeTaxExpense", ""),
+                report.get("interestAndDebtExpense", ""),
+                report.get("netIncomeFromContinuingOperations", ""),
+                report.get("comprehensiveIncomeNetOfTax", ""),
+                report.get("ebit", ""),
+                report.get("ebitda", ""),
                 report.get("netIncome", "")
             )
             rows_to_insert.append(row)
@@ -373,22 +365,15 @@ def store_income_statement(income_data):
             try:
                 cursor.executemany('''
                     INSERT INTO income_statement (
-                        symbol, fiscalDateEnding, reportType, reportedCurrency, operatingCashflow,
-                        paymentsForOperatingActivities, proceedsFromOperatingActivities,
-                        changeInOperatingLiabilities, changeInOperatingAssets,
-                        depreciationDepletionAndAmortization, capitalExpenditures,
-                        changeInReceivables, changeInInventory, profitLoss,
-                        cashflowFromInvestment, cashflowFromFinancing,
-                        proceedsFromRepaymentsOfShortTermDebt,
-                        paymentsForRepurchaseOfCommonStock, paymentsForRepurchaseOfEquity,
-                        paymentsForRepurchaseOfPreferredStock, dividendPayout,
-                        dividendPayoutCommonStock, dividendPayoutPreferredStock,
-                        proceedsFromIssuanceOfCommonStock,
-                        proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet,
-                        proceedsFromIssuanceOfPreferredStock, proceedsFromRepurchaseOfEquity,
-                        proceedsFromSaleOfTreasuryStock, changeInCashAndCashEquivalents,
-                        changeInExchangeRate, netIncome
-                    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+                        symbol, fiscalDateEnding, reportType, reportedCurrency, grossProfit,
+                        totalRevenue, costOfRevenue, costofGoodsAndServicesSold, operatingIncome,
+                        sellingGeneralAndAdministrative, researchAndDevelopment, operatingExpenses,
+                        investmentIncomeNet, netInterestIncome, interestIncome, interestExpense,
+                        nonInterestIncome, otherNonOperatingIncome, depreciation,
+                        depreciationAndAmortization, incomeBeforeTax, incomeTaxExpense,
+                        interestAndDebtExpense, netIncomeFromContinuingOperations,
+                        comprehensiveIncomeNetOfTax, ebit, ebitda, netIncome
+                    ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
                 ''', rows_to_insert)
                 conn.commit()
                 print(f"Inserted {len(rows_to_insert)} new income statement ({report_type}) records for {symbol}.")
