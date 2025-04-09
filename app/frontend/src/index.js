@@ -1,4 +1,5 @@
 import { PageState } from "./globalState.js";
+import { makeIntraday } from "./makeIntraday.js";
 import { makeOverview } from "./makeOverview.js";
 import queryData from "./makeQuery.js";
 import { makeSlider } from "./makeSlider.js";
@@ -40,3 +41,9 @@ makeSlider("slider_container", 2016, 2028);
 // ---------- Make Company Overview ---------- //
 
 makeOverview("company_overview");
+
+
+
+// ---------- Make Intraday Chart ---------- //
+
+makeIntraday("intraday-line-chart");
