@@ -87,7 +87,7 @@ router.post("/balance_sheet_senkey", async (req, res) => {
     const { symbol } = req.body;
 
     // Read the SQL query from the file
-    const queryPath = path.resolve("backend/sql_queries", "balance_sheet_senkey.sql");
+    const queryPath = path.resolve("backend/sql_queries", "balance_sheet_senkey2.sql");
     const query = fs.readFileSync(queryPath, "utf-8");
 
     // Execute the query
