@@ -12,17 +12,18 @@ import queryData from "./makeQuery.js";
 export async function makeBalanceSheetSenkey(containerID) {
   // Select the container element by its ID and clear any existing content.
   const container = d3.select(`#${containerID}`);
-  container.selectAll("*").remove();
-
+//   container.selectAll("*").remove();
+  container.selectAll("svg").remove();
+  container.selectAll("p").remove();
+  console.log(state.symbol);
   // Fetch the balance sheet data for the selected symbol.
   // This should return rows with columns: source, target, value.
-  const data = await queryData("balance_sheet_senkey", [state.symbol]);
+  const data = await queryData("balance_sheet_senkey", { symbol: state.symbol });
   if (!Array.isArray(data) || !data.length) {
     container
       .append("p")
       .text(`No balance sheet data available for ${state.symbol}`);
-    return;
-  }
+  } else {
 
   // Process the data into nodes and links.
   const nodes = Array.from(
@@ -118,7 +119,7 @@ export async function makeBalanceSheetSenkey(containerID) {
     .text((d) => d.name)
     .style("font-family", "Arial, sans-serif")
     .style("font-size", "12px");
-
+    }
   // Listener for symbol/state changes to update the diagram.
   const update = () => {
     state.removeListener(PageState.Events.SYMBOL, update);

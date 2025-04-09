@@ -40,8 +40,8 @@ WITH bs AS (
     commonStock,
     commonStockSharesOutstanding
   FROM balance_sheet
-  WHERE symbol = 'AAPL'
-    AND fiscalDateEnding = '2024-09-30'
+  WHERE symbol = ?
+    AND fiscalDateEnding like '2024%'
     AND reportType = 'annual'
     AND reportedCurrency = 'USD'
   LIMIT 1
