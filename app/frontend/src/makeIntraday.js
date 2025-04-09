@@ -30,6 +30,7 @@ export async function makeIntraday(containerID) {
     datetime: new Date(d.datetime),
     close: +d.close,
   }));
+  console.log(parsedData);
 
    // Set dimensions and margins for the chart
    const margin = { top: 20, right: 30, bottom: 30, left: 50 };
@@ -60,7 +61,7 @@ export async function makeIntraday(containerID) {
    svg
      .append("g")
      .attr("transform", `translate(0,${height})`)
-     .call(d3.axisBottom(x).ticks(10).tickFormat(d3.timeFormat("%H:%M")));
+     .call(d3.axisBottom(x).ticks(10).tickFormat(d3.utcFormat("%y-%b")));
  
    // Add Y axis
    svg.append("g").call(d3.axisLeft(y));
