@@ -19,7 +19,7 @@ After initializing the selection table, we realized we needed a way to update al
 
 ## Data Collection
 
-***Section for describing data collection***
+**_Section for describing data collection_**
 
 ## Date Slider
 
@@ -77,5 +77,46 @@ We will add more information as we go, but it displays all entries from the SQL 
 
 ![Company Overview](./screenshots/company-overview/co-initial.png)
 
-We will also aim for a better, more defined color scheme in the future, but for now we have a functional prototype. 
+We will also aim for a better, more defined color scheme in the future, but for now we have a functional prototype.
 
+## Speedometer
+
+This visual represents a key metric of the selected company, by using a semi-circular dial to show the sentiment of the particular company based on news articles.
+
+### Initial Design
+
+We created a dynamic gauge using D3, where the needle rotates to point to the value corresponding to the current company’s sentiment. The value range is divided into five color-coded sections to indicate performance zones: red (low), orange (moderate low), yellow(neutral), light green (moderate high), and green (high).
+
+![Speedometer ](ProcessBook/screenshots/speedometer/speedometer-initial.png)
+
+## Bubble chart
+
+This visual shows multiple company sectors as bubbles, where the size and color of each bubble indicate the magnitude and category of the sector.
+
+### Initial Design
+
+We used d3.pack() to generate non-overlapping bubbles. Each bubble represents a metric (like Revenue, Profit, etc.), with its size scaled based on the value of that metric. We categorized each value into one of four groups and assigned them colors: Green for high values, Light green for moderately high values, Light red for moderately low values & Red for low values
+
+![bubbleChart ](ProcessBook/screenshots/bubbleChart/bc-initial.png)
+
+## Word Cloud (optional feature)
+
+This visual displays prominent keywords associated with the selected company in a cloud layout from the news articles published for each company.
+
+### Initial Design
+
+We created a word cloud using D3, with font sizes mapped to the importance or frequency of each term. The more significant the word, the larger and bolder it appears.
+
+This chart listens to the global symbol state and updates accordingly. For the prototype, we are currently using static/mock data, but it is set up to integrate with dynamic keyword generation based on backend values.
+
+![wordCloud ](ProcessBook/screenshots/wordCloud/wc-initial.png)
+
+## Radar Chart (optional feature)
+
+This visual compares sector-wise cash flow distribution for the selected company.
+
+### Initial Design
+
+We implemented the radar chart using radial lines and concentric circles to represent six key sectors. Each axis represents a sector, and the values (normalized between 0 and 1) form a closed polygon representing the distribution of cash flow across those sectors.
+
+![radarChart ](ProcessBook/screenshots/radarChart/rc-initial.png)
