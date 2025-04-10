@@ -80,4 +80,28 @@ router.post("/overview", async (req, res) => {
   }
 });
 
+// Return the table schema
+router.post("/intraday", async (req, res) => {
+  try {
+    // Get table parameter
+    const { symbol } = req.body;
+
+    // Execute the query and get the result
+    const result = await db.query(
+      `SELECT datetime, close
+      FROM company_intraday_data
+      WHERE symbol = ?
+      order by datetime ASC`,
+      [symbol]
+    );
+
+    // Send JSON result
+    res.json(result);
+  } catch (err) {
+    // Handle any errors
+    console.error("Error executing query:", err);
+    res.status(500).json({ error: "An error occurred while querying the database." });
+  }
+});
+
 export default router;
