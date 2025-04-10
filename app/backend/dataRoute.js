@@ -101,4 +101,24 @@ router.post("/balance_sheet_senkey", async (req, res) => {
   }
 });
 
+router.post("/cash_flow_senkey", async (req, res) => {
+  
+  try {
+    const { symbol } = req.body;
+
+    // Read the SQL query from the file
+    const queryPath = path.resolve("backend/sql_queries", "cash_flow_senkey.sql");
+    const query = fs.readFileSync(queryPath, "utf-8");
+
+    // Execute the query
+    const result = await db.query(query, [symbol]);
+
+    // Send the result as JSON
+    res.json(result);
+  } catch (err) {
+    console.error("Error executing query:", err, { body: req.body });
+    res.status(500).json({ error: "An error occurred while querying the database." });
+  }
+});
+
 export default router;

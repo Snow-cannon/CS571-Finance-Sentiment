@@ -4,6 +4,7 @@ import queryData from "./makeQuery.js";
 import { makeSlider } from "./makeSlider.js";
 import { makeSelectionTable } from "./makeTable.js";
 import {makeBalanceSheetSenkey} from "./makeBalanceSheetSenkey.js"
+import { makeCashFlowSenkey } from "./makeCashFlowSenkey.js";
 
 // ---------- Init ---------- //
 
@@ -45,3 +46,7 @@ makeOverview("company_overview");
 // ---------- Make Balance Sheet Senkey ---------- //
 
 makeBalanceSheetSenkey("balance_sheet_senkey");
+
+// ---------- Make Cash Flow Senkey ---------- //
+
+makeCashFlowSenkey("cash_flow_senkey");
