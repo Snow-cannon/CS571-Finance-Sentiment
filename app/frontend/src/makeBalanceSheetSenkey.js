@@ -143,6 +143,7 @@ export async function makeBalanceSheetSenkey(containerID) {
   // Listener for symbol/state changes to update the diagram.
   const update = () => {
     state.removeListener(PageState.Events.SYMBOL, update);
+    console.log("Updating balance sheet");
     makeBalanceSheetSenkey(containerID);
   };
   state.addListener(PageState.Events.SYMBOL, update);
