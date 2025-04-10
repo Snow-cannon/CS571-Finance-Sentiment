@@ -6,6 +6,7 @@ import { makeSelectionTable } from "./makeTable.js";
 import { makeWordCloud } from "./makeWordCloud.js";
 import { makeSpeedometer } from "./makeSpeedometer.js";
 import { makeBubbleChart } from "./makeBubbleChart.js";
+import { makeRadarChart } from "./makeRadarChart.js";
 
 // ---------- Init ---------- //
 
@@ -55,3 +56,7 @@ makeSpeedometer("speedometer");
 // ---------- Make Bubble Chart ---------- //
 
 makeBubbleChart("bubble-container");
+
+// ---------- Make Radar Chart ---------- //
+
+makeRadarChart("radar-container");
