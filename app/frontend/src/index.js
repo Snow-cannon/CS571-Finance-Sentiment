@@ -5,6 +5,7 @@ import { makeSlider } from "./makeSlider.js";
 import { makeSelectionTable } from "./makeTable.js";
 import { makeWordCloud } from "./makeWordCloud.js";
 import { makeSpeedometer } from "./makeSpeedometer.js";
+import { makeBubbleChart } from "./makeBubbleChart.js";
 
 // ---------- Init ---------- //
 
@@ -50,3 +51,7 @@ makeWordCloud("wordcloud");
 // ---------- Make Speedometer ---------- //
 
 makeSpeedometer("speedometer");
+
+// ---------- Make Bubble Chart ---------- //
+
+makeBubbleChart("bubble-container");
