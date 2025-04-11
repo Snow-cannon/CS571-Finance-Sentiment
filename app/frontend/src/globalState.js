@@ -143,7 +143,9 @@ export class PageState {
       return;
     }
 
+    const derefCallbacks = [...callbacks];
+
     // Call all cakkbacks
-    callbacks.forEach((callback) => callback());
+    derefCallbacks.forEach((callback) => callback());
   }
 }
