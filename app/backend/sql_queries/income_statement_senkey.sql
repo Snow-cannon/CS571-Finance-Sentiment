@@ -1,3 +1,38 @@
+/* Citation: 
+"Now help me do something similar for the income statement. I have a income statement with the following columns: 
+  symbol,
+  fiscalDateEnding,
+  reportType,
+  reportedCurrency,
+  totalRevenue,
+  grossProfit,
+  costOfRevenue,
+  costofGoodsAndServicesSold,
+  operatingIncome,
+  sellingGeneralAndAdministrative,
+  researchAndDevelopment,
+  operatingExpenses,
+  investmentIncomeNet,
+  netInterestIncome,
+  interestIncome,
+  interestExpense,
+  nonInterestIncome,
+  otherNonOperatingIncome,
+  depreciation,
+  depreciationAndAmortization,
+  incomeBeforeTax,
+  incomeTaxExpense,
+  interestAndDebtExpense,
+  netIncomeFromContinuingOperations,
+  comprehensiveIncomeNetOfTax,
+  ebit,
+  ebitda,
+  netIncome
+help me prepare data in a sql query that I can use for this graph"
+prompt. ChatGPT, 9 April version, OpenAI, 9 April 2025, chat.openai.com.
+*/
+
+
 WITH inc AS (
   SELECT
     symbol,

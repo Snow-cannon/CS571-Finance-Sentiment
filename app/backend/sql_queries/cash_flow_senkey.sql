@@ -1,3 +1,39 @@
+/* Citation: 
+"Now help me do something similar for the cash flow statement. I have a cash flow statement with the following columns: symbol,
+    fiscalDateEnding,
+    reportType,
+    reportedCurrency,
+    operatingCashflow,
+    paymentsForOperatingActivities,
+    proceedsFromOperatingActivities,
+    changeInOperatingLiabilities,
+    changeInOperatingAssets,
+    depreciationDepletionAndAmortization,
+    capitalExpenditures,
+    changeInReceivables,
+    changeInInventory,
+    profitLoss,
+    cashflowFromInvestment,
+    cashflowFromFinancing,
+    proceedsFromRepaymentsOfShortTermDebt,
+    paymentsForRepurchaseOfCommonStock,
+    paymentsForRepurchaseOfEquity,
+    paymentsForRepurchaseOfPreferredStock,
+    dividendPayout,
+    dividendPayoutCommonStock,
+    dividendPayoutPreferredStock,
+    proceedsFromIssuanceOfCommonStock,
+    proceedsFromIssuanceOfLongTermDebtAndCapitalSecuritiesNet,
+    proceedsFromIssuanceOfPreferredStock,
+    proceedsFromRepurchaseOfEquity,
+    proceedsFromSaleOfTreasuryStock,
+    changeInCashAndCashEquivalents,
+    changeInExchangeRate,
+    netIncome,
+help me prepare data in a sql query that I can use for this graph"
+prompt. ChatGPT, 9 April version, OpenAI, 9 April 2025, chat.openai.com.
+*/
+
 WITH cf AS (
   SELECT 
     symbol,

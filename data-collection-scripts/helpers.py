@@ -21,10 +21,6 @@ def disconnect_nordvpn():
     if result.returncode != 0:
         print("Error disconnecting:", result.stderr)
 
-# # Example usage
-# connect_nordvpn('United_States')
-# # Do your proxy requests here...
-
 # save as alpha_vantage_keygen.py
 
 

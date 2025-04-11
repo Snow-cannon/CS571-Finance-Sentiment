@@ -1,3 +1,10 @@
+/* Citation: 
+"How to create a Sankey diagram using D3.js?"
+prompt. ChatGPT, 9 April version, OpenAI, 9 April 2025, chat.openai.com.
+*/
+
+
+
 import * as d3 from "d3";
 import { sankey, sankeyLinkHorizontal } from "d3-sankey";
 import { state } from "./index.js";

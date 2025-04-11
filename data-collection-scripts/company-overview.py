@@ -7,31 +7,24 @@ import time
 from dotenv import load_dotenv
 
 
-# Load environment variables from .env file
 load_dotenv()
 
-# Get API keys from environment variable and split into a list
 api_keys = os.getenv('API_KEY_ALPHAVANTAGE_sbabel_umass_edu', '').split(',')
 if not api_keys or api_keys[0] == '':
     raise ValueError("No API keys found in the environment variable 'API_KEYS'.")
 
-# Function to get the current API key based on index
 current_key_index = 0
 def get_current_api_key():
     return api_keys[current_key_index].strip()
-
-# Function to rotate to the next API key
 def rotate_api_key():
     global current_key_index
     current_key_index = (current_key_index + 1) % len(api_keys)
     print(f"Rotated to new API key: {get_current_api_key()}")
 
-# Read tickers from the text file (a single line with comma-separated tickers)
 with open('../data/top60tickers.txt', 'r') as f:
     content = f.read().strip()
     tickers = [ticker.strip().strip("'").strip('"') for ticker in content.split(',') if ticker.strip()]
 
-# Connect to SQLite database and create a table for company overviews
 conn = sqlite3.connect('company_overview.db')
 cursor = conn.cursor()
 
@@ -106,7 +99,6 @@ for ticker in tickers:
         current_key = get_current_api_key()
         overview = fetch_company_overview(ticker, current_key)
 
-        # Check if valid data was returned
         if overview != 'no data':
             overview_arr.append(overview)
             success = True
@@ -116,7 +108,6 @@ for ticker in tickers:
             attempts += 1
             disconnect_nordvpn()
             connect_nordvpn()
-            # time.sleep(12)  # Respect API rate limit
 
     if not success:
         print(f"Skipping {ticker} after trying all API keys.")

@@ -1,3 +1,5 @@
+//Took inspiration of code from the hw3 code
+
 import { PageState } from "./globalState.js";
 import { state } from "./index.js";
 import queryData from "./makeQuery.js";
