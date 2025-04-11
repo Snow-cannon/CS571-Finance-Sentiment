@@ -9,8 +9,8 @@ import { makeCashFlowSenkey } from "./makeCashFlowSenkey.js";
 import { makeIncomeStatementSenkey } from "./makeIncomeStatementSenkey.js";
 import { makeWordCloud } from "./makeWordCloud.js";
 import { makeSpeedometer } from "./makeSpeedometer.js";
-import { makeWordCloud } from "./makeWordCloud.js";
-import { makeSpeedometer } from "./makeSpeedometer.js";
+import { makeBubbleChart } from "./makeBubbleChart.js";
+import { makeRadarChart } from "./makeRadarChart.js";
 
 // ---------- Init ---------- //
 
