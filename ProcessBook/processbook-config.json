@@ -1,0 +1,10 @@
+{
+	"stylesheet": ["../ProcessBook/processbook.css"],
+	"body_class": "markdown-body",
+	"pdf_options": {
+		"format": "A5",
+		"margin": "15mm 15mm",
+		"printBackground": true
+	},
+	"stylesheet_encoding": "utf-8"
+}
