@@ -19,7 +19,52 @@ After initializing the selection table, we realized we needed a way to update al
 
 ## Data Collection
 
-**_Section for describing data collection_**
+### Data Sources and Collection
+
+We collected our financial data primarily from the [Alpha Vantage API](https://www.alphavantage.co/). The website provided us with a diverse range of financial information including company overviews, financial statements -income statements, cash flows, balance sheets-, stock prices, news articles and sentiments attached to the company. We developed a data collection pipeline in python to fetch, process and store the collected data.
+
+### Collection Infrastructure
+
+We implemented several strategies to overcome the API rate limitations of 25 calls per day potentially by adding waits between api calls, and automating generation of new api keys when needed.
+1. **API Key Management** : We have a key management python class that can generate, store, rotate and use API keys when needed.
+2. **Retry Logic** : We have implemented retry mechnasims by waiting / rotating to new key / generating another key in our fetch data functions.
+
+### Data Types Collected
+
+We have collected several types of financial data.
+
+1. **Symbols** : We created a list of top 60 companies based on Market Cap that we are doing all the data collection for.
+1. **Company Overview** : Basic company information that includes symbol, name, description, sector, industry, market cap, etc.
+
+2. **Financial Statements** : We collected the below in quarterly and annualy basis 
+    - Income Statements
+    - Balance Sheets
+    - Cash Flow 
+3. **Stock Price** : Intraday prices at 60 minute intervals, collected for years 2016 to 2025
+
+4. **News Articles** : We collected news articles with the market sentiment scores for the 60 companies. 
+
+### Data Processing and Storage
+
+The steps for data collection were:
+
+1. Check to see if the data for that symbol already exists.
+1. If the data does not exist, fetch the data by calling the api with correct parameters.
+1. Store the data in the corresponding sql table in a SQLite database called `finance_data.db`.
+1. For analysis and backup, we also exported our tables as csv files. 
+
+Our `finance_data.db` contains tables : 
+`company_overview`, `company_intraday_data`, `balance_sheet`, , `income_statement`, `cash_flow`, `news_articles`, `news_ticker_sentiment`
+
+### Data Cleaning
+
+Before we store the data in the database, we perform certain preprocessing on it:
+- Handling missing values by puting them as `null` 
+- Ensuring proper data formatting for time series data
+- Have correct primary and foreign for our sql tables.
+
+
+This comprehensive dataset provides the foundation for our project, enabling the analysis across multiple features including financial performance, market sentiment, and stock price movement.
 
 ## Date Slider
 
