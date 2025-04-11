@@ -185,7 +185,10 @@ This visual shows multiple company sectors as bubbles, where the size and color 
 
 We used d3.pack() to generate non-overlapping bubbles. Each bubble represents a metric (like Revenue, Profit, etc.), with its size scaled based on the value of that metric. We categorized each value into one of four groups and assigned them colors: Green for high values, Light green for moderately high values, Light red for moderately low values & Red for low values
 
-![bubbleChart ](/ProcessBook/screenshots/bubbleChart/bc-initial.png)
+<center>
+<img src="/ProcessBook/screenshots/bubbleChart/bc-initial.png" style="width: 50%; height: auto%;" />
+</center>
+
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
@@ -227,7 +230,11 @@ This visual compares sector-wise cash flow distribution for the selected company
 
 We implemented the radar chart using radial lines and concentric circles to represent six key sectors. Each axis represents a sector, and the values (normalized between 0 and 1) form a closed polygon representing the distribution of cash flow across those sectors.
 
-![radarChart ](/ProcessBook/screenshots/radarChart/rc-initial.png)
+<center>
+<img src="/ProcessBook/screenshots/radarChart/rc-initial.png" style="width: 50%; height: auto%;" />
+</center>
+
+The text size on the radar chart will need to be increased for readability and scale, and the current variables on the radar chart will likely need to be updated and modified to better fit the data once we collect it.
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
@@ -247,24 +254,30 @@ The data for the cash flow graph is computed on the backend. We use an SQL query
 To make the visual, we utilized the `d3-sankey` library. This library takes a particular data input format which we used as the output format of our previously described SQL query.
 
 <!-- Page Break in PDF -->
-<!-- <div style="page-break-before: always;"></div> -->
+<div style="page-break-before: always;"></div>
 
 ### Cash Flow Chart
 
 <center>
-<img src="/ProcessBook/screenshots/cash-flow/cash-flow-initial.png" style="width: 100%; height: auto;" />
+<img src="/ProcessBook/screenshots/cash-flow/cash-flow-initial.png" style="width: 80%; height: auto;" />
 </center>
+
+<!-- Page Break in PDF -->
+<!-- <div style="page-break-before: always;"></div> -->
 
 ### Balance Sheet Chart
 
 <center>
-<img src="/ProcessBook/screenshots/balance-sheet/balance-sheet-initial.png" style="width: 100%; height: auto;" />
+<img src="/ProcessBook/screenshots/balance-sheet/balance-sheet-initial.png" style="width: 80%; height: auto;" />
 </center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
 
 ### Income Statement Chart
 
 <center>
-<img src="/ProcessBook/screenshots/income-statement/income-statement-initial.png" style="width: 100%; height: auto;" />
+<img src="/ProcessBook/screenshots/income-statement/income-statement-initial.png" style="width: 80%; height: auto;" />
 </center>
 
 The sankey graphs do contain all of the necessary data, and they do update with the global state on a change of the currently selected company. However we have not set up the date slider to update with real dates, and as such we are assuming a constant date with a company symbol as the sole parameter.
@@ -286,7 +299,7 @@ The initial design we went with was to not worry about how the visuals were conn
 
 This design is obviously heavily flawed. When updating the selections at the top, you cannot view the changes without a lot of scrolling. To improve this, we need to add side-by-side visuals such as the speedometer and word cloud, and the company overview with the stock graph. Additionally, we want to combine the sankey diagrams into a single div that will be able to be swapped between with a selection box. This will vastly reduce clutter and user frustration from the current design.
 
-However for designing individual visuals, this approach allowed us to focus on the visuals over the webpage for now, and therefore the design accomplished its task.
+However for designing individual visuals prior to working with the entire context of the page, this approach allowed us to focus on the visuals over the webpage for now, and therefore the design accomplished its task.
 
 [Complete Page](#first-full-page)
 
@@ -296,5 +309,5 @@ However for designing individual visuals, this approach allowed us to focus on t
 ### First Full Page
 
 <center>
-<img src="/ProcessBook/screenshots/complete-webpage/complete-page-1.png" style="width: 30%; height: auto%;" />
+<img src="/ProcessBook/screenshots/complete-webpage/complete-page-1.png" style="width: 30%; height: auto;" />
 </center>
