@@ -9,7 +9,7 @@
     "start": "node ./backend/server.js",
     "watch": "webpack --mode development",
     "bundle": "webpack --mode production",
-    "book": "npx md-to-pdf ../ProcessBook/ProcessBook.md --basedir .."
+    "book": "npx md-to-pdf ../ProcessBook/ProcessBook.md --basedir .. --config-file ../ProcessBook/processbook-config.json"
   },
   "repository": {
     "type": "git",
@@ -26,8 +26,8 @@
   "dependencies": {
     "cors": "2.8.5",
     "d3": "7.9.0",
-    "d3-sankey": "^0.12.3",
     "d3-cloud": "^1.2.7",
+    "d3-sankey": "^0.12.3",
     "express": "5.1.0",
     "sqlite": "5.1.1",
     "sqlite3": "5.1.7"

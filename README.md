@@ -1,69 +1,45 @@
-# CS571-Finance-Sentiment
+# CS571 Finance Sentiment
 
-Final project for CS571 focused on financial statements and news sentiment
+Final project for CS571 focused on financial statements and news sentiment of 60 companies from different sectors.
 
 ## Repository Structure
 
 All development and commands should run from within the `app` folder.
 
-Project proposal is the the `Proposal` folder.
+Project proposal is the the `Proposal` folder (see [`ProjectProposalAnd5PDS.pdf`](./Proposal/ProjectProposalAnd5PDS.pdf)).
 
-Process book is in the `ProcessBook` folder.
+Process book is in the `ProcessBook` folder (see [`ProcessBook.pdf`](./ProcessBook/ProcessBook.pdf)).
 
 ## Development Instructions
 
 Prerequisites:
 - [NodeJS](https://nodejs.org/en/download)
 
-### Setup
+### Starting Services
 
-Navigate to the `app` folder in your terminal and install all required node modules by running:
+To run the website after just downloading the repository, run the following scripts and then navigate to `localhost:3000` in your preferred browser.
 
 ```bash
+cd app # Node env is located in the app folder
 npm i
+npm run dev
 ```
 
-### Building
-
-The compiled frontend is not in the git repo, and must be built to use the frontend. Run the following script to compile the app.
-
-```bash
-npm run build
-```
-
-### Structure
-
-The server and all related files are in the `backend` folder as described below:
-- `server.js`: The root server file. Servers the base HTML page and related static files
-- `dataRoute.js`: The router that serves static CSV data from the `data` folder
-
-The frontend is stored in the `frontend` folder. In the frontend we have the following folder structure:
-- `public`: Contains all statically served files. `html` and `css` store their respective files, while `dist` is the folder containing the built JS, which also gets statically served.
-- `src`: This is the folder where JS gets developed. `index.js` is the root file that webpack builds from, and all other files go through the root.
-
-### Developing
-
-To develop on the app, you can update the server from the `backend` folder and the frontend from any folder other than `dist`, as that will get ignored / overwritten.
-
-To speed up development, there is a script that will auto-build the frontend after you edit it and auto-restart the server when you edit it:
+In the future, once dependencies are installed, you can run the `run dev` command instead to restart the website.
 
 ```bash
 npm run dev
 ```
 
-This will allow you to modify your scripts and see the updates live as you work all from one terminal, and you can close it with `Ctrl+c` like normal.
+### Structure
 
-If you want to run them seperately, you can run the following to run the frontend development
+The server and all related files are in the `backend` folder as described below:
+- `server.js`: The root server file. Servers the base HTML page and related static files.
+- `dataRoute.js`: The router that serves SQL data from the database stored within the `data` folder.
 
-```bash
-npm run watch
-```
-
-and the following to run the server development:
-
-```bash
-npm run dev-server
-```
+The frontend is stored in the `frontend` folder. In the frontend we have the following folder structure:
+- `public`: Contains all statically served files. `html` and `css` store their respective files, while `dist` is the folder containing the built JS, which also gets statically served.
+- `src`: This is the folder where JS gets developed. `index.js` is the root file that webpack builds from, and all other files go through the root.
 
 ### Styling
 
@@ -71,14 +47,16 @@ To prevent styling mismatches, there is also a `.prettierrc` file that enforces 
 
 ### Process Book
 
+The process book is a `.md` file that gets converted to `html` and then directly to `pdf`. The CSS file provided is a modified version of the default VSCode markdown CSS file, providing a clean design for the final product.
+
 The process book is set up so each visual and each major section (data processing / server APIs) are under a `##` heading. At the top of the file we are using a table of contents, and each heading is linked from there.
 
 There is a screenshot folder `screenshots` where each subfolder contains images of the related visual that can be referenced from the process book file.
 
-To build the process book into a `PDF` file, run the following command:
+To build the process book `.md` file into a `PDF` file, run the following command:
 
 ```bash
 npm run book
 ```
 
-The resulting PDF is what will be submitted for grading.
+The resulting PDF, [`ProcessBook.pdf`](./ProcessBook/ProcessBook.pdf), is what will be submitted for grading.
