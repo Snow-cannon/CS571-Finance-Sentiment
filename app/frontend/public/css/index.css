@@ -2,6 +2,48 @@ body {
   background-color: rgb(255, 255, 255);
 }
 
+/* Top-level-grid */
+
+#grid-wrapper {
+  display: grid;
+  grid-template-areas:
+    "speedometer selection"
+    "overview stocks"
+    "cash cash";
+  grid-template-columns: 2fr 2fr;
+  grid-template-rows: 2fr 2fr 2fr 2fr;
+  gap: 5px;
+  padding: 5px;
+}
+
+#grid-wrapper > #selection_table {
+  grid-area: selection;
+}
+
+#grid-wrapper > #company_overview {
+  grid-area: overview;
+}
+
+#grid-wrapper > #intraday-line-chart {
+  grid-area: stocks;
+}
+
+#grid-wrapper > #balance_sheet_senkey {
+  grid-area: cash;
+}
+
+#grid-wrapper > #cash_flow_senkey {
+  grid-area: cash;
+}
+
+#grid-wrapper > #income_statement_senkey {
+  grid-area: cash;
+}
+
+#grid-wrapper > #speedometer {
+  grid-area: speedometer;
+}
+
 /* Company Selection Table */
 
 .symbol-selection-table {
@@ -44,7 +86,7 @@ body {
 
 .symbol-selection-table tbody {
   display: block;
-  height: 200px;
+  height: inherit;
   overflow: auto;
 }
 
