@@ -67,8 +67,8 @@ router.post("/overview", async (req, res) => {
 
     // Execute the query and get the result
     const result = await db.query(
-      // `SELECT Symbol, Name, Description, Country, Sector, Industry FROM company_overview WHERE Symbol = :symbol`,
-      `SELECT Symbol, Name, Sector FROM company_overview WHERE Symbol = ?`,
+      `SELECT Symbol, Name, Description, Country, Sector, Industry FROM company_overview WHERE Symbol = ?`,
+      // `SELECT Symbol, Name, Sector FROM company_overview WHERE Symbol = ?`,
       [symbol]
     );
 

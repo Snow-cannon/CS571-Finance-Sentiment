@@ -1,8 +1,31 @@
 /* Company Overview */
 
 .overview-container {
+  position: relative;
   border: 2px solid #d2b5db;
   border-radius: 5px;
-  padding-left: 5px;
   background-color: rgb(253, 205, 255);
+  display: flex;
+  flex-direction: column;
+  padding: 0px 10px;
+}
+
+.overview-container > h3 {
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  margin: 0;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background-color: #8f43a7;
+  color: white;
+  box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+#overview-details {
+  height: 100%;
+  overflow: auto;
 }
