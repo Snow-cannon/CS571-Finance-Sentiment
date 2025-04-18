@@ -4,7 +4,7 @@ import { makeOverview } from "./makeOverview.js";
 import queryData from "./makeQuery.js";
 import { makeSlider } from "./makeSlider.js";
 import { makeSelectionTable } from "./makeTable.js";
-import {makeBalanceSheetSenkey} from "./makeBalanceSheetSenkey.js"
+import { makeBalanceSheetSenkey } from "./makeBalanceSheetSenkey.js";
 import { makeCashFlowSenkey } from "./makeCashFlowSenkey.js";
 import { makeIncomeStatementSenkey } from "./makeIncomeStatementSenkey.js";
 import { makeWordCloud } from "./makeWordCloud.js";
@@ -34,7 +34,7 @@ const selectRow = (obj) => {
 };
 
 // Make an instance of the selection table
-makeSelectionTable("selection_table", queryTableData, {
+makeSelectionTable("table-wrapper", queryTableData, {
   sortby: "Symbol",
   asc: false,
   selectRow: selectRow,
@@ -47,9 +47,7 @@ makeSlider("slider_container", 2016, 2028);
 
 // ---------- Make Company Overview ---------- //
 
-makeOverview("company_overview");
-
-
+makeOverview("overview-details");
 
 // ---------- Make Intraday Chart ---------- //
 

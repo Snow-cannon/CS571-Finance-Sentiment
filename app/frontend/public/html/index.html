@@ -1,25 +1,35 @@
 <!DOCTYPE html>
 <head>
-  <link href="../css/index.css" rel="stylesheet" />
+  <link href="../css/root.css" rel="stylesheet" />
+  <link href="../css/selection-table.css" rel="stylesheet" />
+  <link href="../css/slider.css" rel="stylesheet" />
+  <link href="../css/overview.css" rel="stylesheet" />
 </head>
 <body>
-  <div id="selection_table">
-    <center>
-      <h3>Company Selection Table</h3>
-    </center>
+  <center>
+    <h3>Finance Sentiment Comparisons</h3>
+  </center>
+  <div id="grid-wrapper">
+    <div id="selection_table">
+      <div id="table-wrapper"></div>
+      <div id="slider_container"></div>
+    </div>
+    <div id="company_overview" class="overview-container">
+      <h3>Company Overview</h3>
+      <div id="overview-details"></div>
+    </div>
+    <div id="intraday-line-chart"></div>
+    <div id="slider_container"></div>
+    <div id="balance_sheet_senkey"></div>
+    <div id="cash_flow_senkey"></div>
+    <div id="income_statement_senkey"></div>
+    <!-- <div id="news-results"> -->
+      <div id="speedometer"></div>
+      <div id="wordcloud"></div>
+    <!-- </div> -->
+    <!-- <div id="bubble-container"></div> -->
+    <!-- <div id="radar-container"></div> -->
   </div>
-  <div id="slider_container"></div>
-  <div id="company_overview" class="overview-container">
-    <h3>Company Overview</h3>
-  </div>
-  <div id="intraday-line-chart"></div>
-  <div id="balance_sheet_senkey"></div>
-  <div id="cash_flow_senkey"></div>
-  <div id="income_statement_senkey"></div>
-  <div id="wordcloud"></div>
-  <div id="speedometer"></div>
-  <div id="bubble-container"></div>
-  <div id="radar-container"></div>
 
   <!-- Load bundled script -->
   <script src="dist/frontend.js"></script>

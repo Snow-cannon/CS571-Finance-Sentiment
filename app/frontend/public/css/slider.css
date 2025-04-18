@@ -1,0 +1,31 @@
+/* Slider */
+
+.slider_container {
+  width: 100%;
+}
+
+.slider_table_wrapper {
+  width: 100%;
+}
+
+.ticker-row {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.time-selection-ticker {
+  color: rgb(156, 156, 156);
+  text-align: center;
+}
+
+.selected-slider-value {
+  color: black;
+  background-color: #dccedd;
+  text-align: center;
+  border-radius: 3px;
+}
+
+input[type="range"] {
+  width: 100%;
+}
