@@ -48,7 +48,7 @@ router.post("/table_schema", async (req, res) => {
 router.get("/symbols", async (req, res) => {
   try {
     // Execute the query and get the result
-    const result = await db.query(`SELECT Symbol, Name, Sector FROM company_overview`);
+    const result = await db.query(`SELECT Symbol, Name, Sector, Industry FROM company_overview`);
 
     // Send JSON result
     res.json(result);

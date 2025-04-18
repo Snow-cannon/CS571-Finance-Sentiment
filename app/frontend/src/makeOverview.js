@@ -29,7 +29,7 @@ export async function makeOverview(containerID) {
       .data(Object.entries(data[0]))
       .enter()
       .append("p")
-      .text((d) => `${d[0]}: ${d[1]}`)
+      .html((d) => `<span class="title">${d[0]}: </span>${d[1]}`)
       .exit();
   }
 
