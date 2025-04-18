@@ -10,83 +10,55 @@ import * as d3 from "d3";
  */
 export function makeSlider(containerID, minYear, maxYear) {
   // Make 1 quarter per year, inclusive of final year
-  const dates = 4 * (maxYear - minYear + 1);
+  const dates = 5 * (maxYear - minYear + 1);
 
   // Container
   const container = d3.select(`#${containerID}`);
-  const sliderTable = container.append("table").classed("slider_table_wrapper", true);
-  const ticksTable = container.append("table").classed("slider_table_wrapper", true);
 
-  // TODO: Make non-linear / decide count and make look good
-  const interpolate = (x) => {
-    // Visual testing provided initial values to interpolate between
-    const x1 = 28;
-    const y1 = 0.2;
-    const x2 = 4;
-    const y2 = 0.375;
+  // Clear old data
+  container.selectAll("input").remove();
+  container.selectAll("svg").remove();
 
-    // Interpolate between initial values based on input value
-    return y1 + ((x - x1) * (y2 - y1)) / (x2 - x1);
-  };
+  // Get width of parent box
+  const width = container.node().getBoundingClientRect().width;
 
-  const getCellWidthPercent = () => {
-    // Get width percentage based on interpolated values from new date count
-    return (100 / dates) * interpolate(dates);
-  };
-
-  // Add slider wrapped table row
-  const sliderRow = sliderTable.append("tr");
-
-  const sidebar = getCellWidthPercent();
-
-  if (sidebar > 0.2) {
-    // Add centering cell
-    sliderRow.append("td").attr("width", `${sidebar}%`);
-  }
-
-  // Add slider in merged cell
-  sliderRow
-    .append("td")
-    .attr("colspan", dates)
+  // Add slider object
+  const slider = container
     .append("input")
     .attr("type", "range")
     .attr("min", 0)
-    .attr("max", dates)
-    .attr("step", 1)
+    .attr("max", dates - 1)
+    .attr("step", 1);
 
-    // TODO: Correct for true date values
-    .attr("value", 0)
-    .on("input", (evt) => {
-      state.quarter = Number(evt.target.value);
-    });
+  // Add svg
+  const svg = container.append("svg");
 
-  if (sidebar > 0.2) {
-    // Add centering cell
-    sliderRow.append("td").attr("width", `${sidebar}%`);
-  }
+  const xScale = d3
+    .scaleLinear()
+    .domain([0, dates - 1]) // from 0 to the last index
+    .range([5, width - 5]);
 
-  // Add grid under slider
-  const tickerRow = ticksTable.append("tr").classed("ticker-row", true);
+  const xAxis = d3
+    .axisBottom(xScale)
+    .ticks(dates) // show one tick per data point
+    .tickFormat((d) => `${d}`); // optional label format
 
-  /** Creates a set of equally sized ticker values */
-  const createRowSelection = () => {
-    tickerRow.selectAll("td").remove();
-    tickerRow
-      .selectAll("td")
-      .data(d3.range(dates + 1))
-      .enter()
-      .append("td")
-      .text((d) => d)
-      .classed("time-selection-ticker", true)
-      .classed("selected-slider-value", (d) => {
-        return state.quarter === d;
-      })
-      .attr("width", `${100 / (dates + 1)}%`);
+  // Append axis to SVG
+  svg
+    .attr("width", width) // extra padding for axis labels
+    .attr("height", 100);
+
+  svg
+    .append("g")
+    // .attr("transform", "translate(50,50)") // move it down and right
+    .call(xAxis);
+
+  const renderAgain = () => {
+    state.removeListener(PageState.Events.RESIZE, renderAgain);
+    makeSlider(containerID, minYear, maxYear);
   };
 
-  // Add set of date grid cells
-  createRowSelection();
-
   // Add a listener to visually change the currently selected values
-  state.addListener(PageState.Events.TIME, createRowSelection);
+  // state.addListener(PageState.Events.TIME, renderAgain);
+  state.addListener(PageState.Events.RESIZE, renderAgain);
 }
