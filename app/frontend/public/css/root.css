@@ -1,0 +1,54 @@
+:root {
+  --grid-row-height: 400px;
+}
+
+body {
+  background-color: rgb(255, 255, 255);
+}
+
+/* Top-level-grid */
+
+#grid-wrapper {
+  display: grid;
+  grid-template-areas:
+    "overview selection selection"
+    "speedometer words stocks"
+    "cash1 cash2 cash3";
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: var(--grid-row-height) var(--grid-row-height);
+  row-gap: 10px;
+  column-gap: 10px;
+  padding: 5px;
+}
+
+#grid-wrapper > #selection_table {
+  grid-area: selection;
+}
+
+#grid-wrapper > #company_overview {
+  grid-area: overview;
+}
+
+#grid-wrapper > #intraday-line-chart {
+  grid-area: stocks;
+}
+
+#grid-wrapper > #balance_sheet_senkey {
+  grid-area: cash1;
+}
+
+#grid-wrapper > #cash_flow_senkey {
+  grid-area: cash2;
+}
+
+#grid-wrapper > #income_statement_senkey {
+  grid-area: cash3;
+}
+
+#grid-wrapper > #speedometer {
+  grid-area: speedometer;
+}
+
+#grid-wrapper > #wordcloud {
+  grid-area: words;
+}

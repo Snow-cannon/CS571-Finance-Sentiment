@@ -34,7 +34,7 @@ const selectRow = (obj) => {
 };
 
 // Make an instance of the selection table
-makeSelectionTable("selection_table", queryTableData, {
+makeSelectionTable("table-wrapper", queryTableData, {
   sortby: "Symbol",
   asc: false,
   selectRow: selectRow,

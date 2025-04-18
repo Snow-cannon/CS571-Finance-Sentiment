@@ -1,0 +1,76 @@
+/* Company Selection Table */
+
+#selection_table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+#selection_table h3 {
+  margin: 0.5em 0;
+  text-align: center;
+}
+
+#table-wrapper {
+  flex: 1;
+  overflow: auto;
+  border: 2px solid black;
+}
+
+.symbol-selection-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.symbol-selection-table th,
+.symbol-selection-table td {
+  text-align: left;
+  padding: 8px;
+}
+
+.symbol-selection-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.symbol-selection-table tr.selected {
+  background-color: #d6abab;
+}
+
+.symbol-selection-table tbody tr:hover {
+  background-color: #dbdbdb;
+}
+
+.symbol-selection-table tbody tr.selected:hover {
+  background-color: #bb7b7b;
+}
+
+.symbol-selection-table thead {
+  background-color: #8304aa;
+  color: white;
+}
+
+.symbol-selection-table thead th:hover {
+  background-color: #700092;
+}
+
+.symbol-selection-table tbody {
+  display: block;
+  height: 100%;
+  overflow: auto;
+}
+
+.symbol-selection-table thead {
+  box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  z-index: 1;
+  top: 0;
+}
+
+.symbol-selection-table thead,
+.symbol-selection-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed; /* even columns width , fix width of table too*/
+}
