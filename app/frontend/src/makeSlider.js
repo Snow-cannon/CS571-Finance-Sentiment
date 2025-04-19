@@ -40,10 +40,7 @@ export function makeSlider(containerID, minYear, maxYear) {
   const width = container.node().getBoundingClientRect().width;
 
   // Define axis scale
-  const xScale = d3
-    .scaleLinear()
-    .domain([0, dates - 1])
-    .range([10, width - 8]);
+  const xScale = d3.scaleLinear().domain([0, dates - 1]);
 
   // Define axis format
   const xAxis = d3
@@ -53,8 +50,22 @@ export function makeSlider(containerID, minYear, maxYear) {
 
   // Define parent SVG
   const svg = container.append("svg");
-  svg.attr("width", width).attr("height", 100);
-  svg.append("g").call(xAxis);
+  svg.attr("height", 100);
+
+  // Add wrapper for the axis
+  const axisWrapper = svg.append("g");
+
+  // Update function for slider value changes
+  function resizeChange() {
+    const updatedContainer = d3.select(`#${containerID}`);
+    const updatedWidth = updatedContainer.node().getBoundingClientRect().width;
+    console.log(updatedWidth);
+    xScale.range([10, updatedWidth - 8]);
+    svg.attr("width", updatedWidth);
+    axisWrapper.call(xAxis);
+  }
+
+  resizeChange();
 
   // Allow users to click the ticks to update the slider
   svg.selectAll(".tick").on("click", (evt, d) => {
@@ -67,7 +78,7 @@ export function makeSlider(containerID, minYear, maxYear) {
   rect.classed("tick-rect-highlight", true);
 
   // Update function for slider value changes
-  function selectionChange(value) {
+  function selectionChange(value, shouldTransition = true) {
     const matches = (d) => {
       return +d === +value;
     };
@@ -83,10 +94,11 @@ export function makeSlider(containerID, minYear, maxYear) {
     const text = selectedTick.select("text").node();
     const bbox = text.getBBox();
 
+    // Add transition option if required
+    let transition = shouldTransition ? rect.transition().duration(200) : rect;
+
     // Move rect behind new tick
-    rect
-      .transition()
-      .duration(200)
+    transition
       .attr("x", bbox.x - 4)
       .attr("y", bbox.y - 2)
       .attr("width", bbox.width + 8)
@@ -94,14 +106,15 @@ export function makeSlider(containerID, minYear, maxYear) {
       .attr("transform", transform);
   }
 
-  selectionChange(slider.node().value);
+  selectionChange(slider.node().value, false);
 
-  const update = () => {
-    state.removeListener(PageState.Events.RESIZE, update);
-    makeSlider(containerID, minYear, maxYear);
+  // ------ Resize Listener ------ //
+
+  const listenForResize = () => {
+    console.log("resize");
+    resizeChange();
+    selectionChange(slider.node().value, false);
   };
 
-  // Add a listener to visually change the currently selected values
-  state.addListener(PageState.Events.TIME, update);
-  state.addListener(PageState.Events.RESIZE, update);
+  state.addListener(PageState.Events.RESIZE, listenForResize);
 }
