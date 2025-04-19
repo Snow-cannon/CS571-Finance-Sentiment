@@ -1,5 +1,6 @@
 //Took inspiration of code from the hw3 code
 
+import { ErrorMsg } from "./errorMsg.js";
 import { PageState } from "./globalState.js";
 import { state } from "./index.js";
 import queryData from "./makeQuery.js";
@@ -44,16 +45,7 @@ export async function makeIntraday(containerID) {
   path.classed("intraday-path", true);
   const xWrapper = wrapper.append("g");
   const yWrapper = wrapper.append("g");
-
-  // Error message display
-  const errorWrapper = wrapper.append("g");
-  errorWrapper
-    .classed("error-wrapper", true)
-    .attr("transform", `transform(${width / 2}, ${-height / 2})`);
-  const errorMsg = errorWrapper.append("text");
-  errorMsg.classed("error-text", true).attr("x", 0).attr("y", 0);
-  const errorRect = errorWrapper.insert("rect", "text");
-  errorRect.classed("error-rect", true).attr("x", 0).attr("y", 0);
+  const error = new ErrorMsg(wrapper, "intraday", ErrorMsg.Directions.LEFT);
 
   // Get initial chart dimensions
   const { width, height } = getDimensions();
@@ -81,30 +73,11 @@ export async function makeIntraday(containerID) {
     // Get initial chart dimensions
     const { width, height } = getDimensions();
 
-    let bbox = errorMsg.node().getBBox();
-
     const isError = !Array.isArray(data) || !data.length;
-
-    const getNewTransform = () => {
-      return `translate(${(isError ? 1 : 4) * (width - bbox.width) / 2}, ${(height) / 2})`;
-    };
 
     // Display error message
     if (isError) {
-      errorMsg.text(`No intraday data available for ${state.symbol}`);
-      bbox = errorMsg.node().getBBox();
-    }
-
-    errorRect
-      .attr("x", bbox.x - 5)
-      .attr("y", bbox.y - 5)
-      .attr("width", bbox.width + 10)
-      .attr("height", bbox.height + 10);
-
-    errorWrapper.transition().duration(duration).attr("transform", getNewTransform());
-
-    if (isError) {
-      // Update path data
+      error.enter(width, height, transition);
       path
         .transition()
         .duration(duration)
@@ -116,6 +89,8 @@ export async function makeIntraday(containerID) {
             .y((d) => yScale(d3.min(yScale.domain())))
         );
       return;
+    } else {
+      error.exit(width, height, transition);
     }
 
     // ------ Line Chart ------ //

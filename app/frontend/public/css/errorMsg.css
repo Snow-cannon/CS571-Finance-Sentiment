@@ -1,0 +1,14 @@
+.error-rect {
+  fill: rgba(173, 37, 37, 0.603);
+  rx: 10px;
+  ry: 10px;
+}
+
+.error-wrapper {
+  width: fit-content;
+  height: fit-content;
+}
+
+.error-text {
+  fill: rgb(255, 235, 198);
+}
