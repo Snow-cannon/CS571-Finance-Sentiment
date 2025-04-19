@@ -5,6 +5,10 @@ export class PageState {
   #_isQuarter;
   /** Currently selected quarter */
   #_quarter;
+  /** 0 indexed start year */
+  #_startYear;
+  /** 0 indexed final selection year */
+  #_endYear;
 
   /**
    * A list of all callback functions hashed by
@@ -31,6 +35,8 @@ export class PageState {
     this.#_quarter = 0;
     this.#_isQuarter = false;
     this.#_callbacks = {};
+    this.#_startYear = options.startYear || 2016;
+    this.#_endYear = options.endYear || this.#_startYear + 5;
     this.#_symbol = options.symbol || "";
 
     const debounceTime = options.debounce;
@@ -94,6 +100,16 @@ export class PageState {
   set isQuarter(isQuarter) {
     this.#_isQuarter = isQuarter;
     this.dispatch(PageState.Events.TIME);
+  }
+
+  /** returns the 0 indexed starting year */
+  get startYear() {
+    return this.#_startYear;
+  }
+
+  /** returns the 0 indexed final year */
+  get endYear() {
+    return this.#_endYear;
   }
 
   /**
