@@ -14,7 +14,6 @@ export async function makeIncomeStatementSenkey(containerID) {
   const container = d3.select(`#${containerID}`);
   container.selectAll("svg").remove();
   container.selectAll("p").remove();
-  console.log(state.symbol);
 
   // Fetch the income statement data for the selected symbol.
   // The query should return rows with columns: source, target, value.

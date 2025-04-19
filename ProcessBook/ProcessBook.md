@@ -7,12 +7,14 @@ Below is the table of contents for the process book.
 - [Data Serving](#data-serving)
 - [Global State](#global-state)
 - [Data Collection](#data-collection)
+- [Error Message](#error-message)
 - [Date Slider](#date-slider)
 - [Company Selection Table](#company-selection-table)
 - [Company Overview](#company-overview)
+- [Intraday Chart](#intraday-chart)
 - [Speedometer](#speedometer)
-- [Bubble Chart (optional feature)](#bubble-chart-optional-feature)
 - [Word Cloud](#word-cloud)
+- [Bubble Chart (optional feature)](#bubble-chart-optional-feature)
 - [Radar Chart (optional feature)](#radar-chart-optional-feature)
 - [Cash Flow / Balance Sheet / Income Statement](#cash-flow--balance-sheet--income-statement)
 - [Complete Page](#complete-page)
@@ -79,7 +81,19 @@ Before we store the data in the database, we perform certain preprocessing on it
 This comprehensive dataset provides the foundation for our project, enabling the analysis across multiple features including financial performance, market sentiment, and stock price movement.
 
 <!-- Page Break in PDF -->
-<!-- TODO: Add back in if needed -->
+<div style="page-break-before: always;"></div>
+
+## Error Message
+
+Not all companies have available data for all the data points we need. We collected all the data we could find regarding these 60 companies, and compiled all data available. However, we need to display to the user if we are missing data for certain visuals when certain times and companies are selected. To account for this, we made an error message class that can be appended to any SVG, and will transition in using the global duration suggestion when there is missing data. This provides the user with consistency in data errors, and small amounts of customizability for us in the direction we choose the error message to enter from.
+
+<center>
+<img src="./screenshots/intraday-chart/intraday-error-msg.png" style="width: 50%; height: auto;" />
+</center>
+
+We may update the CSS for this later to be more appealing and more visually an error, but for now we are using this in all visuals when an error in missing data arises.
+
+<!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
 ## Date Slider
@@ -182,6 +196,25 @@ The new Company Overview visual moves the title of the visual to the top center,
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
+## Intraday Chart
+
+The intraday chart displays stock prices over a period of time. The current design is a basic line chart with tome on the x-axis and the stock price on the y-axis. While this is a common practice, that is because it is the most effective, and will allow the greatest number of people to understant the stock price over the selected time period.
+
+### Initial design
+
+The colors do not entirely fit in the current color scheme, so we will need to fix that later. Additionally, there are no transitions, so we will want to add a transition to the chart for a more effective and visually helpful experience. However, the chart does fulfill the basic requirenments, and can take in any data set with a group of times and convert it into a valid line chart. As such, we can use both annual and quarterly data to display in the chart.
+
+<center>
+<img src="./screenshots/company-overview/co-improved-title.png" style="width: 100%; height: auto;" />
+</center>
+
+### Transitions
+
+We have now added transitions. The chart looks the same, but the added transitions make it feel more responsive and user friendly.
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
 ## Speedometer
 
 This visual represents a key metric of the selected company, by using a semi-circular dial to show the sentiment of the particular company based on news articles.
@@ -195,23 +228,6 @@ We created a dynamic gauge using D3, where the needle rotates to point to the va
 </center>
 
 This initial design is no connected to data from the database. While we have collected and stored the data in the backend database, we have not created the connection between the backend and frontend to facilitate updating it with the currently selected company. As such, the updates to the global state make no affect on the visual just yet, even though the data is present in the database.
-
-<!-- Page Break in PDF -->
-<div style="page-break-before: always;"></div>
-
-## Bubble chart (optional feature)
-
-This visual shows multiple company sectors as bubbles, where the size and color of each bubble indicate the magnitude and category of the sector.
-
-**_Note:_** This design is optional _(Gradescope comment on project proposal)_. The d3 design has been started, but there is no data collected for this visual. If we have the time, we will collect and add the relevant data to the database and complete the visual with the collected data. If not, the visual will be excluded from the final project submission.
-
-### Initial Design
-
-We used d3.pack() to generate non-overlapping bubbles. Each bubble represents a metric (like Revenue, Profit, etc.), with its size scaled based on the value of that metric. We categorized each value into one of four groups and assigned them colors: Green for high values, Light green for moderately high values, Light red for moderately low values & Red for low values
-
-<center>
-<img src="./screenshots/bubbleChart/bc-initial.png" style="width: 50%; height: auto%;" />
-</center>
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
@@ -239,6 +255,23 @@ This word cloud was initially meant to be combined with the speedometer visual, 
 </center>
 
 However, this has turned out to be a very difficult task. To simplify the task, we have split the visual into 2 separate visuals of the word cloud and the speedometer for overall sentiment. We will continue to aim for the combined visual if possible as it is much more appealing, but we also understand the difficulty this may pose to completing the project on time.
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+## Bubble chart (optional feature)
+
+This visual shows multiple company sectors as bubbles, where the size and color of each bubble indicate the magnitude and category of the sector.
+
+**_Note:_** This design is optional _(Gradescope comment on project proposal)_. The d3 design has been started, but there is no data collected for this visual. If we have the time, we will collect and add the relevant data to the database and complete the visual with the collected data. If not, the visual will be excluded from the final project submission.
+
+### Initial Design
+
+We used d3.pack() to generate non-overlapping bubbles. Each bubble represents a metric (like Revenue, Profit, etc.), with its size scaled based on the value of that metric. We categorized each value into one of four groups and assigned them colors: Green for high values, Light green for moderately high values, Light red for moderately low values & Red for low values
+
+<center>
+<img src="./screenshots/bubbleChart/bc-initial.png" style="width: 50%; height: auto%;" />
+</center>
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>

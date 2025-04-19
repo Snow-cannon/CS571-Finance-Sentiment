@@ -1,5 +1,6 @@
 //Took inspiration of code from the hw3 code
 
+import { ErrorMsg } from "./errorMsg.js";
 import { PageState } from "./globalState.js";
 import { state } from "./index.js";
 import queryData from "./makeQuery.js";
@@ -14,80 +15,137 @@ export async function makeIntraday(containerID) {
   // Get container by specified ID
   const container = d3.select(`#${containerID}`);
 
-  // Set overview data
-  const data = await queryData("intraday", { symbol: state.symbol });
-
+  // Clear old elements
   container.selectAll("svg").remove();
   container.selectAll("p").remove();
-  
 
-  if (!Array.isArray(data) || !data.length) {
-    // Display no info exists
+  // Set dimensions and margins for the chart
+  const margin = { top: 20, right: 30, bottom: 30, left: 50 };
 
-    container.append("p").text(`No intraday data available for ${state.symbol}`);
-  } else {
-  
-  // Parse the data
-  const parsedData = data.map((d) => ({
-    datetime: new Date(d.datetime),
-    close: +d.close,
-  }));
-  console.log(parsedData);
+  /**
+   * Returns the width and height of the container taking margins into account
+   */
+  const getDimensions = () => {
+    // Get width of parent box
+    const { width: boundingWidth, height: boundingHeight } = container
+      .node()
+      .getBoundingClientRect();
 
-   // Set dimensions and margins for the chart
-   const margin = { top: 20, right: 30, bottom: 30, left: 50 };
-   const width = 800 - margin.left - margin.right;
-   const height = 400 - margin.top - margin.bottom;
- 
-   // Create SVG element
-   const svg = container
-     .append("svg")
-     .attr("width", width + margin.left + margin.right)
-     .attr("height", height + margin.top + margin.bottom)
-     .append("g")
-     .attr("transform", `translate(${margin.left},${margin.top})`);
- 
-   // Set up scales
-   const x = d3
-     .scaleTime()
-     .domain(d3.extent(parsedData, (d) => d.datetime))
-     .range([0, width]);
- 
-   const y = d3
-     .scaleLinear()
-     .domain([d3.min(parsedData, (d) => d.close), d3.max(parsedData, (d) => d.close)])
-     .nice()
-     .range([height, 0]);
- 
-   // Add X axis
-   svg
-     .append("g")
-     .attr("transform", `translate(0,${height})`)
-     .call(d3.axisBottom(x).ticks(10).tickFormat(d3.utcFormat("%y-%b")));
- 
-   // Add Y axis
-   svg.append("g").call(d3.axisLeft(y));
- 
-   // Add the line
-   svg
-     .append("path")
-     .datum(parsedData)
-     .attr("fill", "none")
-     .attr("stroke", "steelblue")
-     .attr("stroke-width", 1.5)
-     .attr(
-       "d",
-       d3
-         .line()
-         .x((d) => x(d.datetime))
-         .y((d) => y(d.close))
-     );
-    }
-  // Add listeners for symbol updates
-  const update = () => {
-    state.removeListener(PageState.Events.SYMBOL, update);
-    makeIntraday(containerID);
+    // Apply margins
+    const width = boundingWidth - margin.left - margin.right;
+    const height = boundingHeight - margin.top - margin.bottom;
+
+    return { width, height };
   };
 
-  state.addListener(PageState.Events.SYMBOL, update);
+  // Generate new elements
+  const svg = container.append("svg");
+  const wrapper = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+  const path = wrapper.append("path");
+  path.classed("intraday-path", true);
+  const xWrapper = wrapper.append("g");
+  const yWrapper = wrapper.append("g");
+  const error = new ErrorMsg(wrapper, "intraday", ErrorMsg.Directions.LEFT);
+
+  // Get initial chart dimensions
+  const { width, height } = getDimensions();
+
+  const now = new Date();
+
+  // Set up scales with temp domains
+  const xScale = d3
+    .scaleTime()
+    .domain([now, new Date(now.getDate() + 1)])
+    .range([0, width]);
+
+  const yScale = d3.scaleLinear().domain([0, 1]).nice().range([height, 0]);
+
+  /**
+   * Updates old intraday elements to new data using transitions
+   */
+  const changeData = async (symbol, transition = true) => {
+    // Set overview data
+    const data = await queryData("intraday", { symbol: state.symbol });
+    const duration = transition ? state.duration : 0;
+
+    // ------ Error Message ------ //
+
+    // Get initial chart dimensions
+    const { width, height } = getDimensions();
+
+    const isError = !Array.isArray(data) || !data.length;
+
+    // Display error message
+    if (isError) {
+      error.enter(width, height, transition);
+      path
+        .transition()
+        .duration(duration)
+        .attr(
+          "d",
+          d3
+            .line()
+            .x((d) => xScale(d.datetime))
+            .y((d) => yScale(d3.min(yScale.domain())))
+        );
+      return;
+    } else {
+      error.exit(width, height, transition);
+    }
+
+    // ------ Line Chart ------ //
+
+    // Parse the data
+    const parsedData = data.map((d) => ({
+      datetime: new Date(d.datetime),
+      close: +d.close,
+    }));
+
+    // Set new domains
+    xScale.domain(d3.extent(parsedData, (d) => d.datetime));
+    yScale.domain([d3.min(parsedData, (d) => d.close), d3.max(parsedData, (d) => d.close)]);
+
+    // Update path data
+    path
+      .datum(parsedData)
+      .transition()
+      .duration(duration)
+      .attr(
+        "d",
+        d3
+          .line()
+          .x((d) => xScale(d.datetime))
+          .y((d) => yScale(d.close))
+      );
+  };
+
+  const resizeSVG = (transition = true) => {
+    // Get bounding box dimensions
+    const { width, height } = getDimensions();
+
+    // Set SVG dimensions
+    svg
+      .attr("width", width + margin.left + margin.right)
+      .attr("height", height + margin.top + margin.bottom);
+
+    // Update x axis
+    xWrapper
+      .attr("transform", `translate(0,${height})`)
+      .call(d3.axisBottom(xScale).ticks(10).tickFormat(d3.utcFormat("%y-%b")));
+
+    // Update y axis
+    yWrapper.call(d3.axisLeft(yScale));
+
+    // Update the data with transitions
+    changeData(state.symbol, transition);
+  };
+
+  // Call resize to generate initial SVG
+  resizeSVG(false);
+
+  state.addListener(PageState.Events.SYMBOL, resizeSVG);
+  state.addListener(PageState.Events.RESIZE, () => {
+    console.log("message");
+    resizeSVG(false);
+  });
 }
