@@ -10,6 +10,7 @@ Below is the table of contents for the process book.
 - [Date Slider](#date-slider)
 - [Company Selection Table](#company-selection-table)
 - [Company Overview](#company-overview)
+- [Intraday Chart](#intraday-chart)
 - [Speedometer](#speedometer)
 - [Bubble Chart (optional feature)](#bubble-chart-optional-feature)
 - [Word Cloud](#word-cloud)
@@ -178,6 +179,25 @@ The new Company Overview visual moves the title of the visual to the top center,
 <center>
 <img src="./screenshots/company-overview/co-improved-title.png" style="width: 100%; height: auto;" />
 </center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+## Intraday Chart
+
+The intraday chart displays stock prices over a period of time. The current design is a basic line chart with tome on the x-axis and the stock price on the y-axis. While this is a common practice, that is because it is the most effective, and will allow the greatest number of people to understant the stock price over the selected time period.
+
+### Initial design
+
+The colors do not entirely fit in the current color scheme, so we will need to fix that later. Additionally, there are no transitions, so we will want to add a transition to the chart for a more effective and visually helpful experience. However, the chart does fulfill the basic requirenments, and can take in any data set with a group of times and convert it into a valid line chart. As such, we can use both annual and quarterly data to display in the chart.
+
+<center>
+<img src="./screenshots/company-overview/co-improved-title.png" style="width: 100%; height: auto;" />
+</center>
+
+### Transitions
+
+We have now added transitions. The chart looks the same, but the added transitions make it feel more responsive and user friendly.
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
