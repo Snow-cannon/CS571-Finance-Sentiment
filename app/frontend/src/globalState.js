@@ -9,6 +9,8 @@ export class PageState {
   #_startYear;
   /** 0 indexed final selection year */
   #_endYear;
+  /** Global transition suggestion */
+  #_transitionDuration;
 
   /**
    * A list of all callback functions hashed by
@@ -38,6 +40,7 @@ export class PageState {
     this.#_startYear = options.startYear || 2016;
     this.#_endYear = options.endYear || this.#_startYear + 5;
     this.#_symbol = options.symbol || "";
+    this.#_transitionDuration = options.duration || 1000;
 
     const debounceTime = options.debounce;
 
@@ -110,6 +113,11 @@ export class PageState {
   /** returns the 0 indexed final year */
   get endYear() {
     return this.#_endYear;
+  }
+
+  /** returns the duration suggestion for visuals */
+  get duration() {
+    return this.#_transitionDuration;
   }
 
   /**

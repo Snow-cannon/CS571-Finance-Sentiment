@@ -29,6 +29,8 @@ export const state = new PageState({
   endYear: 2022,
   // Window-resize event is debounced by 50ms
   debounceTime: 50,
+  // Global transition duration suggestion for visuals
+  duration: 500,
 });
 
 // ---------- Make Table ---------- //
