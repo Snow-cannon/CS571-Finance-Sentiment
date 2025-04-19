@@ -45,6 +45,7 @@ export function makeSlider(containerID, minYear, maxYear) {
   // Define axis scale
   const xScale = d3.scaleLinear().domain([0, dates - 1]);
 
+  // Use years / quarters for ticker text values
   const tickText = (d) => {
     const year = state.startYear + (d - (d % 5)) / 5;
     const quarter = d % 5;
@@ -60,7 +61,7 @@ export function makeSlider(containerID, minYear, maxYear) {
 
   // Define parent SVG
   const svg = container.append("svg");
-  svg.attr("height", 100);
+  svg.attr("height", 25);
 
   // Add wrapper for the axis
   const axisWrapper = svg.append("g");
@@ -70,7 +71,7 @@ export function makeSlider(containerID, minYear, maxYear) {
     const updatedContainer = d3.select(`#${containerID}`);
     const updatedWidth = updatedContainer.node().getBoundingClientRect().width;
     console.log(updatedWidth);
-    xScale.range([10, updatedWidth - 8]);
+    xScale.range([15, updatedWidth - 13]);
     svg.attr("width", updatedWidth);
     axisWrapper.call(xAxis);
   }

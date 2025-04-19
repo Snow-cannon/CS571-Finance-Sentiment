@@ -26,7 +26,7 @@ export const state = new PageState({
   // 0 indexed year is 2016
   startYear: 2016,
   // 0 indexed final year is 2022
-  startYear: 2022,
+  endYear: 2022,
   // Window-resize event is debounced by 50ms
   debounceTime: 50,
 });

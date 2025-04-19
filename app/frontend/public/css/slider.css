@@ -1,11 +1,12 @@
 /* Slider */
 
-.slider_container {
+div.slider_container {
   width: 100%;
 }
 
 .date-selection-slider {
-  width: 100%;
+  width: calc(100% - 7px);
+  margin-left: 5px;
 }
 
 rect.tick-rect-highlight {
