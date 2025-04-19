@@ -103,6 +103,18 @@ We updated the slider to add a more modern and easy to read view. A rounded high
 
 This update uses d3 to generate a table, but does not make use of d3 axis, which is the aim for future iterations to add better transition support.
 
+### D3 Axis
+
+This version upgrades the HTML grid layout to a D3 x-axis for an SVG. The slider is overlayed without grids and uses padding instead. This allows for a much better looking axis with a horizontal bar, as well as better control over the text within the axis.
+
+This better control was also used to display the year / quarter being selected. To allow users to select both years and individual quarters, we put years as a tick, and the quarters assigned to those years follow as 4 seperate ticks. This makes it clear which quarter of the year they selected, or if they selected the entire year instead, without the need for a second selection menu or bar.
+
+<img src="./screenshots/slider/slider-quarters.gif" style="width: 50%; height: auto;" />
+
+Additionally, the slider now uses transitions. Rather than rebuilding the entire visual every time there is an update, we reuse the same elements and take advantage of CSS classes to use CSS files instead of setting attributes within the JS itself. This allows for more organized code, while still having the power of D3 transitions.
+
+The color scheme is the same, but the years are in bold to make it obvious to the user if they selected a year or a quarter.
+
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
