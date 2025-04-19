@@ -42,7 +42,7 @@ export class PageState {
     this.#_symbol = options.symbol || "";
     this.#_transitionDuration = options.duration || 1000;
 
-    const debounceTime = options.debounce;
+    const debounceTime = options.debounceTime;
 
     // https://www.geeksforgeeks.org/debouncing-in-javascript/#
     // Debounce function. Prevents too many UI updates
