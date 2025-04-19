@@ -29,6 +29,7 @@ export function makeSlider(containerID, minYear, maxYear) {
     .attr("max", dates - 1)
     .attr("step", 1)
     .attr("value", 0)
+    .classed("date-selection-slider", true)
     .on("input", function (evt) {
       const value = d3.select(this).property("value");
       state.isQuarter = value % 5 > 0;
@@ -44,11 +45,18 @@ export function makeSlider(containerID, minYear, maxYear) {
   // Define axis scale
   const xScale = d3.scaleLinear().domain([0, dates - 1]);
 
+  const tickText = (d) => {
+    const year = state.startYear + (d - (d % 5)) / 5;
+    const quarter = d % 5;
+    if (quarter === 0) {
+      return `${year}`;
+    } else {
+      return `Q${quarter}`;
+    }
+  };
+
   // Define axis format
-  const xAxis = d3
-    .axisBottom(xScale)
-    .ticks(dates)
-    .tickFormat((d) => `${d}`);
+  const xAxis = d3.axisBottom(xScale).ticks(dates).tickFormat(tickText);
 
   // Define parent SVG
   const svg = container.append("svg");
@@ -69,9 +77,15 @@ export function makeSlider(containerID, minYear, maxYear) {
 
   resizeChange();
 
+  // Add classes to year / quarter tick marks
+  svg
+    .selectAll(".tick")
+    .classed("year-tick", (d) => d % 5 === 0)
+    .classed("quarter-tick", (d) => d % 5 > 0);
+
   // Allow users to click the ticks to update the slider
   svg.selectAll(".tick").on("click", (evt, d) => {
-    slider.attr("value", d);
+    slider.property("value", d);
     selectionChange(d);
   });
 
