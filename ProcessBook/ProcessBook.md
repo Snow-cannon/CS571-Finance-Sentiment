@@ -99,9 +99,25 @@ This step does not account for actual dates, but sets the groundwork for adding 
 
 We updated the slider to add a more modern and easy to read view. A rounded highlight of the selected tick plus a de-saturated text color on un-selected ticks makes it much easier to identify the current selection. We also made it purple to go with the overall color scheme we are aiming towards.
 
+<center>
 <img src="./screenshots/slider/slider-update-1.png" style="width: 50%; height: auto;" />
+</center>
 
 This update uses d3 to generate a table, but does not make use of d3 axis, which is the aim for future iterations to add better transition support.
+
+### D3 Axis
+
+This version upgrades the HTML grid layout to a D3 x-axis for an SVG. The slider is overlayed without grids and uses padding instead. This allows for a much better looking axis with a horizontal bar, as well as better control over the text within the axis.
+
+This better control was also used to display the year / quarter being selected. To allow users to select both years and individual quarters, we put years as a tick, and the quarters assigned to those years follow as 4 seperate ticks. This makes it clear which quarter of the year they selected, or if they selected the entire year instead, without the need for a second selection menu or bar.
+
+<center>
+<img src="./screenshots/slider/slider-quarters.gif" style="width: 50%; height: auto;" />
+</center>
+
+Additionally, the slider now uses transitions. Rather than rebuilding the entire visual every time there is an update, we reuse the same elements and take advantage of CSS classes to use CSS files instead of setting attributes within the JS itself. This allows for more organized code, while still having the power of D3 transitions.
+
+The color scheme is the same, but the years are in bold to make it obvious to the user if they selected a year or a quarter.
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
@@ -155,6 +171,14 @@ We updated the CSS to make it purple. This allows it to better fit with the purp
 <img src="./screenshots/company-overview/co-css-purple.png" style="width: 50%; height: auto;" />
 </center>
 
+### Title Bar Reposition
+
+The new Company Overview visual moves the title of the visual to the top center, and hovers it over the box to give it a more interesting look without covering any important information. The title also takes advantage of box-shadows to give it a 3D look. We also made the labels bold to help identify them from the values they define.
+
+<center>
+<img src="./screenshots/company-overview/co-improved-title.png" style="width: 100%; height: auto;" />
+</center>
+
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
@@ -167,7 +191,7 @@ This visual represents a key metric of the selected company, by using a semi-cir
 We created a dynamic gauge using D3, where the needle rotates to point to the value corresponding to the current company’s sentiment. The value range is divided into five color-coded sections to indicate performance zones: red (low), orange (moderate low), yellow(neutral), light green (moderate high), and green (high). This 5-bin setup matches with the Bearish to Bullish sentiment bins provided from our collected data structure.
 
 <center>
-<img src="/ProcessBook/screenshots/speedometer/speedometer-initial.png" style="width: 50%; height: auto;" />
+<img src="./screenshots/speedometer/speedometer-initial.png" style="width: 50%; height: auto;" />
 </center>
 
 This initial design is no connected to data from the database. While we have collected and stored the data in the backend database, we have not created the connection between the backend and frontend to facilitate updating it with the currently selected company. As such, the updates to the global state make no affect on the visual just yet, even though the data is present in the database.
@@ -186,9 +210,8 @@ This visual shows multiple company sectors as bubbles, where the size and color 
 We used d3.pack() to generate non-overlapping bubbles. Each bubble represents a metric (like Revenue, Profit, etc.), with its size scaled based on the value of that metric. We categorized each value into one of four groups and assigned them colors: Green for high values, Light green for moderately high values, Light red for moderately low values & Red for low values
 
 <center>
-<img src="/ProcessBook/screenshots/bubbleChart/bc-initial.png" style="width: 50%; height: auto%;" />
+<img src="./screenshots/bubbleChart/bc-initial.png" style="width: 50%; height: auto%;" />
 </center>
-
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
@@ -206,13 +229,13 @@ This chart listens to the global symbol state and updates accordingly. For the p
 The backend has a list of words available for the visual, but the query connection has not been set up and will be implemented in the future to replace the previously mentioned static data.
 
 <center>
-<img src="/ProcessBook/screenshots/wordCloud/wc-initial.png" style="width: 50%; height: auto;" />
+<img src="./screenshots/wordCloud/wc-initial.png" style="width: 50%; height: auto;" />
 </center>
 
 This word cloud was initially meant to be combined with the speedometer visual, creating a visually compelling combination of important words highlighted by sentiment and the total sentiment for that company.
 
 <center>
-<img src="/ProcessBook/screenshots/wordCloud/wc-proposal.png" style="width: 20%; height: auto;" />
+<img src="./screenshots/wordCloud/wc-proposal.png" style="width: 20%; height: auto;" />
 </center>
 
 However, this has turned out to be a very difficult task. To simplify the task, we have split the visual into 2 separate visuals of the word cloud and the speedometer for overall sentiment. We will continue to aim for the combined visual if possible as it is much more appealing, but we also understand the difficulty this may pose to completing the project on time.
@@ -231,7 +254,7 @@ This visual compares sector-wise cash flow distribution for the selected company
 We implemented the radar chart using radial lines and concentric circles to represent six key sectors. Each axis represents a sector, and the values (normalized between 0 and 1) form a closed polygon representing the distribution of cash flow across those sectors.
 
 <center>
-<img src="/ProcessBook/screenshots/radarChart/rc-initial.png" style="width: 50%; height: auto%;" />
+<img src="./screenshots/radarChart/rc-initial.png" style="width: 50%; height: auto%;" />
 </center>
 
 The text size on the radar chart will need to be increased for readability and scale, and the current variables on the radar chart will likely need to be updated and modified to better fit the data once we collect it.
@@ -259,7 +282,7 @@ To make the visual, we utilized the `d3-sankey` library. This library takes a pa
 ### Cash Flow Chart
 
 <center>
-<img src="/ProcessBook/screenshots/cash-flow/cash-flow-initial.png" style="width: 80%; height: auto;" />
+<img src="./screenshots/cash-flow/cash-flow-initial.png" style="width: 80%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
@@ -268,7 +291,7 @@ To make the visual, we utilized the `d3-sankey` library. This library takes a pa
 ### Balance Sheet Chart
 
 <center>
-<img src="/ProcessBook/screenshots/balance-sheet/balance-sheet-initial.png" style="width: 80%; height: auto;" />
+<img src="./screenshots/balance-sheet/balance-sheet-initial.png" style="width: 80%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
@@ -277,7 +300,7 @@ To make the visual, we utilized the `d3-sankey` library. This library takes a pa
 ### Income Statement Chart
 
 <center>
-<img src="/ProcessBook/screenshots/income-statement/income-statement-initial.png" style="width: 80%; height: auto;" />
+<img src="./screenshots/income-statement/income-statement-initial.png" style="width: 80%; height: auto;" />
 </center>
 
 The sankey graphs do contain all of the necessary data, and they do update with the global state on a change of the currently selected company. However we have not set up the date slider to update with real dates, and as such we are assuming a constant date with a company symbol as the sole parameter.
@@ -309,5 +332,28 @@ However for designing individual visuals prior to working with the entire contex
 ### First Full Page
 
 <center>
-<img src="/ProcessBook/screenshots/complete-webpage/complete-page-1.png" style="width: 30%; height: auto;" />
+<img src="./screenshots/complete-webpage/complete-page-1.png" style="width: 30%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+### Grid Layout
+
+The new design of the full webpage uses a CSS grid design:
+
+```css
+#grid-wrapper {
+  display: grid;
+  grid-template-areas:
+    "overview selection selection"
+    "speedometer words stocks"
+    "cash1 cash2 cash3";
+}
+```
+
+This design still does not combine the 3 sankey visuals together. However, it reduces the height and combines them into 3 rows that make some semblence of sense with related information.
+
+<center>
+<img src="./screenshots/complete-webpage/complete-page-2.png" style="width: 100%; height: auto;" />
 </center>

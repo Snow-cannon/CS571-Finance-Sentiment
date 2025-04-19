@@ -14,6 +14,9 @@ Process book is in the `ProcessBook` folder (see [`ProcessBook.pdf`](./ProcessBo
 
 Prerequisites:
 - [NodeJS](https://nodejs.org/en/download)
+- [GitLFS](https://git-lfs.com/) (Included with windows installation of GIT)
+
+If GitLFS is not installed, you will not be able to clone / pull the database file. If you install it after cloning, delete and re-clone the repo to get the database file.
 
 ### Starting Services
 

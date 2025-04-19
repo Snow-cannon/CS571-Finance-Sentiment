@@ -1,31 +1,32 @@
 /* Slider */
 
-.slider_container {
+div.slider_container {
   width: 100%;
 }
 
-.slider_table_wrapper {
-  width: 100%;
+.date-selection-slider {
+  width: calc(100% - 7px);
+  margin-left: 5px;
 }
 
-.ticker-row {
-  display: table;
-  width: 100%;
-  table-layout: fixed;
+rect.tick-rect-highlight {
+  fill: #842b9b7a;
+  rx: 5px;
 }
 
-.time-selection-ticker {
-  color: rgb(156, 156, 156);
-  text-align: center;
+.tick-highlight > line {
+  stroke-width: 3px;
+  stroke: #842b9b7a;
 }
 
-.selected-slider-value {
-  color: black;
-  background-color: #dccedd;
-  text-align: center;
-  border-radius: 3px;
+.tick-highlight > text {
+  color: #000000;
 }
 
-input[type="range"] {
-  width: 100%;
+.tick.year-tick {
+  font-weight: bold;
+}
+
+.tick.quarter-tick {
+  font-weight: lighter;
 }

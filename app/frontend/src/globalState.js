@@ -5,6 +5,10 @@ export class PageState {
   #_isQuarter;
   /** Currently selected quarter */
   #_quarter;
+  /** 0 indexed start year */
+  #_startYear;
+  /** 0 indexed final selection year */
+  #_endYear;
 
   /**
    * A list of all callback functions hashed by
@@ -24,13 +28,38 @@ export class PageState {
   static Events = {
     SYMBOL: "symbol",
     TIME: "time",
+    RESIZE: "resize",
   };
 
-  constructor(symbol) {
+  constructor(options) {
     this.#_quarter = 0;
     this.#_isQuarter = false;
     this.#_callbacks = {};
-    this.#_symbol = symbol;
+    this.#_startYear = options.startYear || 2016;
+    this.#_endYear = options.endYear || this.#_startYear + 5;
+    this.#_symbol = options.symbol || "";
+
+    const debounceTime = options.debounce;
+
+    // https://www.geeksforgeeks.org/debouncing-in-javascript/#
+    // Debounce function. Prevents too many UI updates
+    function debounce(func) {
+      let timeout;
+      return function (...args) {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+          func(...args);
+        }, debounceTime);
+      };
+    }
+
+    // Add debounce to the resize dispatch event
+    const debounceResize = debounce(this.dispatch.bind(this), debounceTime);
+
+    // Built-in resize events
+    window.addEventListener("resize", () => {
+      debounceResize(PageState.Events.RESIZE);
+    });
   }
 
   /** returns the currently selected symbol */
@@ -71,6 +100,16 @@ export class PageState {
   set isQuarter(isQuarter) {
     this.#_isQuarter = isQuarter;
     this.dispatch(PageState.Events.TIME);
+  }
+
+  /** returns the 0 indexed starting year */
+  get startYear() {
+    return this.#_startYear;
+  }
+
+  /** returns the 0 indexed final year */
+  get endYear() {
+    return this.#_endYear;
   }
 
   /**

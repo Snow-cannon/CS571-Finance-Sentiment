@@ -10,83 +10,128 @@ import * as d3 from "d3";
  */
 export function makeSlider(containerID, minYear, maxYear) {
   // Make 1 quarter per year, inclusive of final year
-  const dates = 4 * (maxYear - minYear + 1);
+  const dates = 5 * (maxYear - minYear + 1);
 
   // Container
   const container = d3.select(`#${containerID}`);
-  const sliderTable = container.append("table").classed("slider_table_wrapper", true);
-  const ticksTable = container.append("table").classed("slider_table_wrapper", true);
 
-  // TODO: Make non-linear / decide count and make look good
-  const interpolate = (x) => {
-    // Visual testing provided initial values to interpolate between
-    const x1 = 28;
-    const y1 = 0.2;
-    const x2 = 4;
-    const y2 = 0.375;
+  // Clear old data
+  container.selectAll("input").remove();
+  container.selectAll("svg").remove();
 
-    // Interpolate between initial values based on input value
-    return y1 + ((x - x1) * (y2 - y1)) / (x2 - x1);
-  };
+  // ------ Slider ------ //
 
-  const getCellWidthPercent = () => {
-    // Get width percentage based on interpolated values from new date count
-    return (100 / dates) * interpolate(dates);
-  };
+  const slider = container.append("input");
 
-  // Add slider wrapped table row
-  const sliderRow = sliderTable.append("tr");
-
-  const sidebar = getCellWidthPercent();
-
-  if (sidebar > 0.2) {
-    // Add centering cell
-    sliderRow.append("td").attr("width", `${sidebar}%`);
-  }
-
-  // Add slider in merged cell
-  sliderRow
-    .append("td")
-    .attr("colspan", dates)
-    .append("input")
+  slider
     .attr("type", "range")
     .attr("min", 0)
-    .attr("max", dates)
+    .attr("max", dates - 1)
     .attr("step", 1)
-
-    // TODO: Correct for true date values
     .attr("value", 0)
-    .on("input", (evt) => {
-      state.quarter = Number(evt.target.value);
+    .classed("date-selection-slider", true)
+    .on("input", function (evt) {
+      const value = d3.select(this).property("value");
+      state.isQuarter = value % 5 > 0;
+      state.quarter = value;
+      selectionChange(value);
     });
 
-  if (sidebar > 0.2) {
-    // Add centering cell
-    sliderRow.append("td").attr("width", `${sidebar}%`);
-  }
+  // ------ SVG ------ //
 
-  // Add grid under slider
-  const tickerRow = ticksTable.append("tr").classed("ticker-row", true);
+  // Get width of parent box
+  const width = container.node().getBoundingClientRect().width;
 
-  /** Creates a set of equally sized ticker values */
-  const createRowSelection = () => {
-    tickerRow.selectAll("td").remove();
-    tickerRow
-      .selectAll("td")
-      .data(d3.range(dates + 1))
-      .enter()
-      .append("td")
-      .text((d) => d)
-      .classed("time-selection-ticker", true)
-      .classed("selected-slider-value", (d) => {
-        return state.quarter === d;
-      })
-      .attr("width", `${100 / (dates + 1)}%`);
+  // Define axis scale
+  const xScale = d3.scaleLinear().domain([0, dates - 1]);
+
+  // Use years / quarters for ticker text values
+  const tickText = (d) => {
+    const year = state.startYear + (d - (d % 5)) / 5;
+    const quarter = d % 5;
+    if (quarter === 0) {
+      return `${year}`;
+    } else {
+      return `Q${quarter}`;
+    }
   };
 
-  // Add set of date grid cells
-  createRowSelection();
+  // Define axis format
+  const xAxis = d3.axisBottom(xScale).ticks(dates).tickFormat(tickText);
 
-  // Add a listener to visually change the currently selected values
-  state.addListener(PageState.Events.TIME, createRowSelection);
+  // Define parent SVG
+  const svg = container.append("svg");
+  svg.attr("height", 25);
+
+  // Add wrapper for the axis
+  const axisWrapper = svg.append("g");
+
+  // Update function for slider value changes
+  function resizeChange() {
+    const updatedContainer = d3.select(`#${containerID}`);
+    const updatedWidth = updatedContainer.node().getBoundingClientRect().width;
+    console.log(updatedWidth);
+    xScale.range([15, updatedWidth - 13]);
+    svg.attr("width", updatedWidth);
+    axisWrapper.call(xAxis);
+  }
+
+  resizeChange();
+
+  // Add classes to year / quarter tick marks
+  svg
+    .selectAll(".tick")
+    .classed("year-tick", (d) => d % 5 === 0)
+    .classed("quarter-tick", (d) => d % 5 > 0);
+
+  // Allow users to click the ticks to update the slider
+  svg.selectAll(".tick").on("click", (evt, d) => {
+    slider.property("value", d);
+    selectionChange(d);
+  });
+
+  // Add highlight rect
+  const rect = svg.append("rect");
+  rect.classed("tick-rect-highlight", true);
+
+  // Update function for slider value changes
+  function selectionChange(value, shouldTransition = true) {
+    const matches = (d) => {
+      return +d === +value;
+    };
+
+    // Update tick classes
+    svg.selectAll(".tick").classed("tick-highlight", matches);
+
+    // Select the matching tick
+    const selectedTick = svg.selectAll(".tick").filter(matches);
+
+    // Get transform / position of selected tick
+    const transform = selectedTick.attr("transform");
+    const text = selectedTick.select("text").node();
+    const bbox = text.getBBox();
+
+    // Add transition option if required
+    let transition = shouldTransition ? rect.transition().duration(200) : rect;
+
+    // Move rect behind new tick
+    transition
+      .attr("x", bbox.x - 4)
+      .attr("y", bbox.y - 2)
+      .attr("width", bbox.width + 8)
+      .attr("height", bbox.height + 4)
+      .attr("transform", transform);
+  }
+
+  selectionChange(slider.node().value, false);
+
+  // ------ Resize Listener ------ //
+
+  const listenForResize = () => {
+    console.log("resize");
+    resizeChange();
+    selectionChange(slider.node().value, false);
+  };
+
+  state.addListener(PageState.Events.RESIZE, listenForResize);
 }

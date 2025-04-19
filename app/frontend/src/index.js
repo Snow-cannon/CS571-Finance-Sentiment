@@ -9,8 +9,8 @@ import { makeCashFlowSenkey } from "./makeCashFlowSenkey.js";
 import { makeIncomeStatementSenkey } from "./makeIncomeStatementSenkey.js";
 import { makeWordCloud } from "./makeWordCloud.js";
 import { makeSpeedometer } from "./makeSpeedometer.js";
-import { makeBubbleChart } from "./makeBubbleChart.js";
-import { makeRadarChart } from "./makeRadarChart.js";
+// import { makeBubbleChart } from "./makeBubbleChart.js";
+// import { makeRadarChart } from "./makeRadarChart.js";
 
 // ---------- Init ---------- //
 
@@ -20,7 +20,16 @@ const queryTableData = await queryData("symbols");
 /**
  * Global State Instance
  */
-export const state = new PageState(queryTableData[0].Symbol || "WFC");
+export const state = new PageState({
+  // Starting symbol is the first imported symbol, or 'WFC'
+  symbol: queryTableData[0].Symbol || "WFC",
+  // 0 indexed year is 2016
+  startYear: 2016,
+  // 0 indexed final year is 2022
+  endYear: 2022,
+  // Window-resize event is debounced by 50ms
+  debounceTime: 50,
+});
 
 // ---------- Make Table ---------- //
 
@@ -43,7 +52,7 @@ makeSelectionTable("table-wrapper", queryTableData, {
 // ---------- Make Slider ---------- //
 
 // Make a date selection slider
-makeSlider("slider_container", 2016, 2028);
+makeSlider("slider_container", state.startYear, state.endYear);
 
 // ---------- Make Company Overview ---------- //
 
@@ -52,6 +61,7 @@ makeOverview("overview-details");
 // ---------- Make Intraday Chart ---------- //
 
 makeIntraday("intraday-line-chart");
+
 // ---------- Make Balance Sheet Senkey ---------- //
 
 makeBalanceSheetSenkey("balance_sheet_senkey");
@@ -63,13 +73,7 @@ makeCashFlowSenkey("cash_flow_senkey");
 // ---------- Make Income Statement Senkey ---------- //
 
 makeIncomeStatementSenkey("income_statement_senkey");
-// ---------- Make Word Cloud---------- //
 
-makeWordCloud("wordcloud");
-
-// ---------- Make Speedometer ---------- //
-
-makeSpeedometer("speedometer");
 // ---------- Make Word Cloud---------- //
 
 makeWordCloud("wordcloud");
@@ -80,8 +84,8 @@ makeSpeedometer("speedometer");
 
 // ---------- Make Bubble Chart ---------- //
 
-makeBubbleChart("bubble-container");
+// makeBubbleChart("bubble-container");
 
 // ---------- Make Radar Chart ---------- //
 
-makeRadarChart("radar-container");
+// makeRadarChart("radar-container");
