@@ -29,3 +29,17 @@
 input[type="range"] {
   width: 100%;
 }
+
+rect.tick-rect-highlight {
+  fill: #842b9b7a;
+  rx: 5px;
+}
+
+.tick-highlight > line {
+  stroke-width: 3px;
+  stroke: #842b9b7a;
+}
+
+.tick-highlight > text {
+  color: #000000;
+}
