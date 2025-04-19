@@ -85,6 +85,8 @@ export function makeSlider(containerID, minYear, maxYear) {
 
     // Move rect behind new tick
     rect
+      .transition()
+      .duration(200)
       .attr("x", bbox.x - 4)
       .attr("y", bbox.y - 2)
       .attr("width", bbox.width + 8)
