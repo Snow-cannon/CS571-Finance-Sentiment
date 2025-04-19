@@ -21,7 +21,6 @@ export async function makeBalanceSheetSenkey(containerID) {
   const container = d3.select(`#${containerID}`);
   container.selectAll("svg").remove();
   container.selectAll("p").remove();
-  console.log(state.symbol);
 
   // Fetch the balance sheet data for the selected symbol.
   // This should return rows with columns: source, target, value.
@@ -150,7 +149,6 @@ export async function makeBalanceSheetSenkey(containerID) {
   // Listener for symbol/state changes to update the diagram.
   const update = () => {
     state.removeListener(PageState.Events.SYMBOL, update);
-    console.log("Updating balance sheet");
     makeBalanceSheetSenkey(containerID);
   };
   state.addListener(PageState.Events.SYMBOL, update);

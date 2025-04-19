@@ -101,8 +101,6 @@ export async function makeIntraday(containerID) {
       close: +d.close,
     }));
 
-    console.log(parsedData);
-
     // Set new domains
     xScale.domain(d3.extent(parsedData, (d) => d.datetime));
     yScale.domain([d3.min(parsedData, (d) => d.close), d3.max(parsedData, (d) => d.close)]);
@@ -145,10 +143,9 @@ export async function makeIntraday(containerID) {
   // Call resize to generate initial SVG
   resizeSVG(false);
 
-  // Add listeners for symbol updates
-  const update = () => {
-    changeData(state.symbol);
-  };
-
-  state.addListener(PageState.Events.SYMBOL, update);
+  state.addListener(PageState.Events.SYMBOL, resizeSVG);
+  state.addListener(PageState.Events.RESIZE, () => {
+    console.log("message");
+    resizeSVG(false);
+  });
 }

@@ -70,7 +70,6 @@ export function makeSlider(containerID, minYear, maxYear) {
   function resizeChange() {
     const updatedContainer = d3.select(`#${containerID}`);
     const updatedWidth = updatedContainer.node().getBoundingClientRect().width;
-    console.log(updatedWidth);
     xScale.range([15, updatedWidth - 13]);
     svg.attr("width", updatedWidth);
     axisWrapper.call(xAxis);
@@ -128,7 +127,6 @@ export function makeSlider(containerID, minYear, maxYear) {
   // ------ Resize Listener ------ //
 
   const listenForResize = () => {
-    console.log("resize");
     resizeChange();
     selectionChange(slider.node().value, false);
   };

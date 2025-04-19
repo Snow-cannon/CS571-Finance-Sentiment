@@ -66,7 +66,6 @@ export class ErrorMsg {
   exit(width, height, transition = true) {
     const bbox = this.#_text.node().getBBox();
     const mult = this.#transformMultiplier();
-    console.log();
     const transform = `translate(${(mult.x * (width - bbox.width)) / 2}, ${(mult.y * height) / 2})`;
 
     this.#_rect

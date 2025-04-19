@@ -14,7 +14,6 @@ export async function makeCashFlowSenkey(containerID) {
   const container = d3.select(`#${containerID}`);
   container.selectAll("svg").remove();
   container.selectAll("p").remove();
-  console.log(state.symbol);
 
   // Fetch the cash flow data for the selected symbol.
   // This query should return rows with columns: source, target, value.

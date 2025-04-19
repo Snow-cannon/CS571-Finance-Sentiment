@@ -28,7 +28,7 @@ export const state = new PageState({
   // 0 indexed final year is 2022
   endYear: 2022,
   // Window-resize event is debounced by 50ms
-  debounceTime: 50,
+  debounceTime: 200,
   // Global transition duration suggestion for visuals
   duration: 500,
 });
