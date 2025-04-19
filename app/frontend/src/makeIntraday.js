@@ -39,14 +39,26 @@ export async function makeIntraday(containerID) {
 
   // Generate new elements
   const svg = container.append("svg");
-  const wrapper = svg.append("g");
-  const errorMsg = wrapper.append("text");
+  const wrapper = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
   const path = wrapper.append("path");
+  path.classed("intraday-path", true);
   const xWrapper = wrapper.append("g");
   const yWrapper = wrapper.append("g");
-  const now = new Date();
 
+  // Error message display
+  const errorWrapper = wrapper.append("g");
+  errorWrapper
+    .classed("error-wrapper", true)
+    .attr("transform", `transform(${width / 2}, ${-height / 2})`);
+  const errorMsg = errorWrapper.append("text");
+  errorMsg.classed("error-text", true).attr("x", 0).attr("y", 0);
+  const errorRect = errorWrapper.insert("rect", "text");
+  errorRect.classed("error-rect", true).attr("x", 0).attr("y", 0);
+
+  // Get initial chart dimensions
   const { width, height } = getDimensions();
+
+  const now = new Date();
 
   // Set up scales with temp domains
   const xScale = d3
@@ -59,24 +71,62 @@ export async function makeIntraday(containerID) {
   /**
    * Updates old intraday elements to new data using transitions
    */
-  const changeData = async (symbol) => {
+  const changeData = async (symbol, transition = true) => {
     // Set overview data
     const data = await queryData("intraday", { symbol: state.symbol });
+    const duration = transition ? state.duration : 0;
+
+    // ------ Error Message ------ //
+
+    // Get initial chart dimensions
+    const { width, height } = getDimensions();
+
+    let bbox = errorMsg.node().getBBox();
+
+    const isError = !Array.isArray(data) || !data.length;
+
+    const getNewTransform = () => {
+      return `translate(${(isError ? 1 : 4) * (width - bbox.width) / 2}, ${(height) / 2})`;
+    };
 
     // Display error message
-    if (!Array.isArray(data) || !data.length) {
-      errorMsg
+    if (isError) {
+      errorMsg.text(`No intraday data available for ${state.symbol}`);
+      bbox = errorMsg.node().getBBox();
+    }
+
+    errorRect
+      .attr("x", bbox.x - 5)
+      .attr("y", bbox.y - 5)
+      .attr("width", bbox.width + 10)
+      .attr("height", bbox.height + 10);
+
+    errorWrapper.transition().duration(duration).attr("transform", getNewTransform());
+
+    if (isError) {
+      // Update path data
+      path
         .transition()
-        .duration(state.duration)
-        .text(`No intraday data available for ${state.symbol}`);
+        .duration(duration)
+        .attr(
+          "d",
+          d3
+            .line()
+            .x((d) => xScale(d.datetime))
+            .y((d) => yScale(d3.min(yScale.domain())))
+        );
       return;
     }
+
+    // ------ Line Chart ------ //
 
     // Parse the data
     const parsedData = data.map((d) => ({
       datetime: new Date(d.datetime),
       close: +d.close,
     }));
+
+    console.log(parsedData);
 
     // Set new domains
     xScale.domain(d3.extent(parsedData, (d) => d.datetime));
@@ -86,10 +136,7 @@ export async function makeIntraday(containerID) {
     path
       .datum(parsedData)
       .transition()
-      .duration(state.duration)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 1.5)
+      .duration(duration)
       .attr(
         "d",
         d3
@@ -99,7 +146,7 @@ export async function makeIntraday(containerID) {
       );
   };
 
-  const resizeSVG = () => {
+  const resizeSVG = (transition = true) => {
     // Get bounding box dimensions
     const { width, height } = getDimensions();
 
@@ -107,10 +154,6 @@ export async function makeIntraday(containerID) {
     svg
       .attr("width", width + margin.left + margin.right)
       .attr("height", height + margin.top + margin.bottom);
-
-    // Transform the wrapper to the new position (If margins changed)
-    // TODO: Check if we can remove this
-    wrapper.attr("transform", `translate(${margin.left},${margin.top})`);
 
     // Update x axis
     xWrapper
@@ -121,11 +164,11 @@ export async function makeIntraday(containerID) {
     yWrapper.call(d3.axisLeft(yScale));
 
     // Update the data with transitions
-    changeData(state.symbol);
+    changeData(state.symbol, transition);
   };
 
   // Call resize to generate initial SVG
-  resizeSVG();
+  resizeSVG(false);
 
   // Add listeners for symbol updates
   const update = () => {
