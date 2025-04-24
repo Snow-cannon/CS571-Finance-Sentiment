@@ -187,4 +187,26 @@ router.post("/symbol_sentiment_speedometer", async (req, res) => {
   }
 });
 
+router.post("/wordcloud", async (req, res) => {
+  try {
+    const { symbol } = req.body;
+    const start = "20220101T000000";
+    const end = "20221231T235959";
+    const limit_words = 10;
+    // Read the SQL query from the file
+    const queryPath = path.resolve("backend/sql_queries", "wordcloud.sql");
+    const query = fs.readFileSync(queryPath, "utf-8");
+
+    // Execute the query with hardcoded params
+    const result = await db.query(query, [symbol, start, end, limit_words]);
+    console.log("Speedometer data in dataroute:", result);
+    res.json({ result });
+// Send the result as JSON
+    // res.json(result);
+  } catch (err) {
+    console.error("Error executing query:", err, { body: req.body });
+    res.status(500).json({ error: "An error occurred while querying the database." });
+  }
+});
+
 export default router;

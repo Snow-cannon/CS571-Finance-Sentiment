@@ -14,23 +14,24 @@ export async function makeWordCloud(containerID) {
   container.selectAll("*").remove(); // Clear previous content
 
   // Fetch data for word cloud
-  //const data = await queryData("wordcloud", { symbol: state.symbol });
+  const data = await queryData("wordcloud", { symbol: state.symbol });
 
+  console.log("Word cloud data:", data);
 // Mock data for demonstration
-  const data = {
-    words: [
-      { word: "Innovation", size: 50 },
-      { word: "iPhone", size: 40 },
-      { word: "Ecosystem", size: 30 },
-      { word: "Services", size: 25 },
-      { word: "MacBook", size: 20 },
-      { word: "Revenue", size: 35 },
-      { word: "Growth", size: 28 },
-      { word: "Apple Watch", size: 22 },
-      { word: "Privacy", size: 26 },
-      { word: "AI", size: 32 },
-    ]
-  };
+  // const data = {
+  //   words: [
+  //     { word: "Innovation", size: 50 },
+  //     { word: "iPhone", size: 40 },
+  //     { word: "Ecosystem", size: 30 },
+  //     { word: "Services", size: 25 },
+  //     { word: "MacBook", size: 20 },
+  //     { word: "Revenue", size: 35 },
+  //     { word: "Growth", size: 28 },
+  //     { word: "Apple Watch", size: 22 },
+  //     { word: "Privacy", size: 26 },
+  //     { word: "AI", size: 32 },
+  //   ]
+  // };
   if (!data || !Array.isArray(data.words)) {
     container.append("p").text(`No word cloud data for ${state.symbol}`);
     return;
