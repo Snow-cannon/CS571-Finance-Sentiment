@@ -12,8 +12,9 @@ export async function makeSpeedometer(containerID) {
   container.selectAll("*").remove();
 
   // Mock data: replace with real queryData later
-  // const data = await queryData("speedometer", { symbol: state.symbol });
-  const data = { value: 3 }; // 0 = Bearish, 4 = Bullish
+  const data = await queryData("symbol_sentiment_speedometer", { symbol: state.symbol });
+  console.log("Speedometer data:", data);
+  // const data = { value: 3 }; // 0 = Bearish, 4 = Bullish
 
   const width = 300;
   const height = 200;
