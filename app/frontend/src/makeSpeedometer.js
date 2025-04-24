@@ -12,7 +12,8 @@ export async function makeSpeedometer(containerID) {
   container.selectAll("*").remove();
 
   // Mock data: replace with real queryData later
-  const data = await queryData("symbol_sentiment_speedometer", { symbol: state.symbol });
+  const queryResult = await queryData("symbol_sentiment_speedometer", { symbol: state.symbol });
+  const data = queryResult[0];
   console.log("Speedometer data:", data);
   // const data = { value: 3 }; // 0 = Bearish, 4 = Bullish
 
@@ -25,34 +26,39 @@ export async function makeSpeedometer(containerID) {
     { label: "Somewhat Bearish", color: "#e67e22" },
     { label: "Neutral", color: "#f1c40f" },
     { label: "Somewhat Bullish", color: "#2ecc71" },
-    { label: "Bullish", color: "#27ae60" }
+    { label: "Bullish", color: "#27ae60" },
   ];
 
-  const svg = container.append("svg")
+  const svg = container
+    .append("svg")
     .attr("width", width)
-    .attr("height", height + 40); // Added extra height for clarity
+    .attr("height", height + 40);
 
-  const g = svg.append("g")
-    .attr("transform", `translate(${width / 2}, ${height})`);
+  const g = svg.append("g").attr("transform", `translate(${width / 2}, ${height})`);
 
-  const arc = d3.arc()
+  const arc = d3
+    .arc()
     .innerRadius(radius - 20)
     .outerRadius(radius);
 
-  const angleScale = d3.scaleLinear()
-    .domain([0, 5])
+  const angleScale = d3
+    .scaleLinear()
+    .domain([-0.5, 0.5]) // -0.5 / 0.5 for max / min sentiment scores
     .range([-Math.PI / 2, Math.PI / 2]);
 
-  // Draw arcs per category
-  categories.forEach((cat, i) => {
+  // Non-uniform options
+  const ranges = [-0.5, -0.35, -0.15, 0.15, 0.35, 0.5];
+  const sections = d3.pairs(ranges);
+
+  sections.forEach(([start, end], i) => {
     g.append("path")
-      .attr("d", arc.startAngle(angleScale(i)).endAngle(angleScale(i + 1))())
-      .attr("fill", cat.color);
+      .attr("d", arc.startAngle(angleScale(start)).endAngle(angleScale(end))())
+      .attr("fill", categories[i].color);
   });
 
-  // Draw needle at the center of selected category
-  const needleAngle = angleScale(data.value + 8); // center of the segment
-  const needleLength = radius - 10; // Adjusted to not overshoot
+  // Use -0.5 to center on the speedometer
+  const needleAngle = angleScale(data.value - 0.5);
+  const needleLength = radius - 10;
   const x = needleLength * Math.cos(needleAngle);
   const y = needleLength * Math.sin(needleAngle);
 
