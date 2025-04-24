@@ -1,5 +1,5 @@
 --  the mosfrequent words from the new articles, lets work on the sql query first. Create a SQL query to extract the most frequent words from the summary field of news_articles for a given symbol and date range.
-
+-- Generate a list of stop words for me
 
 WITH articles AS (
   SELECT na.summary
