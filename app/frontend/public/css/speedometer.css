@@ -1,0 +1,12 @@
+/* Normal Line */
+line.needle {
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke: #111;
+}
+
+line.needle_null {
+  stroke-width: 5;
+  stroke-linecap: round;
+  stroke: rgb(148, 31, 31);
+}

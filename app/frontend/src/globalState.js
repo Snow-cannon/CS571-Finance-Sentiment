@@ -120,6 +120,43 @@ export class PageState {
     return this.#_transitionDuration;
   }
 
+  /** Returns the start and end time for date querys */
+  get queryDateRange() {
+    // Horrible but easy to write
+    // Would write better code for work but
+    // Here we are
+    let year = this.startYear + (this.quarter - (this.quarter % 5)) / 5;
+    let startQ = "";
+    let endQ = "";
+    switch (this.quarter % 5) {
+      case 1:
+        startQ = "0101";
+        endQ = "0331";
+        break;
+      case 2:
+        startQ = "0401";
+        endQ = "0630";
+        break;
+      case 3:
+        startQ = "0701";
+        endQ = "0930";
+        break;
+      case 4:
+        startQ = "1001";
+        endQ = "1231";
+        break;
+      default:
+        startQ = "0101";
+        endQ = "1231";
+        break;
+    }
+    let startT = "000000";
+    let endT = "235959";
+    const start = `${year}${startQ}T${startT}`;
+    const end = `${year}${endQ}T${endT}`;
+    return { start, end };
+  }
+
   /**
    * Adds a listener to be called when the target event is
    * dispatched.

@@ -32,9 +32,12 @@ export function makeSlider(containerID, minYear, maxYear) {
     .classed("date-selection-slider", true)
     .on("input", function (evt) {
       const value = d3.select(this).property("value");
+      selectionChange(value);
+    })
+    .on("change", function (evt) {
+      const value = d3.select(this).property("value");
       state.isQuarter = value % 5 > 0;
       state.quarter = value;
-      selectionChange(value);
     });
 
   // ------ SVG ------ //
@@ -86,6 +89,7 @@ export function makeSlider(containerID, minYear, maxYear) {
   // Allow users to click the ticks to update the slider
   svg.selectAll(".tick").on("click", (evt, d) => {
     slider.property("value", d);
+    state.quarter = d;
     selectionChange(d);
   });
 
