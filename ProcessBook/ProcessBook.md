@@ -229,6 +229,24 @@ We created a dynamic gauge using D3, where the needle rotates to point to the va
 
 This initial design is no connected to data from the database. While we have collected and stored the data in the backend database, we have not created the connection between the backend and frontend to facilitate updating it with the currently selected company. As such, the updates to the global state make no affect on the visual just yet, even though the data is present in the database.
 
+### Data Connection
+
+We upgraded the speedometer to connect to the database. Now it will update the angle of the needle based on the sentiment value of the selected year / quarter as well as the current company. We are aiming to add text specifying the names (Bearish / Neutral / Bullish) of the different bins to have an option other than just color, but for now the color will indicate the sentiment score to the user.
+
+In addition to the data connection, we made the speedometer take up the majority of the SVG. It does look a bit thin and we will try out a few more options for making it look good, but for now it is centered and looks more professional than the initial design.
+
+<center>
+<img src="./screenshots/speedometer/speedometer-positive.png" style="width: 50%; height: auto;" />
+</center>
+
+### Errors
+
+Since we are unable to get data for some companies during specific years / quarters, we need an effective way to indicate there is no data for the current selection. We reused the custom error message from the intraday visual, and had the error message float in from the left, as the visual is on the left side of the screen. The needle will also turn a dark shade of red to indiacte that the zeroed out position represents invalid data, in addition to the error message.
+
+<center>
+<img src="./screenshots/speedometer/speedometer-error.png" style="width: 50%; height: auto;" />
+</center>
+
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
@@ -255,6 +273,14 @@ This word cloud was initially meant to be combined with the speedometer visual, 
 </center>
 
 However, this has turned out to be a very difficult task. To simplify the task, we have split the visual into 2 separate visuals of the word cloud and the speedometer for overall sentiment. We will continue to aim for the combined visual if possible as it is much more appealing, but we also understand the difficulty this may pose to completing the project on time.
+
+### Data Connection
+
+We connected the word cloud to the backend database. The query gets the top 10 most used words from news articles, and uses a `d3.scaleLinear()` to map the lowest count word to `15px` and the highest count word to `70px`. The colors are still random, and we need to see if we can extract the sentiment data of each word. However the word size is accurate to the set of words retrieved.
+
+<center>
+<img src="./screenshots/wordCloud/wc-connected.png" style="width: 40%; height: auto;" />
+</center>
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
