@@ -1,0 +1,10 @@
+/* Normal Line */
+line.needle {
+  stroke-width: 3;
+  stroke: #111;
+}
+
+line.needle_null {
+  stroke-width: 3;
+  stroke: rgb(148, 31, 31);
+}

@@ -1,5 +1,6 @@
 import { PageState } from "./globalState.js";
 import { state } from "./index.js";
+import { ErrorMsg } from "./errorMsg.js";
 import queryData from "./makeQuery.js";
 import * as d3 from "d3";
 
@@ -11,19 +12,27 @@ export async function makeSpeedometer(containerID) {
   const container = d3.select(`#${containerID}`);
   container.selectAll("*").remove();
 
-  // Mock data: replace with real queryData later
-  const dateRange = state.queryDateRange;
-  const queryResult = await queryData("symbol_sentiment_speedometer", {
-    symbol: state.symbol,
-    start: dateRange.start,
-    end: dateRange.end,
-  });
-  const data = queryResult[0];
-  console.log("Speedometer data:", data);
+  // Set dimensions and margins for the chart
+  const margin = { top: 20, right: 30, bottom: 30, left: 50 };
 
-  const width = 300;
-  const height = 200;
-  const radius = 100;
+  /**
+   * Returns the width and height of the container taking margins into account
+   */
+  const getDimensions = () => {
+    // Get width of parent box
+    const { width: boundingWidth, height: boundingHeight } = container
+      .node()
+      .getBoundingClientRect();
+
+    // Apply margins
+    const width = boundingWidth - margin.left - margin.right;
+    const height = boundingHeight - margin.top - margin.bottom;
+
+    return { width, height };
+  };
+
+  const { width, height } = getDimensions();
+  const radius = height;
 
   const categories = [
     { label: "Bearish", color: "#e74c3c" },
@@ -60,27 +69,73 @@ export async function makeSpeedometer(containerID) {
       .attr("fill", categories[i].color);
   });
 
-  // Use -0.5 to center on the speedometer
-  const needleAngle = angleScale(data.value - 0.5);
-  const needleLength = radius - 10;
-  const x = needleLength * Math.cos(needleAngle);
-  const y = needleLength * Math.sin(needleAngle);
+  const line = g.append("line").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", 0);
 
-  g.append("line")
-    .attr("x1", 0)
-    .attr("y1", 0)
-    .attr("x2", x)
-    .attr("y2", y)
-    .attr("stroke", "#111")
-    .attr("stroke-width", 3);
-
-  // Re-render on symbol change
-  const update = () => {
-    state.removeListener(PageState.Events.SYMBOL, update);
-    state.removeListener(PageState.Events.TIME, update);
-    makeSpeedometer(containerID);
+  // Gets the data for the new needle value
+  const getData = async () => {
+    const dateRange = state.queryDateRange;
+    const queryResult = await queryData("symbol_sentiment_speedometer", {
+      symbol: state.symbol,
+      start: dateRange.start,
+      end: dateRange.end,
+    });
+    return queryResult[0].value;
   };
 
-  state.addListener(PageState.Events.SYMBOL, update);
-  state.addListener(PageState.Events.TIME, update);
+  // Universal error message for missing data
+  const error = new ErrorMsg(svg, "sentiment", ErrorMsg.Directions.RIGHT);
+
+  const updateLine = async (transition = true) => {
+    // Get data based on current state
+    let value = await getData();
+    const duration = transition ? state.duration : 0;
+
+    let needleLength = radius - 10;
+
+    // ------ Error Message ------ //
+
+    const { width, height } = getDimensions();
+
+    const isError = value === null;
+
+    // Display error message
+    if (isError) {
+      error.enter(width, height, transition);
+      value = 0;
+      line.attr("class", "needle_null");
+    } else {
+      line.attr("class", "needle");
+      error.exit(width, height, transition);
+    }
+
+    // Get current position (0 if no position)
+    const x = parseFloat(line.attr("x2") || 0);
+    const y = parseFloat(line.attr("y2") || 0);
+
+    // Get start / end angle
+    const startAngle = Math.atan2(y, x);
+    const endAngle = angleScale(value - 0.5);
+
+    // Update line position to reflect new sentiment value
+    line
+      .transition()
+      .duration(duration)
+      .attr("x1", 0)
+      .attr("y1", 0)
+
+      // Transition along the angle instead of the
+      .attrTween("x2", () => (t) => {
+        const angle = startAngle + (endAngle - startAngle) * t;
+        return needleLength * Math.cos(angle);
+      })
+      .attrTween("y2", () => (t) => {
+        const angle = startAngle + (endAngle - startAngle) * t;
+        return needleLength * Math.sin(angle);
+      });
+  };
+
+  updateLine(false);
+
+  state.addListener(PageState.Events.SYMBOL, updateLine);
+  state.addListener(PageState.Events.TIME, updateLine);
 }

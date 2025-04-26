@@ -86,6 +86,7 @@ export function makeSlider(containerID, minYear, maxYear) {
   // Allow users to click the ticks to update the slider
   svg.selectAll(".tick").on("click", (evt, d) => {
     slider.property("value", d);
+    state.quarter = d;
     selectionChange(d);
   });
 

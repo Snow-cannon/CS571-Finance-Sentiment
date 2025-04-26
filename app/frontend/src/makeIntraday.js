@@ -145,7 +145,6 @@ export async function makeIntraday(containerID) {
 
   state.addListener(PageState.Events.SYMBOL, resizeSVG);
   state.addListener(PageState.Events.RESIZE, () => {
-    console.log("message");
     resizeSVG(false);
   });
 }
