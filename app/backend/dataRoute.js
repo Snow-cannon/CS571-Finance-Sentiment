@@ -106,7 +106,6 @@ router.post("/intraday", async (req, res) => {
 });
 
 router.post("/balance_sheet_senkey", async (req, res) => {
-  
   try {
     const { symbol } = req.body;
 
@@ -126,7 +125,6 @@ router.post("/balance_sheet_senkey", async (req, res) => {
 });
 
 router.post("/cash_flow_senkey", async (req, res) => {
-  
   try {
     const { symbol } = req.body;
 
@@ -146,7 +144,6 @@ router.post("/cash_flow_senkey", async (req, res) => {
 });
 
 router.post("/income_statement_senkey", async (req, res) => {
-  
   try {
     const { symbol } = req.body;
 
@@ -165,12 +162,12 @@ router.post("/income_statement_senkey", async (req, res) => {
   }
 });
 
-
 router.post("/symbol_sentiment_speedometer", async (req, res) => {
   try {
-    const { symbol } = req.body;
-    const start = "20220101T000000";
-    const end = "20221231T235959";
+    const { symbol, start, end } = req.body;
+    console.log(start, end);
+    // const start = "20220101T000000";
+    // const end = "20221231T235959";
 
     // Read the SQL query from the file
     const queryPath = path.resolve("backend/sql_queries", "symbol_sentiment_speedometer.sql");
@@ -179,7 +176,7 @@ router.post("/symbol_sentiment_speedometer", async (req, res) => {
     // Execute the query with hardcoded params
     const result = await db.query(query, [symbol, start, end]);
     console.log("Speedometer data in dataroute:", result);
-// Send the result as JSON
+    // Send the result as JSON
     res.json(result);
   } catch (err) {
     console.error("Error executing query:", err, { body: req.body });
@@ -201,7 +198,7 @@ router.post("/wordcloud", async (req, res) => {
     const result = await db.query(query, [symbol, start, end, limit_words]);
     console.log("Speedometer data in dataroute:", result);
     res.json({ result });
-// Send the result as JSON
+    // Send the result as JSON
     // res.json(result);
   } catch (err) {
     console.error("Error executing query:", err, { body: req.body });

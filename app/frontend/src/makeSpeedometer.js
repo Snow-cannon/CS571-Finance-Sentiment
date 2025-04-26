@@ -12,10 +12,14 @@ export async function makeSpeedometer(containerID) {
   container.selectAll("*").remove();
 
   // Mock data: replace with real queryData later
-  const queryResult = await queryData("symbol_sentiment_speedometer", { symbol: state.symbol });
+  const dateRange = state.queryDateRange;
+  const queryResult = await queryData("symbol_sentiment_speedometer", {
+    symbol: state.symbol,
+    start: dateRange.start,
+    end: dateRange.end,
+  });
   const data = queryResult[0];
   console.log("Speedometer data:", data);
-  // const data = { value: 3 }; // 0 = Bearish, 4 = Bullish
 
   const width = 300;
   const height = 200;
@@ -73,8 +77,10 @@ export async function makeSpeedometer(containerID) {
   // Re-render on symbol change
   const update = () => {
     state.removeListener(PageState.Events.SYMBOL, update);
+    state.removeListener(PageState.Events.TIME, update);
     makeSpeedometer(containerID);
   };
 
   state.addListener(PageState.Events.SYMBOL, update);
+  state.addListener(PageState.Events.TIME, update);
 }
