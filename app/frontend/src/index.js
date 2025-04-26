@@ -24,9 +24,9 @@ export const state = new PageState({
   // Starting symbol is the first imported symbol, or 'WFC'
   symbol: queryTableData[0].Symbol || "WFC",
   // 0 indexed year is 2016
-  startYear: 2016,
+  startYear: 2022,
   // 0 indexed final year is 2022
-  endYear: 2022,
+  endYear: 2024,
   // Window-resize event is debounced by 50ms
   debounceTime: 200,
   // Global transition duration suggestion for visuals
