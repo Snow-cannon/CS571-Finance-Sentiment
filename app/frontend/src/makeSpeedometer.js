@@ -51,7 +51,7 @@ export async function makeSpeedometer(containerID) {
 
   const arc = d3
     .arc()
-    .innerRadius(radius - 20)
+    .innerRadius(radius - 30)
     .outerRadius(radius);
 
   const angleScale = d3
