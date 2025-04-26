@@ -54,14 +54,14 @@ export async function makeSpeedometer(containerID) {
     .innerRadius(radius - 30)
     .outerRadius(radius);
 
+  // Non-uniform options
+  const ranges = [-0.6, -0.35, -0.15, 0.15, 0.35, 0.6];
+  const sections = d3.pairs(ranges);
+
   const angleScale = d3
     .scaleLinear()
-    .domain([-0.5, 0.5]) // -0.5 / 0.5 for max / min sentiment scores
+    .domain([ranges[0], ranges[ranges.length - 1]]) // -0.5 / 0.5 for max / min sentiment scores
     .range([-Math.PI / 2, Math.PI / 2]);
-
-  // Non-uniform options
-  const ranges = [-0.5, -0.35, -0.15, 0.15, 0.35, 0.5];
-  const sections = d3.pairs(ranges);
 
   sections.forEach(([start, end], i) => {
     g.append("path")
@@ -88,6 +88,7 @@ export async function makeSpeedometer(containerID) {
   const updateLine = async (transition = true) => {
     // Get data based on current state
     let value = await getData();
+    console.log(value);
     const duration = transition ? state.duration : 0;
 
     let needleLength = radius - 10;
@@ -114,7 +115,7 @@ export async function makeSpeedometer(containerID) {
 
     // Get start / end angle
     const startAngle = Math.atan2(y, x);
-    const endAngle = angleScale(value - 0.5);
+    const endAngle = angleScale(value + ranges[0]);
 
     // Update line position to reflect new sentiment value
     line
