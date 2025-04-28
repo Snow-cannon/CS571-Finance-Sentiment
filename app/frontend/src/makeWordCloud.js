@@ -25,7 +25,7 @@ export async function makeWordCloud(containerID) {
   };
 
   const data = await getData();
-  console.log(data);
+  // console.log(data);
 
   if (!data || !Array.isArray(data)) {
     container.append("p").text(`No word cloud data for ${state.symbol}`);

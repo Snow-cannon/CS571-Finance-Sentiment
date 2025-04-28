@@ -65,8 +65,9 @@ WITH inc AS (
     netIncome
   FROM income_statement
   WHERE symbol = ?
-    AND fiscalDateEnding LIKE '2024%'
-    AND reportType = 'annual'
+    AND fiscalDateEnding BETWEEN ? AND ?
+    AND reportType = ?
+    AND reportedCurrency = 'USD'
   LIMIT 1
 )
 

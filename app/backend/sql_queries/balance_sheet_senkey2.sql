@@ -41,8 +41,8 @@ WITH bs AS (
     commonStockSharesOutstanding
   FROM balance_sheet
   WHERE symbol = ?
-    AND fiscalDateEnding like '2024%'
-    AND reportType = 'annual'
+    AND fiscalDateEnding BETWEEN ? AND ?
+    AND reportType = ?
     AND reportedCurrency = 'USD'
   LIMIT 1
 )

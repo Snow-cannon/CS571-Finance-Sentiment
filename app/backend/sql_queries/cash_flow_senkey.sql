@@ -73,14 +73,13 @@ WITH cf AS (
       + COALESCE(cashflowFromFinancing,0)) AS netCashFlow
   FROM cash_flow
   WHERE symbol = ?
-    AND fiscalDateEnding like '2024%'
-    AND reportType = 'annual'
+    AND fiscalDateEnding BETWEEN ? AND ?
+    AND reportType = ?
+    AND reportedCurrency = 'USD'
   LIMIT 1
 )
 
--------------------------------
--- Create Sankey flows per template
--------------------------------
+
 
 -- 1. Net income -> Cash from operations
 SELECT 
