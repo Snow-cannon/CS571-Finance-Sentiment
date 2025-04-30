@@ -88,7 +88,6 @@ export async function makeSpeedometer(containerID) {
   const updateLine = async (transition = true) => {
     // Get data based on current state
     let value = await getData();
-    console.log(value);
     const duration = transition ? state.duration : 0;
 
     let needleLength = radius - 10;
