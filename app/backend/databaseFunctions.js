@@ -1,5 +1,4 @@
 import sqlite3 from "sqlite3";
-import path from "path";
 
 export class DB {
   #_path;

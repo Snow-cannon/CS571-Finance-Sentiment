@@ -2,7 +2,6 @@ import express from "express";
 import path from "path";
 import { DB } from "./databaseFunctions.js";
 import fs from "fs";
-import { on } from "events";
 
 const router = express.Router();
 
@@ -181,7 +180,6 @@ router.post("/symbol_sentiment_speedometer", async (req, res) => {
 
     // Execute the query with hardcoded params
     const result = await db.query(query, [symbol, start, end]);
-    console.log("Speedometer data in dataroute:", result);
     // Send the result as JSON
     res.json(result);
   } catch (err) {
