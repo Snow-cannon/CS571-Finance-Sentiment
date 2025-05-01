@@ -91,18 +91,18 @@ export async function makeSpeedometer(containerID) {
 
     // ------ Error Message ------ //
 
-    const { width, height } = getDimensions();
+    const { boundingWidth, boundingHeight } = getDimensions();
 
     const isError = value === null;
 
     // Display error message
     if (isError) {
-      error.enter(width, height, transition);
+      error.enter(boundingWidth, boundingHeight, transition);
       value = 0;
       line.attr("class", "needle_null");
     } else {
       line.attr("class", "needle");
-      error.exit(width, height, transition);
+      error.exit(boundingWidth, boundingHeight, transition);
     }
 
     // Get current position (0 if no position)
