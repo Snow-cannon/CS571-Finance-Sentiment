@@ -1,5 +1,11 @@
+/* Citation: 
+  "How to create a Sankey diagram using D3.js?"
+   
+  prompt. ChatGPT, 9 April version, OpenAI, 9 April 2025, chat.openai.com.
+*/
+
 import * as d3 from "d3";
-import { sankey, sankeyLinkHorizontal } from "d3-sankey";
+import { sankey, sankeyLeft, sankeyLinkHorizontal } from "d3-sankey";
 import { state } from "./index.js";
 import { PageState } from "./globalState.js";
 import queryData from "./makeQuery.js";
@@ -84,6 +90,7 @@ export async function makeSenkey(containerID, sheet) {
       const sankeyGenerator = sankey()
         .nodeWidth(20)
         .nodePadding(15)
+        .nodeAlign(sankeyLeft)
         .extent([
           [0, 0],
           [width, height],
@@ -101,122 +108,189 @@ export async function makeSenkey(containerID, sheet) {
     return { error: true, sankeyData: null };
   };
 
-  // Retrieve data
-  const { error, sankeyData } = await getData(sheet);
-  console.log(sankeyData);
+  // Create the SVG container.
+  const svg = container
+    .append("svg")
+    .attr("width", boundingWidth)
+    .attr("height", boundingHeight)
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  // Check for errors
-  if (error) {
-    container.append("p").text("No data");
+  const linkG = svg.append("g");
+  const nodeG = svg.append("g");
+
+  // Function to assign a color based on the node name.
+  // For the income statement:
+  // - Positive targets (e.g., Revenue, Gross Profit, Operating Income, Net Income, EBIT, EBITDA) are green.
+  // - Cost/expense items (e.g., anything with "cost", "expense", "tax", "interest") are red.
+  function getNodeColor(d) {
+    const name = d.name.toLowerCase();
+    // Positive items – green hues.
+    if (
+      name.includes("revenue") ||
+      name.includes("gross profit") ||
+      name.includes("operating income") ||
+      name.includes("net income") ||
+      name.includes("ebit") ||
+      name.includes("ebitda")
+    ) {
+      // Use dark green if it is an aggregate node.
+      if (
+        name.trim() === "revenue" ||
+        name.trim() === "gross profit" ||
+        name.trim() === "operating income" ||
+        name.trim() === "net income" ||
+        name.trim() === "ebit" ||
+        name.trim() === "ebitda"
+      ) {
+        return "#4CAF50"; // Dark green.
+      } else {
+        return "#8BC34A"; // Light green.
+      }
+    }
+    // Cost and expense items – red hues.
+    if (
+      name.includes("cost") ||
+      name.includes("expense") ||
+      name.includes("tax") ||
+      name.includes("interest")
+    ) {
+      if (
+        name.trim() === "cost of revenue" ||
+        name.trim() === "operating expenses" ||
+        name.trim() === "income tax expense" ||
+        name.trim() === "interest expense"
+      ) {
+        return "#F44336"; // Dark red.
+      } else {
+        return "#FFCDD2"; // Light red.
+      }
+    }
+    // Default color.
+    return "#9E9E9E"; // Grey.
   }
 
-  if (!error) {
-    // Create the SVG container.
-    const svg = container
-      .append("svg")
-      .attr("width", boundingWidth)
-      .attr("height", boundingHeight)
-      .append("g")
-      .attr("transform", `translate(${margin.left},${margin.top})`);
+  /* Citation: 
+    "How to update d3 sankey draw function to use d3 update model with new data"
+   
+    prompt. ChatGPT, 1 May version, OpenAI, 1 May 2025, chat.openai.com.
+  */
+  function draw(sankeyData, transition = true) {
+    const duration = transition ? state.duration : 0;
 
-    // Function to assign a color based on the node name.
-    // For the income statement:
-    // - Positive targets (e.g., Revenue, Gross Profit, Operating Income, Net Income, EBIT, EBITDA) are green.
-    // - Cost/expense items (e.g., anything with "cost", "expense", "tax", "interest") are red.
-    function getNodeColor(d) {
-      const name = d.name.toLowerCase();
-      // Positive items – green hues.
-      if (
-        name.includes("revenue") ||
-        name.includes("gross profit") ||
-        name.includes("operating income") ||
-        name.includes("net income") ||
-        name.includes("ebit") ||
-        name.includes("ebitda")
-      ) {
-        // Use dark green if it is an aggregate node.
-        if (
-          name.trim() === "revenue" ||
-          name.trim() === "gross profit" ||
-          name.trim() === "operating income" ||
-          name.trim() === "net income" ||
-          name.trim() === "ebit" ||
-          name.trim() === "ebitda"
-        ) {
-          return "#4CAF50"; // Dark green.
-        } else {
-          return "#8BC34A"; // Light green.
-        }
-      }
-      // Cost and expense items – red hues.
-      if (
-        name.includes("cost") ||
-        name.includes("expense") ||
-        name.includes("tax") ||
-        name.includes("interest")
-      ) {
-        if (
-          name.trim() === "cost of revenue" ||
-          name.trim() === "operating expenses" ||
-          name.trim() === "income tax expense" ||
-          name.trim() === "interest expense"
-        ) {
-          return "#F44336"; // Dark red.
-        } else {
-          return "#FFCDD2"; // Light red.
-        }
-      }
-      // Default color.
-      return "#9E9E9E"; // Grey.
-    }
+    // ----- Links ----- //
 
-    function draw() {
-      // Draw links.
-      svg
-        .append("g")
-        .selectAll("path")
-        .data(sankeyData.links)
-        .enter()
-        .append("path")
-        .attr("d", sankeyLinkHorizontal())
-        .attr("fill", "none")
-        .attr("stroke", (d) => getNodeColor(d.source))
-        .attr("stroke-width", (d) => Math.max(1, d.width))
-        .attr("stroke-opacity", 0.5);
+    // Bind links to src/tgt key values for new data
+    const links = linkG
+      .selectAll("path")
+      .data(sankeyData.links, (d) => d.source.name + "-" + d.target.name);
 
-      // Draw nodes.
-      const node = svg.append("g").selectAll("g").data(sankeyData.nodes).enter().append("g");
+    // Remove extra items
+    links.exit().transition().duration(duration).attr("stroke-opacity", 0).remove();
 
-      // Node rectangles.
-      node
-        .append("rect")
-        .attr("x", (d) => d.x0)
-        .attr("y", (d) => d.y0)
-        .attr("height", (d) => d.y1 - d.y0)
-        .attr("width", (d) => d.x1 - d.x0)
-        .attr("fill", (d) => getNodeColor(d))
-        .attr("stroke", "#000");
+    // Modify old items
+    links
+      .transition()
+      .duration(duration)
+      .attr("d", sankeyLinkHorizontal())
+      .attr("stroke", (d) => getNodeColor(d.source))
+      .attr("stroke-width", (d) => Math.max(1, d.width));
 
-      // Node labels – position text to the right of nodes on the left half, and vice versa.
-      node
-        .append("text")
-        .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
-        .attr("y", (d) => (d.y0 + d.y1) / 2)
-        .attr("dy", "0.35em")
-        .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
-        .text((d) => d.name)
-        .style("font-family", "Arial, sans-serif")
-        .style("font-size", "12px");
-    }
+    // Generate new items
+    links
+      .enter()
+      .append("path")
+      .attr("fill", "none")
+      .attr("stroke", (d) => getNodeColor(d.source))
+      .attr("stroke-width", (d) => Math.max(1, d.width))
+      .attr("stroke-opacity", 0)
+      .attr("d", sankeyLinkHorizontal())
+      .transition()
+      .duration(duration)
+      .attr("stroke-opacity", 0.5);
 
-    draw();
+    // ----- Nodes ----- //
+
+    // Bind nodes to key data
+    const node = nodeG.selectAll("g").data(sankeyData.nodes, (d) => d.name);
+
+    /* REMOVE OLD UNUSED NODES */
+
+    node.exit().transition().duration(duration).style("opacity", 0).remove();
+
+    /* UPDATE OLD NODES */
+
+    // Modify old node rects
+    node
+      .select("rect")
+      .transition()
+      .duration(duration)
+      .attr("x", (d) => d.x0)
+      .attr("y", (d) => d.y0)
+      .attr("height", (d) => d.y1 - d.y0)
+      .attr("width", (d) => d.x1 - d.x0)
+      .attr("fill", (d) => getNodeColor(d));
+
+    // Modify old node labels
+    node
+      .select("text")
+      .transition()
+      .duration(duration)
+      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
+      .attr("y", (d) => (d.y0 + d.y1) / 2)
+      .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
+      .text((d) => d.name);
+
+    /* ADD NEW NODES */
+
+    const nodeRect = node.enter().append("g");
+
+    // add new rects for updates
+    nodeRect
+      .append("rect")
+      .attr("x", (d) => d.x0)
+      .attr("y", (d) => d.y0)
+      .attr("height", (d) => d.y1 - d.y0)
+      .attr("width", (d) => d.x1 - d.x0)
+      .attr("fill", (d) => getNodeColor(d))
+      .attr("stroke", "#000")
+      .style("opacity", 0)
+      .transition()
+      .duration(duration)
+      .style("opacity", 1);
+
+    // add new text
+    nodeRect
+      .append("text")
+      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
+      .attr("y", (d) => (d.y0 + d.y1) / 2)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
+      .text((d) => d.name)
+      .style("font-family", "Arial, sans-serif")
+      .style("font-size", "12px")
+      .style("opacity", 0)
+      .transition()
+      .duration(500)
+      .style("opacity", 1);
   }
 
   // Listener for symbol/state changes to update the diagram.
-  const update = () => {
-    state.removeListener(PageState.Events.SYMBOL, update);
-    makeSenkey(containerID, sheet);
+  const update = async () => {
+    // state.removeListener(PageState.Events.SYMBOL, update);
+    // makeSenkey(containerID, sheet);
+
+    // Retrieve data
+    const { error, sankeyData } = await getData(sheet);
+
+    if (error) {
+      return;
+    }
+
+    draw(sankeyData);
   };
+
+  update();
 
   state.addListener(PageState.Events.SYMBOL, update);
 }
