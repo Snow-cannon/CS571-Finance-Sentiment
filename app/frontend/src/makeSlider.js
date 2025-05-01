@@ -1,7 +1,6 @@
 import { PageState } from "./globalState.js";
 import { state } from "./index.js";
 import * as d3 from "d3";
-// import { sliderBottom } from "d3-simple-slider";
 
 /**
  * Creates a slider and tick marks

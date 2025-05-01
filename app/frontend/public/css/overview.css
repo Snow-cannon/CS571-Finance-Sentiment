@@ -28,6 +28,7 @@
 #overview-details {
   height: 100%;
   overflow: auto;
+  line-height: 175%;
 }
 
 .overview-container span.title {
