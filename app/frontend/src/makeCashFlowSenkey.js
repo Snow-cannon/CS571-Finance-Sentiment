@@ -19,28 +19,23 @@ export async function makeCashFlowSenkey(containerID) {
   // This query should return rows with columns: source, target, value.
   const data = await queryData("cash_flow_senkey", { symbol: state.symbol });
   if (!Array.isArray(data) || !data.length) {
-    container
-      .append("p")
-      .text(`No cash flow data available for ${state.symbol}`);
+    container.append("p").text(`No cash flow data available for ${state.symbol}`);
   } else {
     // Process the data into nodes and links.
-    const nodes = Array.from(
-      new Set(data.flatMap((d) => [d.source, d.target])),
-      (name) => ({ name })
-    );
+    const nodes = Array.from(new Set(data.flatMap((d) => [d.source, d.target])), (name) => ({
+      name,
+    }));
     const nodeMap = new Map(nodes.map((d, i) => [d.name, i]));
 
     // Determine your data range
-    const valueExtent = d3.extent(data, d => +d.value);
-    const valueScale = d3.scaleLinear()
-    .domain(valueExtent)
-    .range([0, 100]); 
+    const valueExtent = d3.extent(data, (d) => +d.value);
+    const valueScale = d3.scaleLinear().domain(valueExtent).range([0, 100]);
 
     const links = data.map((d) => ({
-        source: nodeMap.get(d.source),
-        target: nodeMap.get(d.target),
-        value: valueScale(+d.value),
-      }));
+      source: nodeMap.get(d.source),
+      target: nodeMap.get(d.target),
+      value: valueScale(+d.value),
+    }));
 
     // Set overall diagram dimensions and margins.
     const margin = { top: 20, right: 20, bottom: 20, left: 20 };
@@ -116,45 +111,51 @@ export async function makeCashFlowSenkey(containerID) {
     //   return "#9E9E9E"; // Default grey.
     // }
     function getNodeColor(d) {
-        const name = d.name.toLowerCase();
-      
-        // Operating / cash from operations nodes: green hues.
-        if (name.includes("net income")) {
-          return "#4CAF50"; // Dark Green for Net Income.
-        } else if (name.includes("cash from operations") || name.includes("non-cash charges") || name.includes("working capital")) {
-          return "#4CAF50"; // Green.
-        } else if (name.includes("depreciation & amortization") || name.includes("stock-based compensation")) {
-          return "#8BC34A"; // Light Green.
-        }
-        
-        // Investing activities: light red.
-        else if (
-          name.includes("cash from investing") ||
-          name.includes("capital expenditure") ||
-          name.includes("purchase of securities") ||
-          name.includes("proceeds from securities") ||
-          name.includes("other cash from investing")
-        ) {
-          return "#FFCDD2"; // Light Red.
-        }
-        
-        // Financing activities: red.
-        else if (
-          name.includes("cash from financing") ||
-          name.includes("stock buybacks") ||
-          name.includes("dividends") ||
-          name.includes("tax") ||
-          name.includes("repayment of term debt") ||
-          name.includes("repayment of commercial paper") ||
-          name.includes("other cash from financing")
-        ) {
-          return "#F44336"; // Red.
-        }
-        
-        // Fallback color.
-        return "#8BC34A"; // Default to Light Green.
+      const name = d.name.toLowerCase();
+
+      // Operating / cash from operations nodes: green hues.
+      if (name.includes("net income")) {
+        return "#4CAF50"; // Dark Green for Net Income.
+      } else if (
+        name.includes("cash from operations") ||
+        name.includes("non-cash charges") ||
+        name.includes("working capital")
+      ) {
+        return "#4CAF50"; // Green.
+      } else if (
+        name.includes("depreciation & amortization") ||
+        name.includes("stock-based compensation")
+      ) {
+        return "#8BC34A"; // Light Green.
       }
-      
+
+      // Investing activities: light red.
+      else if (
+        name.includes("cash from investing") ||
+        name.includes("capital expenditure") ||
+        name.includes("purchase of securities") ||
+        name.includes("proceeds from securities") ||
+        name.includes("other cash from investing")
+      ) {
+        return "#FFCDD2"; // Light Red.
+      }
+
+      // Financing activities: red.
+      else if (
+        name.includes("cash from financing") ||
+        name.includes("stock buybacks") ||
+        name.includes("dividends") ||
+        name.includes("tax") ||
+        name.includes("repayment of term debt") ||
+        name.includes("repayment of commercial paper") ||
+        name.includes("other cash from financing")
+      ) {
+        return "#F44336"; // Red.
+      }
+
+      // Fallback color.
+      return "#8BC34A"; // Default to Light Green.
+    }
 
     // Draw links.
     svg
@@ -170,12 +171,7 @@ export async function makeCashFlowSenkey(containerID) {
       .attr("stroke-opacity", 0.5);
 
     // Draw nodes.
-    const node = svg
-      .append("g")
-      .selectAll("g")
-      .data(sankeyData.nodes)
-      .enter()
-      .append("g");
+    const node = svg.append("g").selectAll("g").data(sankeyData.nodes).enter().append("g");
 
     // Node rectangles.
     node
