@@ -19,15 +19,12 @@ export async function makeIncomeStatementSenkey(containerID) {
   // The query should return rows with columns: source, target, value.
   const data = await queryData("income_statement_senkey", { symbol: state.symbol });
   if (!Array.isArray(data) || !data.length) {
-    container
-      .append("p")
-      .text(`No income statement data available for ${state.symbol}`);
+    container.append("p").text(`No income statement data available for ${state.symbol}`);
   } else {
     // Process the data into nodes and links.
-    const nodes = Array.from(
-      new Set(data.flatMap((d) => [d.source, d.target])),
-      (name) => ({ name })
-    );
+    const nodes = Array.from(new Set(data.flatMap((d) => [d.source, d.target])), (name) => ({
+      name,
+    }));
     const nodeMap = new Map(nodes.map((d, i) => [d.name, i]));
     const links = data.map((d) => ({
       source: nodeMap.get(d.source),
@@ -128,12 +125,7 @@ export async function makeIncomeStatementSenkey(containerID) {
       .attr("stroke-opacity", 0.5);
 
     // Draw nodes.
-    const node = svg
-      .append("g")
-      .selectAll("g")
-      .data(sankeyData.nodes)
-      .enter()
-      .append("g");
+    const node = svg.append("g").selectAll("g").data(sankeyData.nodes).enter().append("g");
 
     // Node rectangles.
     node
