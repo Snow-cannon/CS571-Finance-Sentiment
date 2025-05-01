@@ -15,9 +15,10 @@ export async function makeIncomeStatementSenkey(containerID) {
   container.selectAll("svg").remove();
   container.selectAll("p").remove();
 
+  const data = await queryData("income_statement_senkey", { symbol: state.symbol });
+
   // Fetch the income statement data for the selected symbol.
   // The query should return rows with columns: source, target, value.
-  const data = await queryData("income_statement_senkey", { symbol: state.symbol });
   if (!Array.isArray(data) || !data.length) {
     container.append("p").text(`No income statement data available for ${state.symbol}`);
   } else {

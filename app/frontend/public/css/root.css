@@ -13,9 +13,12 @@ body {
   grid-template-areas:
     "overview selection selection"
     "speedometer words stocks"
-    "cash1 cash2 cash3";
+    /* "cash1 cash2 cash3" */
+    "cash cash cash";
   grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: var(--grid-row-height) var(--grid-row-height);
+  grid-template-rows: var(--grid-row-height) var(--grid-row-height) var(--grid-row-height) var(
+      --grid-row-height
+    );
   row-gap: 10px;
   column-gap: 10px;
   padding: 5px;
@@ -33,7 +36,7 @@ body {
   grid-area: stocks;
 }
 
-#grid-wrapper > #balance_sheet_senkey {
+/* #grid-wrapper > #balance_sheet_senkey {
   grid-area: cash1;
 }
 
@@ -43,6 +46,10 @@ body {
 
 #grid-wrapper > #income_statement_senkey {
   grid-area: cash3;
+} */
+
+#grid-wrapper > #sankey {
+  grid-area: cash;
 }
 
 #grid-wrapper > #speedometer {
