@@ -28,10 +28,10 @@ export async function makeSpeedometer(containerID) {
     const width = boundingWidth - margin.left - margin.right;
     const height = boundingHeight - margin.top - margin.bottom;
 
-    return { width, height };
+    return { width, height, boundingWidth, boundingHeight };
   };
 
-  const { width, height } = getDimensions();
+  const { width, height, boundingWidth, boundingHeight } = getDimensions();
   const radius = height;
 
   const categories = [
@@ -42,12 +42,9 @@ export async function makeSpeedometer(containerID) {
     { label: "Bullish", color: "#27ae60" },
   ];
 
-  const svg = container
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height + 40);
+  const svg = container.append("svg").attr("width", boundingWidth).attr("height", boundingHeight);
 
-  const g = svg.append("g").attr("transform", `translate(${width / 2}, ${height})`);
+  const g = svg.append("g").attr("transform", `translate(${boundingWidth / 2}, ${boundingHeight})`);
 
   const arc = d3
     .arc()
