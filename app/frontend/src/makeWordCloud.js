@@ -1,3 +1,4 @@
+import { ErrorMsg } from "./errorMsg.js";
 import { PageState } from "./globalState.js";
 import { state } from "./index.js";
 import queryData from "./makeQuery.js";
@@ -71,46 +72,44 @@ export async function makeWordCloud(containerID) {
     .domain(d3.extent(data, (d) => d.occurrence_count))
     .range([20, 70]);
 
-  const svg = container
-    .append("svg")
-    .attr("width", boundingWidth)
-    .attr("height", boundingHeight)
-    .append("g")
-    .attr("transform", `translate(${width / 2},${height / 2})`);
+  const svg = container.append("svg").attr("width", boundingWidth).attr("height", boundingHeight);
+
+  const g = svg.append("g").attr("transform", `translate(${width / 2},${height / 2})`);
 
   // Define layout
   const layout = cloud()
     .size([width, height])
-    .words(
-      data.map((d) => ({
-        text: d.word,
-        size: Math.round(xScale(d.occurrence_count)),
-        score: sections.findIndex(
-          (bin) => d.weighted_sentiment_score >= bin[0] && d.weighted_sentiment_score <= bin[1]
-        ),
-      }))
-    )
+    // .words(
+    //   data.map((d) => ({
+    //     text: d.word,
+    //     size: Math.round(xScale(d.occurrence_count)),
+    //     score: sections.findIndex(
+    //       (bin) => d.weighted_sentiment_score >= bin[0] && d.weighted_sentiment_score <= bin[1]
+    //     ),
+    //   }))
+    // )
     .padding(5)
     .rotate(0)
     .font("Impact")
-    .fontSize((d) => d.size)
+    // .fontSize((d) => d.size)
     .on("end", draw);
 
-  layout.start();
+  // layout.start();
 
   // Draw function
-  function draw(words) {
-    svg.selectAll("text").remove();
+  function draw(words, transition = true) {
+    const duration = transition ? state.duration : 0;
 
-    svg
-      .selectAll("text")
+    g.selectAll("text").remove();
+
+    g.selectAll("text")
       .data(words)
       .enter()
       .append("text")
       .attr("transform", (d) => `translate(${d.x},${d.y})rotate(${d.rotate})`)
       .style("font-size", 0)
       .transition()
-      .duration(state.duration / 2)
+      .duration(duration)
       .style("font-size", (d) => `${d.size}px`)
       .style("font-family", "Impact")
       .style("fill", (d, i) => categories[d.score].color)
@@ -118,13 +117,23 @@ export async function makeWordCloud(containerID) {
       .text((d) => d.text);
   }
 
-  // Update listener
-  const update = async () => {
-    const data = await getData();
+  // Universal error message for missing data
+  const error = new ErrorMsg(svg, "word", ErrorMsg.Directions.LEFT);
 
-    if (!data || !Array.isArray(data)) {
-      container.append("p").text(`No word cloud data for ${state.symbol}`);
-      return;
+  // Update listener
+  const update = async (transition = true) => {
+    let data = await getData();
+    const duration = transition ? state.duration : 0;
+
+    const { boundingWidth, boundingHeight } = getDimensions();
+
+    if (!data || !Array.isArray(data) || data.length === 0) {
+      // container.append("p").text(`No word cloud data for ${state.symbol}`);
+      error.enter(boundingWidth, boundingHeight, duration);
+      data = [];
+      // return;
+    } else {
+      error.exit(boundingWidth, boundingHeight, duration);
     }
 
     xScale.domain(d3.extent(data, (d) => d.occurrence_count));
@@ -139,9 +148,12 @@ export async function makeWordCloud(containerID) {
           ),
         }))
       )
-      .on("end", draw)
+      .on("end", (words) => draw(words, transition))
+      .fontSize((d) => d.size)
       .start();
   };
+
+  update(false);
 
   state.addListener(PageState.Events.SYMBOL, update);
   state.addListener(PageState.Events.TIME, update);
