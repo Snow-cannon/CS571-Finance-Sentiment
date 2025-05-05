@@ -63,30 +63,50 @@ export async function makeSenkey(containerID, sheet) {
       // The query should return rows with columns: source, target, value.
       const data = await queryData(endpoints[sheet], { symbol: state.symbol });
 
-      const filteredData = data.filter((d) => d.value !== "None");
-
       // Verify the retrieved data is correct
-      if (!Array.isArray(filteredData) || !filteredData.length) {
+      if (!Array.isArray(data) || !data.length) {
         return { error: true, sankeyData: null };
       }
 
-      // Process the data into nodes and links.
+      // Filter out "None" values and process value and isNegative
+      const processedData = data
+        .filter((d) => d.value !== "None")
+        .map((d) => ({
+          ...d,
+          value: Math.abs(+d.value),
+          isNegative: +d.value < 0,
+        }));
+
+      // Track node names that participate in negative links
+      const negativeNodeNames = new Set();
+      processedData.forEach((d) => {
+        if (d.isNegative) {
+          negativeNodeNames.add(d.source);
+          negativeNodeNames.add(d.target);
+        }
+      });
+
+      // Create unique node list and mark those involved in negative links
       const nodes = Array.from(
-        new Set(filteredData.flatMap((d) => [d.source, d.target])),
+        new Set(processedData.flatMap((d) => [d.source, d.target])),
         (name) => ({
           name,
+          isNegative: negativeNodeNames.has(name),
         })
       );
 
+      // Map node names to indices
       const nodeMap = new Map(nodes.map((d, i) => [d.name, i]));
 
-      const links = filteredData.map((d) => ({
+      // Build links with index-based source/target and retain isNegative
+      const links = processedData.map((d) => ({
         source: nodeMap.get(d.source),
         target: nodeMap.get(d.target),
-        value: +d.value, // convert to number
+        value: d.value,
+        isNegative: d.isNegative,
       }));
 
-      // Create the sankey layout generator.
+      // Create the sankey layout generator
       const sankeyGenerator = sankey()
         .nodeWidth(20)
         .nodePadding(15)
@@ -96,9 +116,9 @@ export async function makeSenkey(containerID, sheet) {
           [width, height],
         ]);
 
-      // Prepare the sankey diagram data.
+      // Generate the Sankey layout
       const sankeyData = sankeyGenerator({
-        nodes: nodes.map((d) => ({ ...d })),
+        nodes: nodes.map((d) => ({ ...d })), // Copy to prevent mutation
         links: links.map((d) => ({ ...d })),
       });
 
@@ -123,52 +143,38 @@ export async function makeSenkey(containerID, sheet) {
   // For the income statement:
   // - Positive targets (e.g., Revenue, Gross Profit, Operating Income, Net Income, EBIT, EBITDA) are green.
   // - Cost/expense items (e.g., anything with "cost", "expense", "tax", "interest") are red.
-  function getNodeColor(d) {
-    const name = d.name.toLowerCase();
-    // Positive items – green hues.
-    if (
-      name.includes("revenue") ||
-      name.includes("gross profit") ||
-      name.includes("operating income") ||
-      name.includes("net income") ||
-      name.includes("ebit") ||
-      name.includes("ebitda")
-    ) {
-      // Use dark green if it is an aggregate node.
-      if (
-        name.trim() === "revenue" ||
-        name.trim() === "gross profit" ||
-        name.trim() === "operating income" ||
-        name.trim() === "net income" ||
-        name.trim() === "ebit" ||
-        name.trim() === "ebitda"
-      ) {
-        return "#4CAF50"; // Dark green.
-      } else {
-        return "#8BC34A"; // Light green.
-      }
+
+  const titleMap = {
+    light_green: ["revenue", "gross profit", "operating income", "net income", "ebit", "ebitda"],
+    dark_green: ["revenue", "gross profit", "operating income", "net income", "ebit", "ebitda"],
+    light_red: ["cost", "expense", "tax", "interest"],
+    dark_red: ["cost of revenue", "operating expenses", "income tax expense", "interest expense"],
+  };
+
+  const colorMap = {
+    light_green: "#8BC34A",
+    dark_green: "#4CAF50",
+    dark_red: "#F44336",
+    light_red: "#FFCDD2",
+    gray: "#9E9E9E",
+  };
+
+  const titleColor = (d) => {
+    const title = d.name.toLowerCase().trim();
+    const negative = d.isNegative;
+
+    if (titleMap.dark_green.includes(title)) {
+      return !negative ? colorMap.dark_green : colorMap.dark_red;
+    } else if (titleMap.dark_red.includes(title)) {
+      return !negative ? colorMap.dark_red : colorMap.dark_green;
+    } else if (titleMap.light_green.filter((str) => title.includes(str)).length) {
+      return !negative ? colorMap.light_green : colorMap.light_red;
+    } else if (titleMap.light_red.filter((str) => title.includes(str)).length) {
+      return !negative ? colorMap.light_red : colorMap.light_green;
     }
-    // Cost and expense items – red hues.
-    if (
-      name.includes("cost") ||
-      name.includes("expense") ||
-      name.includes("tax") ||
-      name.includes("interest")
-    ) {
-      if (
-        name.trim() === "cost of revenue" ||
-        name.trim() === "operating expenses" ||
-        name.trim() === "income tax expense" ||
-        name.trim() === "interest expense"
-      ) {
-        return "#F44336"; // Dark red.
-      } else {
-        return "#FFCDD2"; // Light red.
-      }
-    }
-    // Default color.
-    return "#9E9E9E"; // Grey.
-  }
+
+    return colorMap.gray;
+  };
 
   /* Citation: 
     "How to update d3 sankey draw function to use d3 update model with new data"
@@ -193,7 +199,7 @@ export async function makeSenkey(containerID, sheet) {
       .transition()
       .duration(duration)
       .attr("d", sankeyLinkHorizontal())
-      .attr("stroke", (d) => getNodeColor(d.source))
+      .attr("stroke", (d) => titleColor(d.source))
       .attr("stroke-width", (d) => Math.max(1, d.width));
 
     // Generate new items
@@ -201,7 +207,7 @@ export async function makeSenkey(containerID, sheet) {
       .enter()
       .append("path")
       .attr("fill", "none")
-      .attr("stroke", (d) => getNodeColor(d.source))
+      .attr("stroke", (d) => titleColor(d.source))
       .attr("stroke-width", (d) => Math.max(1, d.width))
       .attr("stroke-opacity", 0)
       .attr("d", sankeyLinkHorizontal())
@@ -229,7 +235,7 @@ export async function makeSenkey(containerID, sheet) {
       .attr("y", (d) => d.y0)
       .attr("height", (d) => d.y1 - d.y0)
       .attr("width", (d) => d.x1 - d.x0)
-      .attr("fill", (d) => getNodeColor(d));
+      .attr("fill", (d) => titleColor(d));
 
     // Modify old node labels
     node
@@ -252,7 +258,7 @@ export async function makeSenkey(containerID, sheet) {
       .attr("y", (d) => d.y0)
       .attr("height", (d) => d.y1 - d.y0)
       .attr("width", (d) => d.x1 - d.x0)
-      .attr("fill", (d) => getNodeColor(d))
+      .attr("fill", (d) => titleColor(d))
       .attr("stroke", "#000")
       .style("opacity", 0)
       .transition()
@@ -277,9 +283,6 @@ export async function makeSenkey(containerID, sheet) {
 
   // Listener for symbol/state changes to update the diagram.
   const update = async () => {
-    // state.removeListener(PageState.Events.SYMBOL, update);
-    // makeSenkey(containerID, sheet);
-
     // Retrieve data
     const { error, sankeyData } = await getData(sheet);
 
