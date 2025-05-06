@@ -11,6 +11,8 @@ export class PageState {
   #_endYear;
   /** Global transition suggestion */
   #_transitionDuration;
+  /** Currently selected sankey graph */
+  #_sankeyType;
 
   /**
    * A list of all callback functions hashed by
@@ -31,6 +33,7 @@ export class PageState {
     SYMBOL: "symbol",
     TIME: "time",
     RESIZE: "resize",
+    SANKEY_SELECT: "sankey select",
   };
 
   static DATE_TYPE = {
@@ -39,8 +42,15 @@ export class PageState {
     INTRADAY: "intraday",
   };
 
+  static SANKEY_TYPE = {
+    BALANCE: "balance",
+    INCOME: "income",
+    CASH: "cash",
+  };
+
   constructor(options) {
     this.#_quarter = 0;
+    this.#_sankeyType = options.sankey || PageState.SANKEY_TYPE.BALANCE;
     this.#_isQuarter = false;
     this.#_callbacks = {};
     this.#_startYear = options.startYear || 2016;
@@ -124,6 +134,19 @@ export class PageState {
   /** returns the duration suggestion for visuals */
   get duration() {
     return this.#_transitionDuration;
+  }
+
+  /** returns the currently selected sankey type */
+  get sankey() {
+    return this.#_sankeyType;
+  }
+
+  /** If valid, sets the global sankey type to the input */
+  set sankey(sankey) {
+    if (PageState.SANKEY_TYPE.hasOwnProperty(sankey)) {
+      this.#_sankeyType = sankey;
+      this.dispatch(PageState.Events.SANKEY_SELECT);
+    }
   }
 
   /** Returns the start and end time for date querys */

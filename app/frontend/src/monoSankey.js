@@ -10,18 +10,11 @@ import { state } from "./index.js";
 import { PageState } from "./globalState.js";
 import queryData from "./makeQuery.js";
 
-/** Maps the sankey graph type to strings */
-export const sheets = {
-  BALANCE: "balance",
-  INCOME: "income",
-  CASH: "cash",
-};
-
 /** Maps sheet names to endpoints */
 const endpoints = {};
-endpoints[sheets.BALANCE] = "balance_sheet_senkey";
-endpoints[sheets.INCOME] = "income_statement_senkey";
-endpoints[sheets.CASH] = "cash_flow_senkey";
+endpoints[PageState.SANKEY_TYPE.BALANCE] = "balance_sheet_senkey";
+endpoints[PageState.SANKEY_TYPE.INCOME] = "income_statement_senkey";
+endpoints[PageState.SANKEY_TYPE.CASH] = "cash_flow_senkey";
 
 /**
  * Creates a Sankey diagram for the specified data.
@@ -56,13 +49,13 @@ export async function makeSenkey(containerID, sheet) {
   const { width, height, boundingWidth, boundingHeight } = getDimensions();
 
   /** Returns the data for the specified sheet */
-  const getData = async (sheet) => {
+  const getData = async () => {
     // Check if the sheet is valid
-    if (endpoints[sheet]) {
+    if (endpoints[state.sankey]) {
       // Get the data from the endpoint for the specified data / time / symbol
       // The query should return rows with columns: source, target, value.
       const { start, end } = state.queryDateRange(PageState.DATE_TYPE.SANKEY);
-      const data = await queryData(endpoints[sheet], {
+      const data = await queryData(endpoints[state.sankey], {
         symbol: state.symbol,
         report_type: state.isQuarter ? "quarterly" : "annual",
         start,
@@ -338,7 +331,7 @@ export async function makeSenkey(containerID, sheet) {
   // Listener for symbol/state changes to update the diagram.
   const update = async () => {
     // Retrieve data
-    const { error, sankeyData } = await getData(sheet);
+    const { error, sankeyData } = await getData(state.sankey);
 
     if (error) {
       return;
