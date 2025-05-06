@@ -29,19 +29,16 @@ export function makeSlider(containerID, minYear, maxYear) {
     .attr("step", 1)
     .attr("value", 0)
     .classed("date-selection-slider", true)
-    .on("input", function (evt) {
+    .on("change", function (evt) {
       const value = d3.select(this).property("value");
-      // console.log("input", value);
       state.isQuarter = value % 5 > 0;
       state.quarter = value;
       selectionChange(value);
     })
-    // .on("change", function (evt) {
-    //   const value = d3.select(this).property("value");
-    //   console.log("change", value);
-    //   // state.isQuarter = value % 5 > 0;
-    //   // state.quarter = value;
-    // });
+    .on("input", function (evt) {
+      const value = d3.select(this).property("value");
+      selectionChange(value);
+    });
 
   // ------ SVG ------ //
 
@@ -93,7 +90,7 @@ export function makeSlider(containerID, minYear, maxYear) {
   svg.selectAll(".tick").on("click", (evt, d) => {
     slider.property("value", d);
     state.quarter = d;
-    // selectionChange(d);
+    selectionChange(d);
   });
 
   // Add highlight rect

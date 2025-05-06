@@ -291,6 +291,7 @@ export async function makeSenkey(containerID, sheet) {
   const update = async () => {
     // Retrieve data
     const { error, sankeyData } = await getData(sheet);
+    // console.log(error);
 
     if (error) {
       return;
@@ -299,8 +300,8 @@ export async function makeSenkey(containerID, sheet) {
     draw(sankeyData);
   };
 
-  update();
-
   state.addListener(PageState.Events.SYMBOL, update);
   state.addListener(PageState.Events.TIME, update);
+
+  update();
 }
