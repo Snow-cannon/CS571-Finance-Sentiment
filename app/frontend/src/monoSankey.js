@@ -150,10 +150,34 @@ export async function makeSenkey(containerID, sheet) {
   // - Cost/expense items (e.g., anything with "cost", "expense", "tax", "interest") are red.
 
   const titleMap = {
-    light_green: ["revenue", "gross profit", "operating income", "net income", "ebit", "ebitda"],
-    dark_green: ["revenue", "gross profit", "operating income", "net income", "ebit", "ebitda"],
-    light_red: ["cost", "expense", "tax", "interest"],
-    dark_red: ["cost of revenue", "operating expenses", "income tax expense", "interest expense"],
+    light_green: [
+      // "revenue",
+      "gross profit",
+      "operating income",
+      "net income",
+      "ebit",
+      "ebitda",
+      "asset",
+    ],
+    dark_green: [
+      // "revenue",
+      "gross profit",
+      "operating income",
+      "net income",
+      "ebit",
+      "ebitda",
+      "assets",
+    ],
+    light_red: ["cost", "expense", "tax", "interest", "liabilit", "equity"],
+    dark_red: [
+      "cost of revenue",
+      "operating expenses",
+      "income tax expense",
+      "interest expense",
+      "liabilities",
+      "equity",
+      "shareholder equity",
+    ],
   };
 
   const colorMap = {
@@ -291,7 +315,6 @@ export async function makeSenkey(containerID, sheet) {
   const update = async () => {
     // Retrieve data
     const { error, sankeyData } = await getData(sheet);
-    // console.log(error);
 
     if (error) {
       return;
