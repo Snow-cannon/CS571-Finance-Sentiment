@@ -27,6 +27,8 @@ export async function makeSenkey(containerID, sheet) {
   container.selectAll("svg").remove();
   container.selectAll("p").remove();
 
+  // ----- Obtain Dimensions ----- //
+
   // Set dimensions and margins for the chart
   const margin = { top: 20, right: 30, bottom: 30, left: 50 };
 
@@ -47,6 +49,8 @@ export async function makeSenkey(containerID, sheet) {
   };
 
   const { width, height, boundingWidth, boundingHeight } = getDimensions();
+
+  // ----- Get SANKEY Data ----- //
 
   /** Returns the data for the specified sheet */
   const getData = async () => {
@@ -126,7 +130,30 @@ export async function makeSenkey(containerID, sheet) {
     return { error: true, sankeyData: null };
   };
 
-  // Create the SVG container.
+  // ----- Add selection dropdown ----- //
+
+  const options = Object.values(PageState.SANKEY_TYPE);
+
+  const selectWrapper = container.insert("div", ":first-child").classed("sankey-selection", true);
+
+  const select = selectWrapper
+    .append("select")
+    .attr("id", "sankey-selection")
+    .on("change", function (evt) {
+      const value = d3.select(this).property("value");
+      state.sankey = value;
+    });
+
+  select
+    .selectAll("option")
+    .data(options)
+    .enter()
+    .append("option")
+    .attr("value", (d) => d)
+    .text((d) => d);
+
+  // ----- Create SVG ----- //
+
   const svg = container
     .append("svg")
     .attr("width", boundingWidth)
@@ -137,10 +164,7 @@ export async function makeSenkey(containerID, sheet) {
   const linkG = svg.append("g");
   const nodeG = svg.append("g");
 
-  // Function to assign a color based on the node name.
-  // For the income statement:
-  // - Positive targets (e.g., Revenue, Gross Profit, Operating Income, Net Income, EBIT, EBITDA) are green.
-  // - Cost/expense items (e.g., anything with "cost", "expense", "tax", "interest") are red.
+  // ----- Create Color Map ----- //
 
   const titleMap = {
     light_green: [
@@ -342,6 +366,7 @@ export async function makeSenkey(containerID, sheet) {
 
   state.addListener(PageState.Events.SYMBOL, update);
   state.addListener(PageState.Events.TIME, update);
+  state.addListener(PageState.Events.SANKEY_SELECT, update);
 
   update();
 }

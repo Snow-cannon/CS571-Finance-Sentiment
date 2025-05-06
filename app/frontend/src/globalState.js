@@ -43,9 +43,9 @@ export class PageState {
   };
 
   static SANKEY_TYPE = {
-    BALANCE: "balance",
-    INCOME: "income",
-    CASH: "cash",
+    BALANCE: "Balance Sheet",
+    INCOME: "Income Statement",
+    CASH: "Cash Flow",
   };
 
   constructor(options) {
@@ -143,7 +143,8 @@ export class PageState {
 
   /** If valid, sets the global sankey type to the input */
   set sankey(sankey) {
-    if (PageState.SANKEY_TYPE.hasOwnProperty(sankey)) {
+    console.log(sankey);
+    if (Object.values(PageState.SANKEY_TYPE).includes(sankey)) {
       this.#_sankeyType = sankey;
       this.dispatch(PageState.Events.SANKEY_SELECT);
     }
