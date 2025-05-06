@@ -76,7 +76,7 @@ export async function makeSenkey(containerID, sheet) {
 
       // Filter out "None" values and process value and isNegative
       const processedData = data
-        .filter((d) => d.value !== "None")
+        .filter((d) => d.value !== "None" && +d.value !== 0)
         .map((d) => ({
           ...d,
           value: Math.abs(+d.value),
@@ -158,9 +158,14 @@ export async function makeSenkey(containerID, sheet) {
       "ebit",
       "ebitda",
       "asset",
+      "depreciation & amortization",
+      "stock-based compensation",
     ],
     dark_green: [
       // "revenue",
+      "cash from operations",
+      "non-cash charges",
+      "working capital",
       "gross profit",
       "operating income",
       "net income",
@@ -168,7 +173,19 @@ export async function makeSenkey(containerID, sheet) {
       "ebitda",
       "assets",
     ],
-    light_red: ["cost", "expense", "tax", "interest", "liabilit", "equity"],
+    light_red: [
+      "cost",
+      "expense",
+      "tax",
+      "interest",
+      "liabilit",
+      "equity",
+      "cash from investing",
+      "capital expenditure",
+      "purchase of securities",
+      "proceeds from securities",
+      "other cash from investing",
+    ],
     dark_red: [
       "cost of revenue",
       "operating expenses",
@@ -177,6 +194,13 @@ export async function makeSenkey(containerID, sheet) {
       "liabilities",
       "equity",
       "shareholder equity",
+      "cash from financing",
+      "stock buybacks",
+      "dividends",
+      "tax",
+      "repayment of term debt",
+      "repayment of commercial paper",
+      "other cash from financing",
     ],
   };
 
