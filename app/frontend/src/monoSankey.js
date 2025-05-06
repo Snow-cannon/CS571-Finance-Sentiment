@@ -69,8 +69,6 @@ export async function makeSenkey(containerID, sheet) {
         end,
       });
 
-      console.log(data);
-
       // Verify the retrieved data is correct
       if (!Array.isArray(data) || !data.length) {
         return { error: true, sankeyData: null };
@@ -79,19 +77,18 @@ export async function makeSenkey(containerID, sheet) {
       // Filter out "None" values and process value and isNegative
       const processedData = data
         .filter((d) => d.value !== "None")
-        .map((d) => {
-          return {
-            ...d,
-            value: Math.abs(+d.value),
-            isNegative: +d.value < 0,
-          };
-        });
+        .map((d) => ({
+          ...d,
+          value: Math.abs(+d.value),
+          isNegative: +d.value < 0,
+        }));
+
+      console.log(processedData);
 
       // Track node names that participate in negative links
       const negativeNodeNames = new Set();
       processedData.forEach((d) => {
         if (d.isNegative) {
-          negativeNodeNames.add(d.source);
           negativeNodeNames.add(d.target);
         }
       });
@@ -177,10 +174,11 @@ export async function makeSenkey(containerID, sheet) {
       return !negative ? colorMap.dark_green : colorMap.dark_red;
     } else if (titleMap.dark_red.includes(title)) {
       return !negative ? colorMap.dark_red : colorMap.dark_green;
-    } else if (titleMap.light_green.filter((str) => title.includes(str)).length) {
-      return !negative ? colorMap.light_green : colorMap.light_red;
+      // Prefer red over green
     } else if (titleMap.light_red.filter((str) => title.includes(str)).length) {
       return !negative ? colorMap.light_red : colorMap.light_green;
+    } else if (titleMap.light_green.filter((str) => title.includes(str)).length) {
+      return !negative ? colorMap.light_green : colorMap.light_red;
     }
 
     return colorMap.gray;
