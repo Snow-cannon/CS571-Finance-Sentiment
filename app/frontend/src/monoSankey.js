@@ -83,8 +83,6 @@ export async function makeSenkey(containerID, sheet) {
           isNegative: +d.value < 0,
         }));
 
-      console.log(processedData);
-
       // Track node names that participate in negative links
       const negativeNodeNames = new Set();
       processedData.forEach((d) => {
@@ -110,7 +108,7 @@ export async function makeSenkey(containerID, sheet) {
         source: nodeMap.get(d.source),
         target: nodeMap.get(d.target),
         value: d.value,
-        isNegative: d.isNegative,
+        // isNegative: negativeNodeNames.has(d.target) ? true : false,
       }));
 
       // Create the sankey layout generator
@@ -207,7 +205,7 @@ export async function makeSenkey(containerID, sheet) {
       .transition()
       .duration(duration)
       .attr("d", sankeyLinkHorizontal())
-      .attr("stroke", (d) => titleColor(d.source))
+      .attr("stroke", (d) => titleColor(d.target))
       .attr("stroke-width", (d) => Math.max(1, d.width));
 
     // Generate new items
@@ -215,7 +213,7 @@ export async function makeSenkey(containerID, sheet) {
       .enter()
       .append("path")
       .attr("fill", "none")
-      .attr("stroke", (d) => titleColor(d.source))
+      .attr("stroke", (d) => titleColor(d.target))
       .attr("stroke-width", (d) => Math.max(1, d.width))
       .attr("stroke-opacity", 0)
       .attr("d", sankeyLinkHorizontal())
