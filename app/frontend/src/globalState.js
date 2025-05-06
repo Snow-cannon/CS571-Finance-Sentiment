@@ -33,6 +33,12 @@ export class PageState {
     RESIZE: "resize",
   };
 
+  static DATE_TYPE = {
+    SANKEY: "sankey",
+    CLOUD: "word cloud",
+    INTRADAY: "intraday",
+  };
+
   constructor(options) {
     this.#_quarter = 0;
     this.#_isQuarter = false;
@@ -121,39 +127,65 @@ export class PageState {
   }
 
   /** Returns the start and end time for date querys */
-  get queryDateRange() {
+  queryDateRange(type) {
     // Horrible but easy to write
     // Would write better code for work but
     // Here we are
     let year = this.startYear + (this.quarter - (this.quarter % 5)) / 5;
-    let startQ = "";
-    let endQ = "";
+    let startQ = { month: "", day: "" };
+    let endQ = { month: "", day: "" };
     switch (this.quarter % 5) {
       case 1:
-        startQ = "0101";
-        endQ = "0331";
+        startQ.month = "01";
+        startQ.day = "01";
+        endQ.month = "03";
+        endQ.day = "31";
         break;
       case 2:
-        startQ = "0401";
-        endQ = "0630";
+        startQ.month = "04";
+        startQ.day = "01";
+        endQ.month = "06";
+        endQ.day = "30";
         break;
       case 3:
-        startQ = "0701";
-        endQ = "0930";
+        startQ.month = "07";
+        startQ.day = "01";
+        endQ.month = "09";
+        endQ.day = "30";
         break;
       case 4:
-        startQ = "1001";
-        endQ = "1231";
+        startQ.month = "10";
+        startQ.day = "01";
+        endQ.month = "12";
+        endQ.day = "31";
         break;
       default:
-        startQ = "0101";
-        endQ = "1231";
+        startQ.month = "01";
+        startQ.day = "01";
+        endQ.month = "12";
+        endQ.day = "31";
         break;
     }
-    let startT = "000000";
-    let endT = "235959";
-    const start = `${year}${startQ}T${startT}`;
-    const end = `${year}${endQ}T${endT}`;
+
+    let start;
+    let end;
+
+    switch (type) {
+      case PageState.DATE_TYPE.SANKEY:
+        start = `${year}-${startQ.month}-${startQ.day}`;
+        end = `${year}-${endQ.month}-${endQ.day}`;
+        break;
+      case PageState.DATE_TYPE.CLOUD:
+        start = `${year}${startQ.month}${endQ.day}T000000`;
+        end = `${year}${endQ.month}${endQ.day}T235959`;
+        break;
+      case PageState.DATE_TYPE.INTRADAY:
+        start = `${year}-${startQ.month}-star${startQ.day} 00:00:00`;
+        end = `${year}-${endQ.month}-${endQ.day} 23:59:59`;
+        break;
+      default:
+        return;
+    }
     return { start, end };
   }
 

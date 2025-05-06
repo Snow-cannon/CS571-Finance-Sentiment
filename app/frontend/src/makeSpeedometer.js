@@ -70,7 +70,7 @@ export async function makeSpeedometer(containerID) {
 
   // Gets the data for the new needle value
   const getData = async () => {
-    const dateRange = state.queryDateRange;
+    const dateRange = state.queryDateRange(PageState.DATE_TYPE.CLOUD);
     const queryResult = await queryData("symbol_sentiment_speedometer", {
       symbol: state.symbol,
       start: dateRange.start,

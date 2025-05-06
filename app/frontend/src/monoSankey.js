@@ -61,7 +61,15 @@ export async function makeSenkey(containerID, sheet) {
     if (endpoints[sheet]) {
       // Get the data from the endpoint for the specified data / time / symbol
       // The query should return rows with columns: source, target, value.
-      const data = await queryData(endpoints[sheet], { symbol: state.symbol });
+      const { start, end } = state.queryDateRange(PageState.DATE_TYPE.SANKEY);
+      const data = await queryData(endpoints[sheet], {
+        symbol: state.symbol,
+        report_type: state.isQuarter ? "quarterly" : "annual",
+        start,
+        end,
+      });
+
+      console.log(data);
 
       // Verify the retrieved data is correct
       if (!Array.isArray(data) || !data.length) {
@@ -71,11 +79,13 @@ export async function makeSenkey(containerID, sheet) {
       // Filter out "None" values and process value and isNegative
       const processedData = data
         .filter((d) => d.value !== "None")
-        .map((d) => ({
-          ...d,
-          value: Math.abs(+d.value),
-          isNegative: +d.value < 0,
-        }));
+        .map((d) => {
+          return {
+            ...d,
+            value: Math.abs(+d.value),
+            isNegative: +d.value < 0,
+          };
+        });
 
       // Track node names that participate in negative links
       const negativeNodeNames = new Set();
@@ -296,4 +306,5 @@ export async function makeSenkey(containerID, sheet) {
   update();
 
   state.addListener(PageState.Events.SYMBOL, update);
+  state.addListener(PageState.Events.TIME, update);
 }

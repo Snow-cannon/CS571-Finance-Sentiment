@@ -19,7 +19,7 @@ body {
   grid-template-rows: var(--grid-row-height) var(--grid-row-height) var(--grid-row-height) var(
       --grid-row-height
     );
-  row-gap: 10px;
+  row-gap: 20px;
   column-gap: 10px;
   padding: 5px;
 }

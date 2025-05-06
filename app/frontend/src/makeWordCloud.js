@@ -16,7 +16,7 @@ export async function makeWordCloud(containerID) {
 
   // Fetch data for word cloud
   const getData = async () => {
-    const dateRange = state.queryDateRange;
+    const dateRange = state.queryDateRange(PageState.DATE_TYPE.CLOUD);
     const queryResult = await queryData("wordcloud", {
       symbol: state.symbol,
       start: dateRange.start,
