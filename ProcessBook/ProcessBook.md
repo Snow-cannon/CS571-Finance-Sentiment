@@ -368,6 +368,16 @@ To improve the sankey visual for all 3 charts and remove overlapping text, we ne
 
 Additionally, we want to take all 3 visuals and merge them into a single visual that can be swapped between with a selection box.
 
+### Joined Chart
+
+We took all 3 visuals and combined them into a single, large chart. This will allow users to have a less cluttered screen as we can now have only one sankey chart visible, chosen by the user, and the grid can be 2x3 which reduces the required width. We accomplished this by making a single chart script that takes in a generic sankey graph data input and generates it from that. We combined the list of colors as well, so regardless of the type it will use those colors, inverting them if there are negative values in the input. All values that are 0 are also removed, removing the issue of grouped titles in the corner that had no visible nodes or links.
+
+The chart below shows the negative values. Gross profit is green, but this implies that the gross profit was actually negative, and the company was running at a loss in profits. The total revenue did come in, but all profits were spent and considered as leaving the company bank rather than going in.
+
+<center>
+<img src="./screenshots/mono-sankey/ms-negatives.png" style="width: 80%; height: auto;" />
+</center>
+
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
@@ -415,4 +425,15 @@ This design still does not combine the 3 sankey visuals together. However, it re
 
 <center>
 <img src="./screenshots/complete-webpage/complete-page-2.png" style="width: 100%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+### Condensed Layout
+
+Once the sankey visuals were merged into a single layout, we were able to shrink the grid to use a 2 x 3 design. This reduces the amount of clutter on the screen, and makes it more suitable for small monitors, which is the most likely size people will be using to view the webpage.
+
+<center>
+<img src="./screenshots/complete-webpage/complete-page-3.png" style="width: 100%; height: auto;" />
 </center>

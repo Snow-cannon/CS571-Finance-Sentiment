@@ -1,0 +1,354 @@
+/* Citation: 
+  "How to create a Sankey diagram using D3.js?"
+   
+  prompt. ChatGPT, 9 April version, OpenAI, 9 April 2025, chat.openai.com.
+*/
+
+import * as d3 from "d3";
+import { sankey, sankeyLeft, sankeyLinkHorizontal } from "d3-sankey";
+import { state } from "./index.js";
+import { PageState } from "./globalState.js";
+import queryData from "./makeQuery.js";
+
+/** Maps the sankey graph type to strings */
+export const sheets = {
+  BALANCE: "balance",
+  INCOME: "income",
+  CASH: "cash",
+};
+
+/** Maps sheet names to endpoints */
+const endpoints = {};
+endpoints[sheets.BALANCE] = "balance_sheet_senkey";
+endpoints[sheets.INCOME] = "income_statement_senkey";
+endpoints[sheets.CASH] = "cash_flow_senkey";
+
+/**
+ * Creates a Sankey diagram for the specified data.
+ *
+ * @param {String} containerID - ID of the container div
+ */
+export async function makeSenkey(containerID, sheet) {
+  // Select the container element by its ID and clear any existing content.
+  const container = d3.select(`#${containerID}`);
+  container.selectAll("svg").remove();
+  container.selectAll("p").remove();
+
+  // Set dimensions and margins for the chart
+  const margin = { top: 20, right: 30, bottom: 30, left: 50 };
+
+  /**
+   * Returns the width and height of the container taking margins into account
+   */
+  const getDimensions = () => {
+    // Get width of parent box
+    const { width: boundingWidth, height: boundingHeight } = container
+      .node()
+      .getBoundingClientRect();
+
+    // Apply margins
+    const width = boundingWidth - margin.left - margin.right;
+    const height = boundingHeight - margin.top - margin.bottom;
+
+    return { width, height, boundingWidth, boundingHeight };
+  };
+
+  const { width, height, boundingWidth, boundingHeight } = getDimensions();
+
+  /** Returns the data for the specified sheet */
+  const getData = async (sheet) => {
+    // Check if the sheet is valid
+    if (endpoints[sheet]) {
+      // Get the data from the endpoint for the specified data / time / symbol
+      // The query should return rows with columns: source, target, value.
+      const { start, end } = state.queryDateRange(PageState.DATE_TYPE.SANKEY);
+      const data = await queryData(endpoints[sheet], {
+        symbol: state.symbol,
+        report_type: state.isQuarter ? "quarterly" : "annual",
+        start,
+        end,
+      });
+
+      // Verify the retrieved data is correct
+      if (!Array.isArray(data) || !data.length) {
+        return { error: true, sankeyData: null };
+      }
+
+      // Filter out "None" values and process value and isNegative
+      const processedData = data
+        .filter((d) => d.value !== "None" && +d.value !== 0)
+        .map((d) => ({
+          ...d,
+          value: Math.abs(+d.value),
+          isNegative: +d.value < 0,
+        }));
+
+      // Track node names that participate in negative links
+      const negativeNodeNames = new Set();
+      processedData.forEach((d) => {
+        if (d.isNegative) {
+          negativeNodeNames.add(d.target);
+        }
+      });
+
+      // Create unique node list and mark those involved in negative links
+      const nodes = Array.from(
+        new Set(processedData.flatMap((d) => [d.source, d.target])),
+        (name) => ({
+          name,
+          isNegative: negativeNodeNames.has(name),
+        })
+      );
+
+      // Map node names to indices
+      const nodeMap = new Map(nodes.map((d, i) => [d.name, i]));
+
+      // Build links with index-based source/target and retain isNegative
+      const links = processedData.map((d) => ({
+        source: nodeMap.get(d.source),
+        target: nodeMap.get(d.target),
+        value: d.value,
+        // isNegative: negativeNodeNames.has(d.target) ? true : false,
+      }));
+
+      // Create the sankey layout generator
+      const sankeyGenerator = sankey()
+        .nodeWidth(20)
+        .nodePadding(15)
+        .nodeAlign(sankeyLeft)
+        .extent([
+          [0, 0],
+          [width, height],
+        ]);
+
+      // Generate the Sankey layout
+      const sankeyData = sankeyGenerator({
+        nodes: nodes.map((d) => ({ ...d })), // Copy to prevent mutation
+        links: links.map((d) => ({ ...d })),
+      });
+
+      return { error: false, sankeyData };
+    }
+
+    return { error: true, sankeyData: null };
+  };
+
+  // Create the SVG container.
+  const svg = container
+    .append("svg")
+    .attr("width", boundingWidth)
+    .attr("height", boundingHeight)
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  const linkG = svg.append("g");
+  const nodeG = svg.append("g");
+
+  // Function to assign a color based on the node name.
+  // For the income statement:
+  // - Positive targets (e.g., Revenue, Gross Profit, Operating Income, Net Income, EBIT, EBITDA) are green.
+  // - Cost/expense items (e.g., anything with "cost", "expense", "tax", "interest") are red.
+
+  const titleMap = {
+    light_green: [
+      // "revenue",
+      "gross profit",
+      "operating income",
+      "net income",
+      "ebit",
+      "ebitda",
+      "asset",
+      "depreciation & amortization",
+      "stock-based compensation",
+    ],
+    dark_green: [
+      // "revenue",
+      "cash from operations",
+      "non-cash charges",
+      "working capital",
+      "gross profit",
+      "operating income",
+      "net income",
+      "ebit",
+      "ebitda",
+      "assets",
+    ],
+    light_red: [
+      "cost",
+      "expense",
+      "tax",
+      "interest",
+      "liabilit",
+      "equity",
+      "cash from investing",
+      "capital expenditure",
+      "purchase of securities",
+      "proceeds from securities",
+      "other cash from investing",
+    ],
+    dark_red: [
+      "cost of revenue",
+      "operating expenses",
+      "income tax expense",
+      "interest expense",
+      "liabilities",
+      "equity",
+      "shareholder equity",
+      "cash from financing",
+      "stock buybacks",
+      "dividends",
+      "tax",
+      "repayment of term debt",
+      "repayment of commercial paper",
+      "other cash from financing",
+    ],
+  };
+
+  const colorMap = {
+    light_green: "#8BC34A",
+    dark_green: "#4CAF50",
+    dark_red: "#F44336",
+    light_red: "#FFCDD2",
+    gray: "#9E9E9E",
+  };
+
+  const titleColor = (d) => {
+    const title = d.name.toLowerCase().trim();
+    const negative = d.isNegative;
+
+    if (titleMap.dark_green.includes(title)) {
+      return !negative ? colorMap.dark_green : colorMap.dark_red;
+    } else if (titleMap.dark_red.includes(title)) {
+      return !negative ? colorMap.dark_red : colorMap.dark_green;
+      // Prefer red over green
+    } else if (titleMap.light_red.filter((str) => title.includes(str)).length) {
+      return !negative ? colorMap.light_red : colorMap.light_green;
+    } else if (titleMap.light_green.filter((str) => title.includes(str)).length) {
+      return !negative ? colorMap.light_green : colorMap.light_red;
+    }
+
+    return colorMap.gray;
+  };
+
+  /* Citation: 
+    "How to update d3 sankey draw function to use d3 update model with new data"
+   
+    prompt. ChatGPT, 1 May version, OpenAI, 1 May 2025, chat.openai.com.
+  */
+  function draw(sankeyData, transition = true) {
+    const duration = transition ? state.duration : 0;
+
+    // ----- Links ----- //
+
+    // Bind links to src/tgt key values for new data
+    const links = linkG
+      .selectAll("path")
+      .data(sankeyData.links, (d) => d.source.name + "-" + d.target.name);
+
+    // Remove extra items
+    links.exit().transition().duration(duration).attr("stroke-opacity", 0).remove();
+
+    // Modify old items
+    links
+      .transition()
+      .duration(duration)
+      .attr("d", sankeyLinkHorizontal())
+      .attr("stroke", (d) => titleColor(d.target))
+      .attr("stroke-width", (d) => Math.max(1, d.width));
+
+    // Generate new items
+    links
+      .enter()
+      .append("path")
+      .attr("fill", "none")
+      .attr("stroke", (d) => titleColor(d.target))
+      .attr("stroke-width", (d) => Math.max(1, d.width))
+      .attr("stroke-opacity", 0)
+      .attr("d", sankeyLinkHorizontal())
+      .transition()
+      .duration(duration)
+      .attr("stroke-opacity", 0.5);
+
+    // ----- Nodes ----- //
+
+    // Bind nodes to key data
+    const node = nodeG.selectAll("g").data(sankeyData.nodes, (d) => d.name);
+
+    /* REMOVE OLD UNUSED NODES */
+
+    node.exit().transition().duration(duration).style("opacity", 0).remove();
+
+    /* UPDATE OLD NODES */
+
+    // Modify old node rects
+    node
+      .select("rect")
+      .transition()
+      .duration(duration)
+      .attr("x", (d) => d.x0)
+      .attr("y", (d) => d.y0)
+      .attr("height", (d) => d.y1 - d.y0)
+      .attr("width", (d) => d.x1 - d.x0)
+      .attr("fill", (d) => titleColor(d));
+
+    // Modify old node labels
+    node
+      .select("text")
+      .transition()
+      .duration(duration)
+      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
+      .attr("y", (d) => (d.y0 + d.y1) / 2)
+      .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
+      .text((d) => d.name);
+
+    /* ADD NEW NODES */
+
+    const nodeRect = node.enter().append("g");
+
+    // add new rects for updates
+    nodeRect
+      .append("rect")
+      .attr("x", (d) => d.x0)
+      .attr("y", (d) => d.y0)
+      .attr("height", (d) => d.y1 - d.y0)
+      .attr("width", (d) => d.x1 - d.x0)
+      .attr("fill", (d) => titleColor(d))
+      .attr("stroke", "#000")
+      .style("opacity", 0)
+      .transition()
+      .duration(duration)
+      .style("opacity", 1);
+
+    // add new text
+    nodeRect
+      .append("text")
+      .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
+      .attr("y", (d) => (d.y0 + d.y1) / 2)
+      .attr("dy", "0.35em")
+      .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
+      .text((d) => d.name)
+      .style("font-family", "Arial, sans-serif")
+      .style("font-size", "12px")
+      .style("opacity", 0)
+      .transition()
+      .duration(500)
+      .style("opacity", 1);
+  }
+
+  // Listener for symbol/state changes to update the diagram.
+  const update = async () => {
+    // Retrieve data
+    const { error, sankeyData } = await getData(sheet);
+
+    if (error) {
+      return;
+    }
+
+    draw(sankeyData);
+  };
+
+  state.addListener(PageState.Events.SYMBOL, update);
+  state.addListener(PageState.Events.TIME, update);
+
+  update();
+}

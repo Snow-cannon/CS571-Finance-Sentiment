@@ -85,15 +85,13 @@ router.post("/overview", async (req, res) => {
 router.post("/intraday", async (req, res) => {
   try {
     const { symbol, start, end } = req.body;
-    let start_hard = "2022-01-21 16:00:00";
-    let end_hard = "2022-12-22 04:00:00";
-    
+
     // Read the SQL query from the file
     const queryPath = path.resolve("backend/sql_queries", "intraday.sql");
     const query = fs.readFileSync(queryPath, "utf-8");
 
     // Execute the query
-    const result = await db.query(query, [symbol, start_hard, end_hard]);
+    const result = await db.query(query, [symbol, start, end]);
 
     // Send JSON result
     res.json(result);
@@ -106,18 +104,18 @@ router.post("/intraday", async (req, res) => {
 
 router.post("/balance_sheet_senkey", async (req, res) => {
   try {
-    const { symbol } = req.body;
-    let report_type = "annual"; // Change to "quarterly" for quarterly data
-    let start_date = "2024-01-01";
-    let end_date = "2024-12-31";
+    const { symbol, start, end, report_type } = req.body;
+    // let report_type = "annual"; // Change to "quarterly" for quarterly data
+    // let start_date = "2024-01-01";
+    // let end_date = "2024-12-31";
 
     // Read the SQL query from the file
     const queryPath = path.resolve("backend/sql_queries", "balance_sheet_senkey2.sql");
     const query = fs.readFileSync(queryPath, "utf-8");
 
     // Execute the query
-    const result = await db.query(query, [symbol, start_date, end_date, report_type]);
-    ``;
+    const result = await db.query(query, [symbol, start, end, report_type]);
+
     // Send the result as JSON
     res.json(result);
   } catch (err) {
@@ -128,18 +126,14 @@ router.post("/balance_sheet_senkey", async (req, res) => {
 
 router.post("/cash_flow_senkey", async (req, res) => {
   try {
-    const { symbol } = req.body;
-    let report_type = "annual"; // Change to "quarterly" for quarterly data
-    let start_date = "2024-01-01";
-    let end_date = "2024-12-31";
+    const { symbol, start, end, report_type } = req.body;
 
     // Read the SQL query from the file
     const queryPath = path.resolve("backend/sql_queries", "cash_flow_senkey.sql");
     const query = fs.readFileSync(queryPath, "utf-8");
 
     // Execute the query
-    // const result = await db.query(query, [symbol]);
-    const result = await db.query(query, [symbol, start_date, end_date, report_type]);
+    const result = await db.query(query, [symbol, start, end, report_type]);
 
     // Send the result as JSON
     res.json(result);
@@ -151,18 +145,15 @@ router.post("/cash_flow_senkey", async (req, res) => {
 
 router.post("/income_statement_senkey", async (req, res) => {
   try {
-    const { symbol } = req.body;
-    let report_type = "annual"; // Change to "quarterly" for quarterly data
-    let start_date = "2024-01-01";
-    let end_date = "2024-12-31";
+    const { symbol, start, end, report_type } = req.body;
+    console.log(symbol, start, end, report_type);
 
     // Read the SQL query from the file
     const queryPath = path.resolve("backend/sql_queries", "income_statement_senkey.sql");
     const query = fs.readFileSync(queryPath, "utf-8");
 
     // Execute the query
-    // const result = await db.query(query, [symbol]);
-    const result = await db.query(query, [symbol, start_date, end_date, report_type]);
+    const result = await db.query(query, [symbol, start, end, report_type]);
 
     // Send the result as JSON
     res.json(result);

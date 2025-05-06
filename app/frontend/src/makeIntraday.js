@@ -63,9 +63,10 @@ export async function makeIntraday(containerID) {
   /**
    * Updates old intraday elements to new data using transitions
    */
-  const changeData = async (symbol, transition = true) => {
+  const changeData = async (transition = true) => {
     // Set overview data
-    const data = await queryData("intraday", { symbol: state.symbol });
+    const { start, end } = state.queryDateRange(PageState.DATE_TYPE.INTRADAY);
+    const data = await queryData("intraday", { symbol: state.symbol, start, end });
     const duration = transition ? state.duration : 0;
 
     // ------ Error Message ------ //
@@ -137,14 +138,15 @@ export async function makeIntraday(containerID) {
     yWrapper.call(d3.axisLeft(yScale));
 
     // Update the data with transitions
-    changeData(state.symbol, transition);
+    changeData(transition);
   };
 
   // Call resize to generate initial SVG
   resizeSVG(false);
 
-  state.addListener(PageState.Events.SYMBOL, resizeSVG);
-  state.addListener(PageState.Events.RESIZE, () => {
-    resizeSVG(false);
-  });
+  state.addListener(PageState.Events.SYMBOL, changeData);
+  state.addListener(PageState.Events.TIME, changeData);
+  // state.addListener(PageState.Events.RESIZE, () => {
+  //   resizeSVG(false);
+  // });
 }

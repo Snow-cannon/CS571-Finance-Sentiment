@@ -9,6 +9,7 @@ import { makeCashFlowSenkey } from "./makeCashFlowSenkey.js";
 import { makeIncomeStatementSenkey } from "./makeIncomeStatementSenkey.js";
 import { makeWordCloud } from "./makeWordCloud.js";
 import { makeSpeedometer } from "./makeSpeedometer.js";
+import { makeSenkey, sheets } from "./monoSankey.js";
 
 // ---------- Init ---------- //
 
@@ -82,10 +83,6 @@ makeWordCloud("wordcloud");
 
 makeSpeedometer("speedometer");
 
-// ---------- Make Bubble Chart ---------- //
+// ---------- Make Combined Sankey ---------- //
 
-// makeBubbleChart("bubble-container");
-
-// ---------- Make Radar Chart ---------- //
-
-// makeRadarChart("radar-container");
+makeSenkey("sankey", sheets.INCOME);

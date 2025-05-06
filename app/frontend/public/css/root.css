@@ -1,5 +1,5 @@
 :root {
-  --grid-row-height: 400px;
+  --grid-row-height: 300px;
 }
 
 body {
@@ -11,12 +11,15 @@ body {
 #grid-wrapper {
   display: grid;
   grid-template-areas:
-    "overview selection selection"
-    "speedometer words stocks"
-    "cash1 cash2 cash3";
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: var(--grid-row-height) var(--grid-row-height);
-  row-gap: 10px;
+    "selection selection"
+    "overview stocks"
+    "speedometer words"
+    "cash cash";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: var(--grid-row-height) var(--grid-row-height) var(--grid-row-height) var(
+      --grid-row-height
+    );
+  row-gap: 20px;
   column-gap: 10px;
   padding: 5px;
 }
@@ -33,16 +36,8 @@ body {
   grid-area: stocks;
 }
 
-#grid-wrapper > #balance_sheet_senkey {
-  grid-area: cash1;
-}
-
-#grid-wrapper > #cash_flow_senkey {
-  grid-area: cash2;
-}
-
-#grid-wrapper > #income_statement_senkey {
-  grid-area: cash3;
+#grid-wrapper > #sankey {
+  grid-area: cash;
 }
 
 #grid-wrapper > #speedometer {

@@ -3,8 +3,6 @@
 prompt. ChatGPT, 9 April version, OpenAI, 9 April 2025, chat.openai.com.
 */
 
-
-
 import * as d3 from "d3";
 import { sankey, sankeyLinkHorizontal } from "d3-sankey";
 import { state } from "./index.js";
@@ -26,15 +24,12 @@ export async function makeBalanceSheetSenkey(containerID) {
   // This should return rows with columns: source, target, value.
   const data = await queryData("balance_sheet_senkey", { symbol: state.symbol });
   if (!Array.isArray(data) || !data.length) {
-    container
-      .append("p")
-      .text(`No balance sheet data available for ${state.symbol}`);
+    container.append("p").text(`No balance sheet data available for ${state.symbol}`);
   } else {
     // Process the data into nodes and links.
-    const nodes = Array.from(
-      new Set(data.flatMap((d) => [d.source, d.target])),
-      (name) => ({ name })
-    );
+    const nodes = Array.from(new Set(data.flatMap((d) => [d.source, d.target])), (name) => ({
+      name,
+    }));
     const nodeMap = new Map(nodes.map((d, i) => [d.name, i]));
     const links = data.map((d) => ({
       source: nodeMap.get(d.source),
@@ -91,10 +86,7 @@ export async function makeBalanceSheetSenkey(containerID) {
         }
       } else if (name.includes("equity")) {
         // For equity: if exactly "shareholder equity" or "equity", use dark red; else light red.
-        if (
-          name.trim() === "shareholder equity" ||
-          name.trim() === "equity"
-        ) {
+        if (name.trim() === "shareholder equity" || name.trim() === "equity") {
           return "#F44336"; // Dark Red (Aggregate Equity)
         } else {
           return "#FFCDD2"; // Light Red (Detail Equity Items)
@@ -118,12 +110,7 @@ export async function makeBalanceSheetSenkey(containerID) {
       .attr("stroke-opacity", 0.5);
 
     // Draw nodes.
-    const node = svg
-      .append("g")
-      .selectAll("g")
-      .data(sankeyData.nodes)
-      .enter()
-      .append("g");
+    const node = svg.append("g").selectAll("g").data(sankeyData.nodes).enter().append("g");
 
     // Node rectangles.
     node

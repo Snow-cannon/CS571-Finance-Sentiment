@@ -29,14 +29,15 @@ export function makeSlider(containerID, minYear, maxYear) {
     .attr("step", 1)
     .attr("value", 0)
     .classed("date-selection-slider", true)
-    .on("input", function (evt) {
-      const value = d3.select(this).property("value");
-      selectionChange(value);
-    })
     .on("change", function (evt) {
       const value = d3.select(this).property("value");
       state.isQuarter = value % 5 > 0;
       state.quarter = value;
+      selectionChange(value);
+    })
+    .on("input", function (evt) {
+      const value = d3.select(this).property("value");
+      selectionChange(value);
     });
 
   // ------ SVG ------ //
