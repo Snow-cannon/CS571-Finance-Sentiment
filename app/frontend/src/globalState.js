@@ -110,6 +110,7 @@ export class PageState {
   /** Sets the current quarter */
   set quarter(quarter) {
     this.#_quarter = quarter;
+    this.#_isQuarter = this.#_quarter % 5 > 0;
     this.dispatch(PageState.Events.TIME);
   }
 
@@ -119,10 +120,10 @@ export class PageState {
   }
 
   /** Sets the current quarter */
-  set isQuarter(isQuarter) {
-    this.#_isQuarter = isQuarter;
-    this.dispatch(PageState.Events.TIME);
-  }
+  // set isQuarter(isQuarter) {
+  //   this.#_isQuarter = isQuarter;
+  //   this.dispatch(PageState.Events.TIME);
+  // }
 
   /** returns the 0 indexed starting year */
   get startYear() {
@@ -210,7 +211,7 @@ export class PageState {
         end = `${year}${endQ.month}${endQ.day}T235959`;
         break;
       case PageState.DATE_TYPE.INTRADAY:
-        start = `${year}-${startQ.month}-star${startQ.day} 00:00:00`;
+        start = `${year}-${startQ.month}-${startQ.day} 00:00:00`;
         end = `${year}-${endQ.month}-${endQ.day} 23:59:59`;
         break;
       default:

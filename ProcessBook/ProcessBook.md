@@ -205,12 +205,41 @@ The intraday chart displays stock prices over a period of time. The current desi
 The colors do not entirely fit in the current color scheme, so we will need to fix that later. Additionally, there are no transitions, so we will want to add a transition to the chart for a more effective and visually helpful experience. However, the chart does fulfill the basic requirenments, and can take in any data set with a group of times and convert it into a valid line chart. As such, we can use both annual and quarterly data to display in the chart.
 
 <center>
-<img src="./screenshots/company-overview/co-improved-title.png" style="width: 100%; height: auto;" />
+<img src="./screenshots/intraday-chart/intraday-chart-initial.png" style="width: 100%; height: auto;" />
 </center>
 
 ### Transitions
 
 We have now added transitions. The chart looks the same, but the added transitions make it feel more responsive and user friendly.
+
+### Error Message
+
+We added the custom error message to the intraday chart, having it enter from the right on no data. Additionally, when there is an error, it transitions the intraday line so it goes from the previous value to 0 for a smooth error transiton.
+
+<center>
+<img src="./screenshots/intraday-chart/intraday-error-msg.png" style="width: 100%; height: auto;" />
+</center>
+
+There is very little missing data on the intraday from the selections we are limited too, but this will account for any we may not know about.
+
+### Axis Formatting
+
+On the x-axis, we changed it so the quarterly data has a different tick format than the annual since the quarterly has multiple ticks per month. The annual version eliminates the day from the tick format as every month has only 1 tick.We used d3 to format the y-axis with the `"~s"` format to trim out long numbers and use `'k'` as a valid value for thousand. This reduces long numbers, improves readability, and allows users an easier time understanding the axis values. We also added axis labels so users will understand the legend of what is happening with the one line on the visual.
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+#### Annual
+
+<center>
+<img src="./screenshots/intraday-chart/intraday-dollar-label.png" style="width: 100%; height: auto;" />
+</center>
+
+#### Quarterly
+
+<center>
+<img src="./screenshots/intraday-chart/intraday-quarterly-dollar-label.png" style="width: 100%; height: auto;" />
+</center>
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
@@ -299,6 +328,10 @@ We used d3.pack() to generate non-overlapping bubbles. Each bubble represents a 
 <img src="./screenshots/bubbleChart/bc-initial.png" style="width: 50%; height: auto%;" />
 </center>
 
+### Removal
+
+Due to the time constraints of the class, we were not able to collect enough data to make use of the chart. As such, we have removed it from the final design, and no further improvements were made to it.
+
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
@@ -317,6 +350,10 @@ We implemented the radar chart using radial lines and concentric circles to repr
 </center>
 
 The text size on the radar chart will need to be increased for readability and scale, and the current variables on the radar chart will likely need to be updated and modified to better fit the data once we collect it.
+
+### Removal
+
+Due to the time constraints of the class, we were not able to collect enough data to make use of the chart. As such, we have removed it from the final design, and no further improvements were made to it.
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
@@ -376,6 +413,22 @@ The chart below shows the negative values. Gross profit is green, but this impli
 
 <center>
 <img src="./screenshots/mono-sankey/ms-negatives.png" style="width: 80%; height: auto;" />
+</center>
+
+### Dropdown
+
+To allow users the ability to choose which chart they want to view, we added a dropdown above the sankey graph in the center. This makes it easy to spot and keeps it out of the way of the visual itself. The one downside is it takes up some of the alloted height of the grid row, but we can add more height to it if it appears to becomes overcrowded.
+
+<center>
+<img src="./screenshots/mono-sankey/ms-dropdown-income.png" style="width: 90%; height: auto;" />
+</center>
+
+<center>
+<img src="./screenshots/mono-sankey/ms-dropdown-balance.png" style="width: 90%; height: auto;" />
+</center>
+
+<center>
+<img src="./screenshots/mono-sankey/ms-dropdown-cash.png" style="width: 90%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->

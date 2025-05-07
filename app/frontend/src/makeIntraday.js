@@ -20,7 +20,7 @@ export async function makeIntraday(containerID) {
   container.selectAll("p").remove();
 
   // Set dimensions and margins for the chart
-  const margin = { top: 20, right: 30, bottom: 30, left: 50 };
+  const margin = { top: 20, right: 30, bottom: 50, left: 60 };
 
   /**
    * Returns the width and height of the container taking margins into account
@@ -35,7 +35,7 @@ export async function makeIntraday(containerID) {
     const width = boundingWidth - margin.left - margin.right;
     const height = boundingHeight - margin.top - margin.bottom;
 
-    return { width, height };
+    return { width, height, boundingHeight, boundingWidth };
   };
 
   // Generate new elements
@@ -45,10 +45,12 @@ export async function makeIntraday(containerID) {
   path.classed("intraday-path", true);
   const xWrapper = wrapper.append("g");
   const yWrapper = wrapper.append("g");
+  const xTitle = wrapper.append("g");
+  const yTitle = wrapper.append("g");
   const error = new ErrorMsg(wrapper, "intraday", ErrorMsg.Directions.LEFT);
 
   // Get initial chart dimensions
-  const { width, height } = getDimensions();
+  const { width, height, boundingHeight, boundingWidth } = getDimensions();
 
   const now = new Date();
 
@@ -59,6 +61,26 @@ export async function makeIntraday(containerID) {
     .range([0, width]);
 
   const yScale = d3.scaleLinear().domain([0, 1]).nice().range([height, 0]);
+
+  xTitle
+    .attr("transform", `translate(${width / 2}, ${boundingHeight - 25})`)
+    .append("text")
+    .attr("text-anchor", "middle")
+    .attr("x", 0)
+    .attr("y", 0)
+    .text("Stock Date")
+    .classed("axis-text", true);
+
+  yTitle
+    .attr("transform", `translate(${- margin.left + 10}, ${height / 2})rotate(-90)`)
+    .append("text")
+    .attr("text-anchor", "middle")
+    .attr("x", 0)
+    .attr("y", 0)
+    .text("Stock Price")
+    .classed("axis-text", true);
+
+  let oldData = [];
 
   /**
    * Updates old intraday elements to new data using transitions
@@ -103,21 +125,59 @@ export async function makeIntraday(containerID) {
     }));
 
     // Set new domains
-    xScale.domain(d3.extent(parsedData, (d) => d.datetime));
-    yScale.domain([d3.min(parsedData, (d) => d.close), d3.max(parsedData, (d) => d.close)]);
-
-    // Update path data
-    path
-      .datum(parsedData)
+    console.log(start, end);
+    xScale.domain(/* [new Date(start), new Date(end)] */ d3.extent(parsedData, (d) => d.datetime));
+    xWrapper
       .transition()
       .duration(duration)
+      .call(
+        d3
+          .axisBottom(xScale)
+          // .ticks(10)
+          .tickFormat(state.isQuarter ? d3.utcFormat("%y-%b-%d") : d3.utcFormat("%y-%b"))
+      );
+    yScale.domain([d3.min(parsedData, (d) => d.close), d3.max(parsedData, (d) => d.close)]);
+    yWrapper
+      .transition()
+      .duration(duration)
+      .call(d3.axisLeft(yScale).tickFormat(d3.format("$~s")));
+
+    // Step 1: Transition line down to y = 0
+    path
+      .datum(oldData)
+      .transition()
+      .duration(duration / 2)
       .attr(
         "d",
         d3
           .line()
           .x((d) => xScale(d.datetime))
-          .y((d) => yScale(d.close))
-      );
+          .y((d) => yScale(d3.min(yScale.domain())))
+      )
+      // Step 2 & 3: When transition ends, bind new data and animate back up
+      .on("end", function () {
+        path
+          .datum(parsedData)
+          .attr(
+            "d",
+            d3
+              .line()
+              .x((d) => xScale(d.datetime))
+              .y((d) => yScale(d3.min(yScale.domain())))
+          )
+          .transition()
+          .duration(duration / 2)
+          .attr(
+            "d",
+            d3
+              .line()
+              .x((d) => xScale(d.datetime))
+              .y((d) => yScale(d.close))
+          );
+
+        // Update oldData reference
+        oldData = parsedData;
+      });
   };
 
   const resizeSVG = (transition = true) => {
@@ -130,12 +190,9 @@ export async function makeIntraday(containerID) {
       .attr("height", height + margin.top + margin.bottom);
 
     // Update x axis
-    xWrapper
-      .attr("transform", `translate(0,${height})`)
-      .call(d3.axisBottom(xScale).ticks(10).tickFormat(d3.utcFormat("%y-%b")));
+    xWrapper.attr("transform", `translate(0,${height})`);
 
     // Update y axis
-    yWrapper.call(d3.axisLeft(yScale));
 
     // Update the data with transitions
     changeData(transition);
@@ -144,8 +201,8 @@ export async function makeIntraday(containerID) {
   // Call resize to generate initial SVG
   resizeSVG(false);
 
-  state.addListener(PageState.Events.SYMBOL, changeData);
-  state.addListener(PageState.Events.TIME, changeData);
+  state.addListener(PageState.Events.SYMBOL, resizeSVG);
+  state.addListener(PageState.Events.TIME, resizeSVG);
   // state.addListener(PageState.Events.RESIZE, () => {
   //   resizeSVG(false);
   // });

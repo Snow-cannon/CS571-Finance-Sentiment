@@ -31,7 +31,6 @@ export function makeSlider(containerID, minYear, maxYear) {
     .classed("date-selection-slider", true)
     .on("change", function (evt) {
       const value = d3.select(this).property("value");
-      state.isQuarter = value % 5 > 0;
       state.quarter = value;
       selectionChange(value);
     })

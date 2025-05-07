@@ -4,3 +4,8 @@
   stroke-width: 1.5;
   stroke-linejoin:round
 }
+
+.axis-text {
+  font-size: smaller;
+  font-weight: lighter;
+}

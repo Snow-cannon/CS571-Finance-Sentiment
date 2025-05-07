@@ -35,29 +35,27 @@ export class ErrorMsg {
     this.#_dataName = name;
   }
 
-  #transformMultiplier() {
-    switch (this.#_direction) {
+  #transform(width, height, bbox, direction) {
+    switch (direction) {
       case ErrorMsg.Directions.TOP:
-        return { x: 1, y: -3 };
+        return `translate(${(width - bbox.width) / 2}, ${-bbox.height})`;
       case ErrorMsg.Directions.BOTTOM:
-        return { x: 1, y: 3 };
+        console.log("bottom:", width, height, bbox);
+        return `translate(${(width - bbox.width) / 2}, ${height * 1.5 + bbox.height})`;
       case ErrorMsg.Directions.LEFT:
-        return { x: 4, y: 1 };
-      case ErrorMsg.Directions.RIGHT:
-        return { x: -3, y: 1 };
+        return `translate(${width + bbox.width}, ${(height + bbox.height) / 2})`;
+        case ErrorMsg.Directions.RIGHT:
+        return `translate(${-bbox.width}, ${(height + bbox.height) / 2})`;
       default:
-        return { x: 1, y: 1 };
+        return `translate(${(width - bbox.width) / 2}, ${(height + bbox.height) / 2})`;
     }
-  }
-
-  set dataName(name) {
-    this.#_dataName = name;
   }
 
   enter(width, height, transition = true) {
     this.#_text.text(`No ${this.#_dataName} data available for ${state.symbol}`);
     const bbox = this.#_text.node().getBBox();
-    const transform = `translate(${(width - bbox.width) / 2}, ${height / 2})`;
+    const transform = this.#transform(width, height, bbox, "None");
+    console.log(transform);
 
     this.#_rect
       .attr("x", bbox.x - 5)
@@ -74,8 +72,8 @@ export class ErrorMsg {
   exit(width, height, transition = true) {
     this.#_text.text(`No ${this.#_dataName} data available for ${state.symbol}`);
     const bbox = this.#_text.node().getBBox();
-    const mult = this.#transformMultiplier();
-    const transform = `translate(${(mult.x * (width - bbox.width)) / 2}, ${(mult.y * height) / 2})`;
+    const transform = this.#transform(width, height, bbox, this.#_direction);
+    console.log(transform);
 
     this.#_rect
       .attr("x", bbox.x - 5)
