@@ -113,24 +113,48 @@ export async function makeIntraday(containerID) {
       .call(
         d3
           .axisBottom(xScale)
-          .ticks(10)
+          // .ticks(10)
           .tickFormat(state.isQuarter ? d3.utcFormat("%y-%b-%d") : d3.utcFormat("%y-%b"))
       );
     yScale.domain([d3.min(parsedData, (d) => d.close), d3.max(parsedData, (d) => d.close)]);
     yWrapper.transition().duration(duration).call(d3.axisLeft(yScale));
 
-    // Update path data
+    // Step 1: Transition line down to y = 0
     path
-      .datum(parsedData)
+      .datum(oldData)
       .transition()
-      .duration(duration)
+      .duration(duration / 2)
       .attr(
         "d",
         d3
           .line()
           .x((d) => xScale(d.datetime))
-          .y((d) => yScale(d.close))
-      );
+          .y((d) => yScale(d3.min(yScale.domain())))
+      )
+      // Step 2 & 3: When transition ends, bind new data and animate back up
+      .on("end", function () {
+        path
+          .datum(parsedData)
+          .attr(
+            "d",
+            d3
+              .line()
+              .x((d) => xScale(d.datetime))
+              .y((d) => yScale(d3.min(yScale.domain())))
+          )
+          .transition()
+          .duration(duration / 2)
+          .attr(
+            "d",
+            d3
+              .line()
+              .x((d) => xScale(d.datetime))
+              .y((d) => yScale(d.close))
+          );
+
+        // Update oldData reference
+        oldData = parsedData;
+      });
   };
 
   const resizeSVG = (transition = true) => {
