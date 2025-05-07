@@ -22,6 +22,9 @@ export class PageState {
    */
   #_callbacks;
 
+  /** Time used to prevent overcalling of functoins */
+  #_debounceTime;
+
   /**
    * A list of all valid events to listen to
    *
@@ -58,7 +61,7 @@ export class PageState {
     this.#_symbol = options.symbol || "";
     this.#_transitionDuration = options.duration || 1000;
 
-    const debounceTime = options.debounceTime;
+    this.#_debounceTime = options.debounceTime;
 
     // https://www.geeksforgeeks.org/debouncing-in-javascript/#
     // Debounce function. Prevents too many UI updates
@@ -68,12 +71,12 @@ export class PageState {
         clearTimeout(timeout);
         timeout = setTimeout(() => {
           func(...args);
-        }, debounceTime);
+        }, this.#_debounceTime);
       };
     }
 
     // Add debounce to the resize dispatch event
-    const debounceResize = debounce(this.dispatch.bind(this), debounceTime);
+    const debounceResize = debounce(this.dispatch.bind(this));
 
     // Built-in resize events
     window.addEventListener("resize", () => {
@@ -143,11 +146,14 @@ export class PageState {
 
   /** If valid, sets the global sankey type to the input */
   set sankey(sankey) {
-    console.log(sankey);
     if (Object.values(PageState.SANKEY_TYPE).includes(sankey)) {
       this.#_sankeyType = sankey;
       this.dispatch(PageState.Events.SANKEY_SELECT);
     }
+  }
+
+  get debounceTime() {
+    return this.#_debounceTime;
   }
 
   /** Returns the start and end time for date querys */

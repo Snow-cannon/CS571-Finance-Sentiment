@@ -9,6 +9,7 @@ import { sankey, sankeyLeft, sankeyLinkHorizontal } from "d3-sankey";
 import { state } from "./index.js";
 import { PageState } from "./globalState.js";
 import queryData from "./makeQuery.js";
+import { ErrorMsg } from "./errorMsg.js";
 
 /** Maps sheet names to endpoints */
 const endpoints = {};
@@ -68,7 +69,7 @@ export async function makeSenkey(containerID, sheet) {
 
       // Verify the retrieved data is correct
       if (!Array.isArray(data) || !data.length) {
-        return { error: true, sankeyData: null };
+        return { error: true, sankeyData: { links: [], nodes: [] } };
       }
 
       // Filter out "None" values and process value and isNegative
@@ -127,7 +128,7 @@ export async function makeSenkey(containerID, sheet) {
       return { error: false, sankeyData };
     }
 
-    return { error: true, sankeyData: null };
+    return { error: true, sankeyData: { links: [], nodes: [] } };
   };
 
   // ----- Add selection dropdown ----- //
@@ -271,7 +272,8 @@ export async function makeSenkey(containerID, sheet) {
       .duration(duration)
       .attr("d", sankeyLinkHorizontal())
       .attr("stroke", (d) => titleColor(d.target))
-      .attr("stroke-width", (d) => Math.max(1, d.width));
+      .attr("stroke-width", (d) => Math.max(1, d.width))
+      .attr("stroke-opacity", 0.5);
 
     // Generate new items
     links
@@ -290,6 +292,7 @@ export async function makeSenkey(containerID, sheet) {
 
     // Bind nodes to key data
     const node = nodeG.selectAll("g").data(sankeyData.nodes, (d) => d.name);
+    console.log(node.size());
 
     /* REMOVE OLD UNUSED NODES */
 
@@ -306,7 +309,8 @@ export async function makeSenkey(containerID, sheet) {
       .attr("y", (d) => d.y0)
       .attr("height", (d) => d.y1 - d.y0)
       .attr("width", (d) => d.x1 - d.x0)
-      .attr("fill", (d) => titleColor(d));
+      .attr("fill", (d) => titleColor(d))
+      .attr("opacity", 1);
 
     // Modify old node labels
     node
@@ -316,7 +320,8 @@ export async function makeSenkey(containerID, sheet) {
       .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
       .attr("y", (d) => (d.y0 + d.y1) / 2)
       .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
-      .text((d) => d.name);
+      .text((d) => d.name)
+      .attr("opacity", 1);
 
     /* ADD NEW NODES */
 
@@ -348,25 +353,45 @@ export async function makeSenkey(containerID, sheet) {
       .style("font-size", "12px")
       .style("opacity", 0)
       .transition()
-      .duration(500)
+      .duration(duration)
       .style("opacity", 1);
   }
 
+  // Universal error message for missing data
+  const errorMsg = new ErrorMsg(svg, state.sankey.toLocaleLowerCase(), ErrorMsg.Directions.RIGHT);
+
+  // https://www.geeksforgeeks.org/debouncing-in-javascript/#
+  // Debounce function. Prevents too many UI updates
+  function debounce(func) {
+    let timeout;
+    return function (...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        func(...args);
+      }, state.debounceTime);
+    };
+  }
+
   // Listener for symbol/state changes to update the diagram.
-  const update = async () => {
+  const update = async (transition = true) => {
     // Retrieve data
-    const { error, sankeyData } = await getData(state.sankey);
+    let { error, sankeyData } = await getData(state.sankey);
+    const { width, height } = getDimensions();
 
     if (error) {
-      return;
+      errorMsg.enter(width, height, transition);
+    } else {
+      errorMsg.exit(width, height, transition);
     }
 
     draw(sankeyData);
   };
 
-  state.addListener(PageState.Events.SYMBOL, update);
-  state.addListener(PageState.Events.TIME, update);
-  state.addListener(PageState.Events.SANKEY_SELECT, update);
+  const debouncedUpdate = debounce(update);
 
-  update();
+  state.addListener(PageState.Events.SYMBOL, debouncedUpdate);
+  state.addListener(PageState.Events.TIME, debouncedUpdate);
+  state.addListener(PageState.Events.SANKEY_SELECT, debouncedUpdate);
+
+  update(false);
 }

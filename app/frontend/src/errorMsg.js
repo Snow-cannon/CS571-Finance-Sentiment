@@ -46,6 +46,10 @@ export class ErrorMsg {
     }
   }
 
+  set dataName(name) {
+    this.#_dataName = name;
+  }
+
   enter(width, height, transition = true) {
     this.#_text.text(`No ${this.#_dataName} data available for ${state.symbol}`);
     const bbox = this.#_text.node().getBBox();
