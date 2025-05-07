@@ -358,7 +358,7 @@ export async function makeSenkey(containerID, sheet) {
   }
 
   // Universal error message for missing data
-  const errorMsg = new ErrorMsg(svg, state.sankey.toLocaleLowerCase(), ErrorMsg.Directions.RIGHT);
+  const errorMsg = new ErrorMsg(svg, state.sankey.toLocaleLowerCase(), ErrorMsg.Directions.BOTTOM);
 
   // https://www.geeksforgeeks.org/debouncing-in-javascript/#
   // Debounce function. Prevents too many UI updates
@@ -379,6 +379,7 @@ export async function makeSenkey(containerID, sheet) {
     const { width, height } = getDimensions();
 
     if (error) {
+      errorMsg.dataName = state.sankey.toLocaleLowerCase();
       errorMsg.enter(width, height, transition);
     } else {
       errorMsg.exit(width, height, transition);

@@ -31,6 +31,10 @@ export class ErrorMsg {
     this.#_rect.classed("error-rect", true).attr("x", 0).attr("y", 0);
   }
 
+  set dataName(name) {
+    this.#_dataName = name;
+  }
+
   #transformMultiplier() {
     switch (this.#_direction) {
       case ErrorMsg.Directions.TOP:
@@ -68,6 +72,7 @@ export class ErrorMsg {
   }
 
   exit(width, height, transition = true) {
+    this.#_text.text(`No ${this.#_dataName} data available for ${state.symbol}`);
     const bbox = this.#_text.node().getBBox();
     const mult = this.#transformMultiplier();
     const transform = `translate(${(mult.x * (width - bbox.width)) / 2}, ${(mult.y * height) / 2})`;
