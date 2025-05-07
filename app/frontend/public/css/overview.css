@@ -2,12 +2,20 @@
 
 .overview-container {
   position: relative;
-  border: 2px solid #d2b5db;
-  border-radius: 5px;
-  background-color: rgb(253, 205, 255);
+  border: 1px solid rgba(210, 181, 219, 0.6);
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(255, 240, 255, 0.9) 0%, rgba(253, 205, 255, 0.8) 100%);
   display: flex;
   flex-direction: column;
-  padding: 0px 10px;
+  padding: 20px 25px;
+  margin-top: 35px;
+  box-shadow: 0 8px 16px rgba(143, 67, 167, 0.1);
+  transition: all 0.3s ease;
+}
+
+.overview-container:hover {
+  box-shadow: 0 12px 24px rgba(143, 67, 167, 0.18);
+  transform: translateY(-2px);
 }
 
 .overview-container > h3 {
@@ -17,20 +25,75 @@
   transform: translateX(-50%);
   text-align: center;
   margin: 0;
-  padding: 10px 20px;
-  border-radius: 5px;
-  background-color: #8f43a7;
+  padding: 12px 30px;
+  border-radius: 25px;
+  background: linear-gradient(145deg, #9b4db4, #8043a0);
   color: white;
-  box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 5px 15px rgba(143, 67, 167, 0.3);
   z-index: 1;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  min-width: 150px;
 }
 
 #overview-details {
   height: 100%;
   overflow: auto;
-  line-height: 175%;
+  line-height: 1.8;
+  padding: 10px 5px;
+  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-top: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #8f43a7 #f0e6f3;
+}
+
+#overview-details::-webkit-scrollbar {
+  width: 6px;
+}
+
+#overview-details::-webkit-scrollbar-track {
+  background: #f0e6f3;
+  border-radius: 10px;
+}
+
+#overview-details::-webkit-scrollbar-thumb {
+  background: #8f43a7;
+  border-radius: 10px;
 }
 
 .overview-container span.title {
-  font-weight: bold;
+  font-weight: 700;
+  color: #5d2d6f;
+  margin-right: 8px;
+  position: relative;
+  display: inline-block;
+}
+
+.overview-container span.title::after {
+  content: ":";
+  position: relative;
+  right: -2px;
+}
+
+.overview-container p {
+  margin: 8px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed rgba(143, 67, 167, 0.2);
+}
+
+.overview-container p:last-child {
+  border-bottom: none;
+}
+
+@media (max-width: 768px) {
+  .overview-container {
+    padding: 15px;
+  }
+  
+  .overview-container > h3 {
+    padding: 8px 20px;
+    font-size: 16px;
+  }
 }
