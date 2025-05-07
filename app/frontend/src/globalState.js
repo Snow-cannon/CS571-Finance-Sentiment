@@ -11,6 +11,8 @@ export class PageState {
   #_endYear;
   /** Global transition suggestion */
   #_transitionDuration;
+  /** Currently selected sankey graph */
+  #_sankeyType;
 
   /**
    * A list of all callback functions hashed by
@@ -19,6 +21,9 @@ export class PageState {
    * @type {Object<string, function(): void>}
    */
   #_callbacks;
+
+  /** Time used to prevent overcalling of functoins */
+  #_debounceTime;
 
   /**
    * A list of all valid events to listen to
@@ -31,6 +36,7 @@ export class PageState {
     SYMBOL: "symbol",
     TIME: "time",
     RESIZE: "resize",
+    SANKEY_SELECT: "sankey select",
   };
 
   static DATE_TYPE = {
@@ -39,8 +45,15 @@ export class PageState {
     INTRADAY: "intraday",
   };
 
+  static SANKEY_TYPE = {
+    BALANCE: "Balance Sheet",
+    INCOME: "Income Statement",
+    CASH: "Cash Flow",
+  };
+
   constructor(options) {
     this.#_quarter = 0;
+    this.#_sankeyType = options.sankey || PageState.SANKEY_TYPE.BALANCE;
     this.#_isQuarter = false;
     this.#_callbacks = {};
     this.#_startYear = options.startYear || 2016;
@@ -48,7 +61,7 @@ export class PageState {
     this.#_symbol = options.symbol || "";
     this.#_transitionDuration = options.duration || 1000;
 
-    const debounceTime = options.debounceTime;
+    this.#_debounceTime = options.debounceTime;
 
     // https://www.geeksforgeeks.org/debouncing-in-javascript/#
     // Debounce function. Prevents too many UI updates
@@ -58,12 +71,12 @@ export class PageState {
         clearTimeout(timeout);
         timeout = setTimeout(() => {
           func(...args);
-        }, debounceTime);
+        }, this.#_debounceTime);
       };
     }
 
     // Add debounce to the resize dispatch event
-    const debounceResize = debounce(this.dispatch.bind(this), debounceTime);
+    const debounceResize = debounce(this.dispatch.bind(this));
 
     // Built-in resize events
     window.addEventListener("resize", () => {
@@ -124,6 +137,23 @@ export class PageState {
   /** returns the duration suggestion for visuals */
   get duration() {
     return this.#_transitionDuration;
+  }
+
+  /** returns the currently selected sankey type */
+  get sankey() {
+    return this.#_sankeyType;
+  }
+
+  /** If valid, sets the global sankey type to the input */
+  set sankey(sankey) {
+    if (Object.values(PageState.SANKEY_TYPE).includes(sankey)) {
+      this.#_sankeyType = sankey;
+      this.dispatch(PageState.Events.SANKEY_SELECT);
+    }
+  }
+
+  get debounceTime() {
+    return this.#_debounceTime;
   }
 
   /** Returns the start and end time for date querys */

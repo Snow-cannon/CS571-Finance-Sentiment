@@ -105,9 +105,6 @@ router.post("/intraday", async (req, res) => {
 router.post("/balance_sheet_senkey", async (req, res) => {
   try {
     const { symbol, start, end, report_type } = req.body;
-    // let report_type = "annual"; // Change to "quarterly" for quarterly data
-    // let start_date = "2024-01-01";
-    // let end_date = "2024-12-31";
 
     // Read the SQL query from the file
     const queryPath = path.resolve("backend/sql_queries", "balance_sheet_senkey2.sql");
@@ -146,7 +143,6 @@ router.post("/cash_flow_senkey", async (req, res) => {
 router.post("/income_statement_senkey", async (req, res) => {
   try {
     const { symbol, start, end, report_type } = req.body;
-    console.log(symbol, start, end, report_type);
 
     // Read the SQL query from the file
     const queryPath = path.resolve("backend/sql_queries", "income_statement_senkey.sql");

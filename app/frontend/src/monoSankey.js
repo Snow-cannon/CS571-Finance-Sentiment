@@ -9,19 +9,13 @@ import { sankey, sankeyLeft, sankeyLinkHorizontal } from "d3-sankey";
 import { state } from "./index.js";
 import { PageState } from "./globalState.js";
 import queryData from "./makeQuery.js";
-
-/** Maps the sankey graph type to strings */
-export const sheets = {
-  BALANCE: "balance",
-  INCOME: "income",
-  CASH: "cash",
-};
+import { ErrorMsg } from "./errorMsg.js";
 
 /** Maps sheet names to endpoints */
 const endpoints = {};
-endpoints[sheets.BALANCE] = "balance_sheet_senkey";
-endpoints[sheets.INCOME] = "income_statement_senkey";
-endpoints[sheets.CASH] = "cash_flow_senkey";
+endpoints[PageState.SANKEY_TYPE.BALANCE] = "balance_sheet_senkey";
+endpoints[PageState.SANKEY_TYPE.INCOME] = "income_statement_senkey";
+endpoints[PageState.SANKEY_TYPE.CASH] = "cash_flow_senkey";
 
 /**
  * Creates a Sankey diagram for the specified data.
@@ -33,6 +27,8 @@ export async function makeSenkey(containerID, sheet) {
   const container = d3.select(`#${containerID}`);
   container.selectAll("svg").remove();
   container.selectAll("p").remove();
+
+  // ----- Obtain Dimensions ----- //
 
   // Set dimensions and margins for the chart
   const margin = { top: 20, right: 30, bottom: 30, left: 50 };
@@ -55,14 +51,16 @@ export async function makeSenkey(containerID, sheet) {
 
   const { width, height, boundingWidth, boundingHeight } = getDimensions();
 
+  // ----- Get SANKEY Data ----- //
+
   /** Returns the data for the specified sheet */
-  const getData = async (sheet) => {
+  const getData = async () => {
     // Check if the sheet is valid
-    if (endpoints[sheet]) {
+    if (endpoints[state.sankey]) {
       // Get the data from the endpoint for the specified data / time / symbol
       // The query should return rows with columns: source, target, value.
       const { start, end } = state.queryDateRange(PageState.DATE_TYPE.SANKEY);
-      const data = await queryData(endpoints[sheet], {
+      const data = await queryData(endpoints[state.sankey], {
         symbol: state.symbol,
         report_type: state.isQuarter ? "quarterly" : "annual",
         start,
@@ -71,7 +69,7 @@ export async function makeSenkey(containerID, sheet) {
 
       // Verify the retrieved data is correct
       if (!Array.isArray(data) || !data.length) {
-        return { error: true, sankeyData: null };
+        return { error: true, sankeyData: { links: [], nodes: [] } };
       }
 
       // Filter out "None" values and process value and isNegative
@@ -130,10 +128,33 @@ export async function makeSenkey(containerID, sheet) {
       return { error: false, sankeyData };
     }
 
-    return { error: true, sankeyData: null };
+    return { error: true, sankeyData: { links: [], nodes: [] } };
   };
 
-  // Create the SVG container.
+  // ----- Add selection dropdown ----- //
+
+  const options = Object.values(PageState.SANKEY_TYPE);
+
+  const selectWrapper = container.insert("div", ":first-child").classed("sankey-selection", true);
+
+  const select = selectWrapper
+    .append("select")
+    .attr("id", "sankey-selection")
+    .on("change", function (evt) {
+      const value = d3.select(this).property("value");
+      state.sankey = value;
+    });
+
+  select
+    .selectAll("option")
+    .data(options)
+    .enter()
+    .append("option")
+    .attr("value", (d) => d)
+    .text((d) => d);
+
+  // ----- Create SVG ----- //
+
   const svg = container
     .append("svg")
     .attr("width", boundingWidth)
@@ -144,10 +165,7 @@ export async function makeSenkey(containerID, sheet) {
   const linkG = svg.append("g");
   const nodeG = svg.append("g");
 
-  // Function to assign a color based on the node name.
-  // For the income statement:
-  // - Positive targets (e.g., Revenue, Gross Profit, Operating Income, Net Income, EBIT, EBITDA) are green.
-  // - Cost/expense items (e.g., anything with "cost", "expense", "tax", "interest") are red.
+  // ----- Create Color Map ----- //
 
   const titleMap = {
     light_green: [
@@ -254,7 +272,8 @@ export async function makeSenkey(containerID, sheet) {
       .duration(duration)
       .attr("d", sankeyLinkHorizontal())
       .attr("stroke", (d) => titleColor(d.target))
-      .attr("stroke-width", (d) => Math.max(1, d.width));
+      .attr("stroke-width", (d) => Math.max(1, d.width))
+      .attr("stroke-opacity", 0.5);
 
     // Generate new items
     links
@@ -273,6 +292,7 @@ export async function makeSenkey(containerID, sheet) {
 
     // Bind nodes to key data
     const node = nodeG.selectAll("g").data(sankeyData.nodes, (d) => d.name);
+    console.log(node.size());
 
     /* REMOVE OLD UNUSED NODES */
 
@@ -289,7 +309,8 @@ export async function makeSenkey(containerID, sheet) {
       .attr("y", (d) => d.y0)
       .attr("height", (d) => d.y1 - d.y0)
       .attr("width", (d) => d.x1 - d.x0)
-      .attr("fill", (d) => titleColor(d));
+      .attr("fill", (d) => titleColor(d))
+      .attr("opacity", 1);
 
     // Modify old node labels
     node
@@ -299,7 +320,8 @@ export async function makeSenkey(containerID, sheet) {
       .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
       .attr("y", (d) => (d.y0 + d.y1) / 2)
       .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
-      .text((d) => d.name);
+      .text((d) => d.name)
+      .attr("opacity", 1);
 
     /* ADD NEW NODES */
 
@@ -331,24 +353,46 @@ export async function makeSenkey(containerID, sheet) {
       .style("font-size", "12px")
       .style("opacity", 0)
       .transition()
-      .duration(500)
+      .duration(duration)
       .style("opacity", 1);
   }
 
+  // Universal error message for missing data
+  const errorMsg = new ErrorMsg(svg, state.sankey.toLocaleLowerCase(), ErrorMsg.Directions.BOTTOM);
+
+  // https://www.geeksforgeeks.org/debouncing-in-javascript/#
+  // Debounce function. Prevents too many UI updates
+  function debounce(func) {
+    let timeout;
+    return function (...args) {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        func(...args);
+      }, state.debounceTime);
+    };
+  }
+
   // Listener for symbol/state changes to update the diagram.
-  const update = async () => {
+  const update = async (transition = true) => {
     // Retrieve data
-    const { error, sankeyData } = await getData(sheet);
+    let { error, sankeyData } = await getData(state.sankey);
+    const { width, height } = getDimensions();
 
     if (error) {
-      return;
+      errorMsg.dataName = state.sankey.toLocaleLowerCase();
+      errorMsg.enter(width, height, transition);
+    } else {
+      errorMsg.exit(width, height, transition);
     }
 
     draw(sankeyData);
   };
 
-  state.addListener(PageState.Events.SYMBOL, update);
-  state.addListener(PageState.Events.TIME, update);
+  const debouncedUpdate = debounce(update);
 
-  update();
+  state.addListener(PageState.Events.SYMBOL, debouncedUpdate);
+  state.addListener(PageState.Events.TIME, debouncedUpdate);
+  state.addListener(PageState.Events.SANKEY_SELECT, debouncedUpdate);
+
+  update(false);
 }
