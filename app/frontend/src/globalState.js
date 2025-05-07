@@ -210,7 +210,7 @@ export class PageState {
         end = `${year}${endQ.month}${endQ.day}T235959`;
         break;
       case PageState.DATE_TYPE.INTRADAY:
-        start = `${year}-${startQ.month}-star${startQ.day} 00:00:00`;
+        start = `${year}-${startQ.month}-${startQ.day} 00:00:00`;
         end = `${year}-${endQ.month}-${endQ.day} 23:59:59`;
         break;
       default:
