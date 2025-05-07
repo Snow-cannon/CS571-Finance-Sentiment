@@ -1,44 +1,37 @@
 WITH bs AS (
-  SELECT 
+  SELECT
     symbol,
     fiscalDateEnding,
     reportType,
     reportedCurrency,
-    totalAssets,
-    totalCurrentAssets,
-    totalNonCurrentAssets,
-    totalLiabilities,
-    totalCurrentLiabilities,
-    totalNonCurrentLiabilities,
-    totalShareholderEquity,
-    cashAndCashEquivalentsAtCarryingValue,
-    cashAndShortTermInvestments,
-    inventory,
-    currentNetReceivables,
-    otherCurrentAssets,
-    propertyPlantEquipment,
-    intangibleAssets,
-    intangibleAssetsExcludingGoodwill,
-    goodwill,
-    investments,
-    longTermInvestments,
-    shortTermInvestments,
-    otherNonCurrentAssets,
-    currentAccountsPayable,
-    deferredRevenue,
-    currentDebt,
-    shortTermDebt,
-    capitalLeaseObligations,
-    longTermDebt,
-    currentLongTermDebt,
-    longTermDebtNoncurrent,
-    shortLongTermDebtTotal,
-    otherCurrentLiabilities,
-    otherNonCurrentLiabilities,
-    treasuryStock,
-    retainedEarnings,
-    commonStock,
-    commonStockSharesOutstanding
+    COALESCE(totalAssets, 0) AS totalAssets,
+    COALESCE(totalCurrentAssets, 0) AS totalCurrentAssets,
+    COALESCE(cashAndCashEquivalentsAtCarryingValue, 0) AS cashAndCashEquivalentsAtCarryingValue,
+    COALESCE(shortTermInvestments, 0) AS shortTermInvestments, 
+    COALESCE(inventory, 0) AS inventory,
+    COALESCE(currentNetReceivables, 0) AS currentNetReceivables,
+    COALESCE(otherCurrentAssets, 0) AS otherCurrentAssets,
+    COALESCE(totalNonCurrentAssets, 0) AS totalNonCurrentAssets,
+    COALESCE(propertyPlantEquipment, 0) AS propertyPlantEquipment,
+    COALESCE(goodwill, 0) AS goodwill,
+    COALESCE(intangibleAssetsExcludingGoodwill, 0) AS intangibleAssetsExcludingGoodwill,
+    COALESCE(longTermInvestments, 0) AS longTermInvestments,
+    COALESCE(otherNonCurrentAssets, 0) AS otherNonCurrentAssets,
+    COALESCE(totalLiabilities, 0) AS totalLiabilities,
+    COALESCE(totalCurrentLiabilities, 0) AS totalCurrentLiabilities,
+    COALESCE(currentAccountsPayable, 0) AS currentAccountsPayable,
+    COALESCE(deferredRevenue, 0) AS deferredRevenue,
+    COALESCE(shortTermDebt, 0) AS shortTermDebt,
+    COALESCE(currentLongTermDebt, 0) AS currentLongTermDebt,
+    COALESCE(otherCurrentLiabilities, 0) AS otherCurrentLiabilities,
+    COALESCE(totalNonCurrentLiabilities, 0) AS totalNonCurrentLiabilities,
+    COALESCE(longTermDebtNoncurrent, 0) AS longTermDebtNoncurrent,
+    COALESCE(capitalLeaseObligations, 0) AS capitalLeaseObligations,
+    COALESCE(otherNonCurrentLiabilities, 0) AS otherNonCurrentLiabilities,
+    COALESCE(totalShareholderEquity, 0) AS totalShareholderEquity,
+    COALESCE(commonStock, 0) AS commonStock,
+    COALESCE(retainedEarnings, 0) AS retainedEarnings,
+    COALESCE(treasuryStock, 0) AS treasuryStock
   FROM balance_sheet
   WHERE symbol = ?
     AND fiscalDateEnding BETWEEN ? AND ?
@@ -46,218 +39,164 @@ WITH bs AS (
     AND reportedCurrency = 'USD'
   LIMIT 1
 )
-
------------------------------
--- ASSETS BREAKDOWN (Aggregation)
------------------------------
-
--- Detailed Current Asset items flow into the "Current Assets" node:
-SELECT 
-  'Cash & Cash Equivalents' AS source, 
-  'Current Assets' AS target, 
-  COALESCE(cashAndCashEquivalentsAtCarryingValue, 0) AS value
+SELECT
+  'Cash & Cash Equivalents' AS source,
+  'Current Assets' AS target,
+  cashAndCashEquivalentsAtCarryingValue AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Cash & Short Term Investments', 
-  'Current Assets', 
-  COALESCE(cashAndShortTermInvestments, 0) 
+SELECT
+  'Short Term Investments' AS source,
+  'Current Assets' AS target,
+  shortTermInvestments AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Inventory', 
-  'Current Assets', 
-  COALESCE(inventory, 0) 
+SELECT
+  'Inventory' AS source,
+  'Current Assets' AS target,
+  inventory AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Current Net Receivables', 
-  'Current Assets', 
-  COALESCE(currentNetReceivables, 0) 
+SELECT
+  'Current Net Receivables' AS source,
+  'Current Assets' AS target,
+  currentNetReceivables AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Other Current Assets', 
-  'Current Assets', 
-  COALESCE(otherCurrentAssets, 0) 
-FROM bs
--- Aggregate all Current Assets into the overall Assets node:
-UNION ALL
-SELECT 
-  'Current Assets', 
-  'Assets', 
-  COALESCE(totalCurrentAssets, 0) 
-FROM bs
-
--- Detailed Non-Current Asset items flow into "Non-Current Assets":
-UNION ALL
-SELECT 
-  'Property, Plant & Equipment', 
-  'Non-Current Assets', 
-  COALESCE(propertyPlantEquipment, 0) 
+SELECT
+  'Other Current Assets' AS source,
+  'Current Assets' AS target,
+  otherCurrentAssets AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Intangible Assets', 
-  'Non-Current Assets', 
-  COALESCE(intangibleAssets, 0) 
-FROM bs
--- (Optional breakdown details for intangibles could be added here)
-UNION ALL
-SELECT 
-  'Investments', 
-  'Non-Current Assets', 
-  COALESCE(investments, 0) 
+SELECT
+  'Current Assets' AS source,
+  'Total Assets' AS target,
+  totalCurrentAssets AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Long Term Investments', 
-  'Non-Current Assets', 
-  COALESCE(longTermInvestments, 0) 
+SELECT
+  'Property, Plant & Equipment' AS source,
+  'Non-Current Assets' AS target,
+  propertyPlantEquipment AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Short Term Investments', 
-  'Non-Current Assets', 
-  COALESCE(shortTermInvestments, 0) 
+SELECT
+  'Goodwill' AS source,
+  'Non-Current Assets' AS target,
+  goodwill AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Other Non-Current Assets', 
-  'Non-Current Assets', 
-  COALESCE(otherNonCurrentAssets, 0) 
-FROM bs
--- Aggregate Non-Current Assets into the overall Assets node:
-UNION ALL
-SELECT 
-  'Non-Current Assets', 
-  'Assets', 
-  COALESCE(totalNonCurrentAssets, 0) 
-FROM bs
-
------------------------------
--- LIABILITIES & SHAREHOLDER EQUITY BREAKDOWN (Split from Aggregates)
------------------------------
-
--- From Assets, the overall flow splits into Liabilities and Shareholder Equity:
-UNION ALL
-SELECT 
-  'Assets', 
-  'Liabilities', 
-  COALESCE(totalLiabilities, 0) 
+SELECT
+  'Intangible Assets Excluding Goodwill' AS source,
+  'Non-Current Assets' AS target,
+  intangibleAssetsExcludingGoodwill AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Assets', 
-  'Shareholder Equity', 
-  COALESCE(totalShareholderEquity, 0) 
-FROM bs
-
--- BREAKDOWN: LIABILITIES
-
--- First, split the overall Liabilities node into "Current Liabilities" and "Non-Current Liabilities":
-UNION ALL
-SELECT 
-  'Liabilities', 
-  'Current Liabilities', 
-  COALESCE(totalCurrentLiabilities, 0) 
+SELECT
+  'Long Term Investments' AS source,
+  'Non-Current Assets' AS target,
+  longTermInvestments AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Liabilities', 
-  'Non-Current Liabilities', 
-  COALESCE(totalNonCurrentLiabilities, 0) 
-FROM bs
-
--- Now have each liability aggregate split into its detailed components:
--- Current Liabilities breakdown:
-UNION ALL
-SELECT 
-  'Current Liabilities', 
-  'Current Accounts Payable', 
-  COALESCE(currentAccountsPayable, 0) 
+SELECT
+  'Other Non-Current Assets' AS source,
+  'Non-Current Assets' AS target,
+  otherNonCurrentAssets AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Current Liabilities', 
-  'Deferred Revenue', 
-  COALESCE(deferredRevenue, 0) 
+SELECT
+  'Non-Current Assets' AS source,
+  'Total Assets' AS target,
+  totalNonCurrentAssets AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Current Liabilities', 
-  'Current Debt', 
-  COALESCE(currentDebt, 0) 
+SELECT
+  'Total Assets' AS source,
+  'Total Liabilities' AS target,
+  totalLiabilities AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Current Liabilities', 
-  'Short Term Debt', 
-  COALESCE(shortTermDebt, 0) 
+SELECT
+  'Total Assets' AS source,
+  'Total Shareholder Equity' AS target,
+  totalShareholderEquity AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Current Liabilities', 
-  'Other Current Liabilities', 
-  COALESCE(otherCurrentLiabilities, 0) 
-FROM bs
-
--- Non-Current Liabilities breakdown:
-UNION ALL
-SELECT 
-  'Non-Current Liabilities', 
-  'Capital Lease Obligations', 
-  COALESCE(capitalLeaseObligations, 0) 
+SELECT
+  'Total Liabilities' AS source,
+  'Current Liabilities' AS target,
+  totalCurrentLiabilities AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Non-Current Liabilities', 
-  'Long Term Debt', 
-  COALESCE(longTermDebt, 0) 
+SELECT
+  'Total Liabilities' AS source,
+  'Non-Current Liabilities' AS target,
+  totalNonCurrentLiabilities AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Non-Current Liabilities', 
-  'Current Long Term Debt', 
-  COALESCE(currentLongTermDebt, 0) 
+SELECT
+  'Current Liabilities' AS source,
+  'Current Accounts Payable' AS target,
+  currentAccountsPayable AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Non-Current Liabilities', 
-  'Long Term Debt (Noncurrent)', 
-  COALESCE(longTermDebtNoncurrent, 0) 
+SELECT
+  'Current Liabilities' AS source,
+  'Deferred Revenue (Current)' AS target,
+  deferredRevenue AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Non-Current Liabilities', 
-  'Short-Long Term Debt Total', 
-  COALESCE(shortLongTermDebtTotal, 0) 
+SELECT
+  'Current Liabilities' AS source,
+  'Short Term Debt' AS target,
+  shortTermDebt AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Non-Current Liabilities', 
-  'Other Non-Current Liabilities', 
-  COALESCE(otherNonCurrentLiabilities, 0) 
-FROM bs
-
--- BREAKDOWN: SHAREHOLDER EQUITY
-
--- The overall Shareholder Equity node splits into its detailed items:
-UNION ALL
-SELECT 
-  'Shareholder Equity', 
-  'Retained Earnings', 
-  COALESCE(retainedEarnings, 0) 
+SELECT
+  'Current Liabilities' AS source,
+  'Current Portion of Long Term Debt' AS target,
+  currentLongTermDebt AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Shareholder Equity', 
-  'Common Stock', 
-  COALESCE(commonStock, 0) 
+SELECT
+  'Current Liabilities' AS source,
+  'Other Current Liabilities' AS target,
+  otherCurrentLiabilities AS value
 FROM bs
 UNION ALL
-SELECT 
-  'Shareholder Equity', 
-  'Treasury Stock', 
-  COALESCE(treasuryStock, 0) 
+SELECT
+  'Non-Current Liabilities' AS source,
+  'Long Term Debt (Noncurrent)' AS target,
+  longTermDebtNoncurrent AS value
+FROM bs
+UNION ALL
+SELECT
+  'Non-Current Liabilities' AS source,
+  'Capital Lease Obligations (Noncurrent)' AS target,
+  capitalLeaseObligations AS value
+FROM bs
+UNION ALL
+SELECT
+  'Non-Current Liabilities' AS source,
+  'Other Non-Current Liabilities' AS target,
+  otherNonCurrentLiabilities AS value
+FROM bs
+UNION ALL
+SELECT
+  'Total Shareholder Equity' AS source,
+  'Common Stock' AS target,
+  commonStock AS value
+FROM bs
+UNION ALL
+SELECT
+  'Total Shareholder Equity' AS source,
+  'Retained Earnings' AS target,
+  retainedEarnings AS value
+FROM bs
+UNION ALL
+SELECT
+  'Total Shareholder Equity' AS source,
+  'Treasury Stock' AS target,
+  ABS(treasuryStock) AS value
 FROM bs;
