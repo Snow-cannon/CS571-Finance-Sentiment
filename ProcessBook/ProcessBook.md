@@ -299,6 +299,10 @@ We used d3.pack() to generate non-overlapping bubbles. Each bubble represents a 
 <img src="./screenshots/bubbleChart/bc-initial.png" style="width: 50%; height: auto%;" />
 </center>
 
+### Removal
+
+Due to the time constraints of the class, we were not able to collect enough data to make use of the chart. As such, we have removed it from the final design, and no further improvements were made to it.
+
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
@@ -317,6 +321,10 @@ We implemented the radar chart using radial lines and concentric circles to repr
 </center>
 
 The text size on the radar chart will need to be increased for readability and scale, and the current variables on the radar chart will likely need to be updated and modified to better fit the data once we collect it.
+
+### Removal
+
+Due to the time constraints of the class, we were not able to collect enough data to make use of the chart. As such, we have removed it from the final design, and no further improvements were made to it.
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
