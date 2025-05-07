@@ -371,7 +371,7 @@ SELECT
   ABS(dividendPayout) AS value
 FROM cf
 UNION ALL
--- 15. Cash from Financing -> Repayment of Commercial Paper (Placeholder)
+-- 15. Cash from Financing -> Repayment of Commercial Paper 
 SELECT
   'Cash from Financing' AS source,
   'Repayment of Commercial Paper' AS target,
@@ -385,14 +385,14 @@ SELECT
   0 AS value
 FROM cf
 UNION ALL
--- 17. Cash from Financing -> Repayment of Term Debt (Placeholder)
+-- 17. Cash from Financing -> Repayment of Term Debt 
 SELECT
   'Cash from Financing' AS source,
   'Repayment of Term Debt' AS target,
   0 AS value
 FROM cf
 UNION ALL
--- 18. Cash from Financing -> Other Cash from Financing (Residual)
+-- 18. Cash from Financing -> Other Cash from Financing 
 SELECT
   'Cash from Financing' AS source,
   'Other Cash from Financing' AS target,
