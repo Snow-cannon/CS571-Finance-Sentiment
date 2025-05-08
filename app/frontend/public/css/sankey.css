@@ -10,3 +10,21 @@
   padding: 0px 10px;
   font-size: large;
 }
+
+#sankey {
+  position: relative;
+}
+
+.sankey-rect {
+  stroke: black;
+  rx: 2px;
+}
+
+.sankey-text {
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+}
+
+.sankey-link {
+  fill: none;
+}

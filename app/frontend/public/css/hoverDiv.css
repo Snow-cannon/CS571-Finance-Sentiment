@@ -1,0 +1,27 @@
+.hover-div {
+  position: absolute;
+  pointer-events: none;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 5px;
+  font-size: large;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.hover-div::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* Position it just below the hover-div */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid white; /* Match the background of the div */
+}
+
+.hover-div > p {
+  margin: 0;
+}

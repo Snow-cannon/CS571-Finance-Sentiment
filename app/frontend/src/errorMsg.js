@@ -43,9 +43,9 @@ export class ErrorMsg {
         console.log("bottom:", width, height, bbox);
         return `translate(${(width - bbox.width) / 2}, ${height * 1.5 + bbox.height})`;
       case ErrorMsg.Directions.LEFT:
-        return `translate(${width + bbox.width}, ${(height + bbox.height) / 2})`;
+        return `translate(${width + bbox.width + 10}, ${(height + bbox.height) / 2})`;
         case ErrorMsg.Directions.RIGHT:
-        return `translate(${-bbox.width}, ${(height + bbox.height) / 2})`;
+        return `translate(${-bbox.width - 10}, ${(height + bbox.height) / 2})`;
       default:
         return `translate(${(width - bbox.width) / 2}, ${(height + bbox.height) / 2})`;
     }

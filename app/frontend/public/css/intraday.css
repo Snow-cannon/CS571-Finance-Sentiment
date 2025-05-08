@@ -2,10 +2,16 @@
   fill: none;
   stroke: steelblue;
   stroke-width: 1.5;
-  stroke-linejoin:round
+  stroke-linejoin: round;
 }
 
 .axis-text {
   font-size: smaller;
   font-weight: lighter;
+}
+
+.intraday-y-line {
+  stroke: rgba(139, 32, 139, 0.5); /* semi-transparent purple */
+  stroke-width: 1.5px;
+  stroke-dasharray: 4, 2; /* dashed: 4px dash, 2px gap */
 }
