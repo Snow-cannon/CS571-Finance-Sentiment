@@ -1,0 +1,10 @@
+.hover-div {
+  padding: 5px;
+  border-radius: 5px;
+  position: absolute; /* REQUIRED */
+  display: none;
+  background-color: white; /* Optional for visibility */
+  border: 1px solid gray; /* Optional */
+  pointer-events: none; /* Optional: so it doesn't block mouse events */
+  z-index: 1000; /* Optional: ensure it appears above other elements */
+}

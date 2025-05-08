@@ -4,6 +4,7 @@ import { ErrorMsg } from "./errorMsg.js";
 import { PageState } from "./globalState.js";
 import { state } from "./index.js";
 import queryData from "./makeQuery.js";
+import { timeFormat } from "d3-time-format";
 import * as d3 from "d3";
 
 /**
@@ -41,6 +42,10 @@ export async function makeIntraday(containerID) {
   // Generate new elements
   const svg = container.append("svg");
   const wrapper = svg.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
+  const overlayG = wrapper.append("g");
+  const overlayLine = overlayG.append("line");
+  const yOverlayLineG = wrapper.append("g");
+  const yOverlayLine = yOverlayLineG.append("line");
   const path = wrapper.append("path");
   path.classed("intraday-path", true);
   const xWrapper = wrapper.append("g");
@@ -51,6 +56,40 @@ export async function makeIntraday(containerID) {
 
   // Get initial chart dimensions
   const { width, height, boundingHeight, boundingWidth } = getDimensions();
+
+  yOverlayLine
+    .classed("intraday-y-line", true)
+    .attr("x1", 0)
+    .attr("y1", 0)
+    .attr("x2", width)
+    .attr("y2", 0)
+  yOverlayLineG.style("display", "none");
+  overlayG.style("display", "none");
+  overlayLine
+    .attr("x1", 0)
+    .attr("y1", boundingHeight - margin.bottom - margin.top)
+    .attr("x2", 0)
+    .attr("y2", 0)
+    .attr("stroke", "gray");
+
+  svg
+    .on("mousemove", (evt) => {
+      const point = d3.pointer(evt, svg.node());
+      const x = point[0] - margin.left;
+      if (x > 0 && x < width) {
+        makeOverlayText(x);
+        overlayG.style("display", "block");
+        overlayG.attr("transform", `translate(${x}, ${0})`);
+        yOverlayLineG.style("display", "block");
+      } else {
+        overlayG.style("display", "none");
+        yOverlayLineG.style("display", "none");
+      }
+    })
+    .on("mouseleave", () => {
+      overlayG.style("display", "none");
+      yOverlayLineG.style("display", "none");
+    });
 
   const now = new Date();
 
@@ -72,13 +111,52 @@ export async function makeIntraday(containerID) {
     .classed("axis-text", true);
 
   yTitle
-    .attr("transform", `translate(${- margin.left + 10}, ${height / 2})rotate(-90)`)
+    .attr("transform", `translate(${-margin.left + 10}, ${height / 2})rotate(-90)`)
     .append("text")
     .attr("text-anchor", "middle")
     .attr("x", 0)
     .attr("y", 0)
     .text("Stock Price")
     .classed("axis-text", true);
+
+  const formatDate = timeFormat("%-d %B %Y, %-I%p");
+
+  /**
+   * Generates the overlay text based on the hovered location
+   * Used from @Snow-cannon HW4
+   */
+  const makeOverlayText = (x) => {
+    // Remove old text elements
+    overlayG.selectAll("text").remove();
+
+    // Get valid data points at the hovered date from the selected list
+    const selectedDate = new Date(xScale.invert(x));
+
+    // Since not all data points exist, find the closest one available
+    // Data is time sorted already, so this approach is valid
+    const point = oldData.find((d) => d.datetime.getTime() >= selectedDate.getTime());
+
+    overlayG
+      .selectAll("text")
+      .data([formatDate(point.datetime), point.close])
+      .enter()
+      .append("text")
+
+      // Format like the map
+      .text((d, i) => (i === 1 ? d3.format("$~s")(d) : d))
+
+      // Display left / right based on position
+      .attr("text-anchor", x < 300 ? "start" : "end")
+
+      // Base color off of name map index
+      .classed("intraday-overlay-text", true)
+
+      // Translate left / right 5 pixels based on position
+      .attr("transform", (d, i) => `translate(${x < 300 ? 5 : -5}, ${margin.top + 20 * i})`);
+
+    const selectedY = yScale(point.close);
+    yOverlayLine.attr("y1", selectedY).attr("y2", selectedY);
+  };
 
   let oldData = [];
 
