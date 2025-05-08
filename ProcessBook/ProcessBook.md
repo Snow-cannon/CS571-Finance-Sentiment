@@ -34,7 +34,7 @@ After initializing the selection table, we realized we needed a way to update al
 
 ### Data Sources and Collection
 
-We collected our financial data primarily from the [Alpha Vantage API](https://www.alphavantage.co/). The website provided us with a diverse range of financial information including company overviews, financial statements -income statements, cash flows, balance sheets-, stock prices, news articles and sentiments attached to the company. We developed a data collection pipeline in python to fetch, process and store the collected data.
+We collected our financial data primarily from the [Alpha Vantage API](https://www.alphavantage.co/). The website provided us with a diverse range of financial information including company overviews, financial statements, income statements, cash flows, balance sheets, stock prices, news articles and sentiments attached to the company. We developed a data collection pipeline in python to fetch, process and store the collected data.
 
 ### Collection Infrastructure
 
@@ -193,6 +193,14 @@ The new Company Overview visual moves the title of the visual to the top center,
 <img src="./screenshots/company-overview/co-improved-title.png" style="width: 100%; height: auto;" />
 </center>
 
+### CSS Upgrades
+
+We decided to overhaul the design with CS, implementing a new complex set of rules. This gives it a more modern look while being more interesting to look at.
+
+<center>
+<img src="./screenshots/company-overview/co-css-upgrade.png" style="width: 100%; height: auto;" />
+</center>
+
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
@@ -239,6 +247,14 @@ On the x-axis, we changed it so the quarterly data has a different tick format t
 
 <center>
 <img src="./screenshots/intraday-chart/intraday-quarterly-dollar-label.png" style="width: 100%; height: auto;" />
+</center>
+
+### Hover Interactions
+
+Based on the HW4 interactions, we implemented a similar line chart overlay to allow the user to see exactly what price was at what time. Since some price points are missing from the data set, we find the price closest to the hovered portion in the future and display it on the overlay line. Additionally, we added a purple, transparent dashed line to show the user exactly what part of the graph they were being shown compared to the y-axis.
+
+<center>
+<img src="./screenshots/intraday-chart/intraday-user-interaction.png" style="width: 100%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
@@ -305,7 +321,7 @@ However, this has turned out to be a very difficult task. To simplify the task, 
 
 ### Data Connection
 
-We connected the word cloud to the backend database. The query gets the top 10 most used words from news articles, and uses a `d3.scaleLinear()` to map the lowest count word to `15px` and the highest count word to `70px`. The colors are still random, and we need to see if we can extract the sentiment data of each word. However the word size is accurate to the set of words retrieved.
+We connected the word cloud to the backend database. The query gets the top 10 most used words from news articles, and uses a `d3.scaleLinear()` to map the lowest count word to `15px` and the highest count word to `70px`. The colors are also retrieved from the database, and colored based on individual sentiment scores for the articles that word is associated with in regards to the company selected during the time period selected.
 
 <center>
 <img src="./screenshots/wordCloud/wc-connected.png" style="width: 40%; height: auto;" />
@@ -328,9 +344,12 @@ We used d3.pack() to generate non-overlapping bubbles. Each bubble represents a 
 <img src="./screenshots/bubbleChart/bc-initial.png" style="width: 50%; height: auto%;" />
 </center>
 
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
 ### Removal
 
-Due to the time constraints of the class, we were not able to collect enough data to make use of the chart. As such, we have removed it from the final design, and no further improvements were made to it.
+Due to the time constraints of the class, we were not able to collect enough data to make use of the chart and we have removed it from the final design.
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
@@ -353,7 +372,7 @@ The text size on the radar chart will need to be increased for readability and s
 
 ### Removal
 
-Due to the time constraints of the class, we were not able to collect enough data to make use of the chart. As such, we have removed it from the final design, and no further improvements were made to it.
+Due to the time constraints of the class, we were not able to collect enough data to make use of the chart and we have removed it from the final design.
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
@@ -429,6 +448,34 @@ To allow users the ability to choose which chart they want to view, we added a d
 
 <center>
 <img src="./screenshots/mono-sankey/ms-dropdown-cash.png" style="width: 90%; height: auto;" />
+</center>
+
+### Query Updates
+
+In previous versions, the 3 different charts had queries that returned the set of connections from node A to node B in the chart and the value id held. This allowed us to make the sankey graph directly from queried data. However, not all the data aggregation was used in the right order. We fixed the ordering which helped make the data feel complete and organized for the user as well as made it accurate. While the sankey graph does have some nodes that are larger than their inputs, the data collection only was able to collect certain portions of cash flow, income statement, and balance sheet data based on what the API gave us. The nmumbers for these charts do not line up perfectly for reasons we are investigating, but is most likely due to missing data that was not accounted for in the sheets we obtained. The image below represents our best efforts to get it to line up based on available collected data.
+
+<center>
+<img src="./screenshots/mono-sankey/ms-sankey-final-income.png" style="width: 90%; height: auto;" />
+</center>
+
+<center>
+<img src="./screenshots/mono-sankey/ms-sankey-final-balance.png" style="width: 90%; height: auto;" />
+</center>
+
+<center>
+<img src="./screenshots/mono-sankey/ms-sankey-final-cash.png" style="width: 90%; height: auto;" />
+</center>
+
+### Hover View
+
+Because the sankey graph does not have raw values labeled anywhere, we have added the ability to hover over individual sankey nodes to display the associated values with those nodes. It also accounts for nodes that have negative values, making sure users can see that the value is being taken out rather than added like it would normally be.
+
+<center>
+<img src="./screenshots/mono-sankey/ms-hover-div.png" style="width: 90%; height: auto;" />
+</center>
+
+<center>
+<img src="./screenshots/mono-sankey/ms-negative-hover-value.png" style="width: 90%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
