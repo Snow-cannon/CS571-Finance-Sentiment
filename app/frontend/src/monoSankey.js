@@ -10,6 +10,7 @@ import { state } from "./index.js";
 import { PageState } from "./globalState.js";
 import queryData from "./makeQuery.js";
 import { ErrorMsg } from "./errorMsg.js";
+import HoverDiv from "./floatingDiv.js";
 
 /** Maps sheet names to endpoints */
 const endpoints = {};
@@ -248,6 +249,12 @@ export async function makeSenkey(containerID, sheet) {
     return colorMap.gray;
   };
 
+  const hoverDiv = new HoverDiv(container);
+
+  const formatDollars = (n) => {
+    return `\$${d3.format(".2s")(n).replace("G", "B")}`;
+  };
+
   /* Citation: 
     "How to update d3 sankey draw function to use d3 update model with new data"
    
@@ -279,11 +286,11 @@ export async function makeSenkey(containerID, sheet) {
     links
       .enter()
       .append("path")
-      .attr("fill", "none")
       .attr("stroke", (d) => titleColor(d.target))
       .attr("stroke-width", (d) => Math.max(1, d.width))
-      .attr("stroke-opacity", 0)
       .attr("d", sankeyLinkHorizontal())
+      .classed("sankey-link", true)
+      .attr("stroke-opacity", 0)
       .transition()
       .duration(duration)
       .attr("stroke-opacity", 0.5);
@@ -335,8 +342,20 @@ export async function makeSenkey(containerID, sheet) {
       .attr("height", (d) => d.y1 - d.y0)
       .attr("width", (d) => d.x1 - d.x0)
       .attr("fill", (d) => titleColor(d))
-      .attr("stroke", "#000")
+      .classed("sankey-rect", true)
       .style("opacity", 0)
+      .on("mouseenter", function (evt, d) {
+        const rect = this.getBoundingClientRect();
+        const containerRect = container.node().getBoundingClientRect();
+
+        const centerX = rect.left + rect.width / 2 - containerRect.left;
+        const topY = rect.top - containerRect.top;
+
+        hoverDiv.show(centerX, topY - 5, [formatDollars(d.isNegative ? -d.value : d.value)]);
+      })
+      .on("mouseleave", () => {
+        hoverDiv.hide();
+      })
       .transition()
       .duration(duration)
       .style("opacity", 1);
@@ -346,11 +365,10 @@ export async function makeSenkey(containerID, sheet) {
       .append("text")
       .attr("x", (d) => (d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6))
       .attr("y", (d) => (d.y0 + d.y1) / 2)
-      .attr("dy", "0.35em")
       .attr("text-anchor", (d) => (d.x0 < width / 2 ? "start" : "end"))
       .text((d) => d.name)
-      .style("font-family", "Arial, sans-serif")
-      .style("font-size", "12px")
+      .attr("dy", "0.35em")
+      .classed("sankey-text", true)
       .style("opacity", 0)
       .transition()
       .duration(duration)
