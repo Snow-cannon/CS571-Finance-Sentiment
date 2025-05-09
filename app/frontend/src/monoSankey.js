@@ -225,11 +225,16 @@ export async function makeSenkey(containerID, sheet) {
   };
 
   const colorMap = {
-    light_green: "#8BC34A",
-    dark_green: "#4CAF50",
-    dark_red: "#F44336",
-    light_red: "#FFCDD2",
-    gray: "#9E9E9E",
+    // light_green: "#8BC34A",
+    // dark_green: "#4CAF50",
+    // dark_red: "#F44336",
+    // light_red: "#FFCDD2",
+    // gray: "#9E9E9E",
+    light_green: "bullish-sankey",
+    dark_green: "sw-bullish-sankey",
+    dark_red: "bearish-sankey",
+    light_red: "sw-bearish-sankey",
+    gray: "neutral-sankey",
   };
 
   const titleColor = (d) => {
@@ -279,7 +284,7 @@ export async function makeSenkey(containerID, sheet) {
       .transition()
       .duration(duration)
       .attr("d", sankeyLinkHorizontal())
-      .attr("stroke", (d) => titleColor(d.target))
+      .attr("class", (d) => `sankey-link ${titleColor(d.target)}`)
       .attr("stroke-width", (d) => Math.max(1, d.width))
       .attr("stroke-opacity", 0.5);
 
@@ -287,10 +292,9 @@ export async function makeSenkey(containerID, sheet) {
     links
       .enter()
       .append("path")
-      .attr("stroke", (d) => titleColor(d.target))
+      .attr("class", (d) => `sankey-link ${titleColor(d.target)}`)
       .attr("stroke-width", (d) => Math.max(1, d.width))
       .attr("d", sankeyLinkHorizontal())
-      .classed("sankey-link", true)
       .attr("stroke-opacity", 0)
       .transition()
       .duration(duration)
@@ -316,7 +320,7 @@ export async function makeSenkey(containerID, sheet) {
       .attr("y", (d) => d.y0)
       .attr("height", (d) => d.y1 - d.y0)
       .attr("width", (d) => d.x1 - d.x0)
-      .attr("fill", (d) => titleColor(d))
+      .attr("class", (d) => `sankey-rect ${titleColor(d)}`)
       .attr("opacity", 1);
 
     // Modify old node labels
@@ -341,8 +345,7 @@ export async function makeSenkey(containerID, sheet) {
       .attr("y", (d) => d.y0)
       .attr("height", (d) => d.y1 - d.y0)
       .attr("width", (d) => d.x1 - d.x0)
-      .attr("fill", (d) => titleColor(d))
-      .classed("sankey-rect", true)
+      .attr("class", (d) => `sankey-rect ${titleColor(d)}`)
       .style("opacity", 0)
       .on("mouseenter", function (evt, d) {
         const rect = this.getBoundingClientRect();

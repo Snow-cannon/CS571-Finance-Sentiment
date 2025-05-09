@@ -34,7 +34,7 @@ export async function makeWebsiteOverview(containerID) {
     {
       icon: "📟",
       title: "Speedometer",
-      text: "Shows average sentiment from news sources as a dynamic gauge value. Red is Bearish, Green is Bullish",
+      text: "Shows average sentiment from news sources as a dynamic gauge value. Red is Bearish, Blue is Bullish",
     },
     {
       icon: "☁️",

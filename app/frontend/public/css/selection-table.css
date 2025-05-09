@@ -30,29 +30,35 @@
   padding: 8px;
 }
 
-.symbol-selection-table tr:nth-child(even) {
-  background-color: #f2f2f2;
+.symbol-selection-table tbody tr:nth-child(even) {
+  background-color: var(--pink-light); /* very soft background */
 }
 
-.symbol-selection-table tr.selected {
-  background-color: #d6abab;
+.symbol-selection-table tbody tr:nth-child(odd) {
+  background-color: var(--pink); /* slightly deeper pink tint */
+}
+
+.symbol-selection-table tbody tr.selected {
+  background-color: var(--pink-pale); /* distinct but soft selection */
 }
 
 .symbol-selection-table tbody tr:hover {
-  background-color: #dbdbdb;
+  background-color: var(--pink-dark); /* warm, richer pink on hover */
 }
 
 .symbol-selection-table tbody tr.selected:hover {
-  background-color: #bb7b7b;
+  background-color: var(--purple-light); /* blends selection with your purple */
 }
 
+
+
 .symbol-selection-table thead {
-  background-color: #8304aa;
+  background: var(--purple-gradient);
   color: white;
 }
 
 .symbol-selection-table thead th:hover {
-  background-color: #700092;
+  background-color: #00000031;
 }
 
 .symbol-selection-table tbody {
@@ -62,7 +68,7 @@
 }
 
 .symbol-selection-table thead {
-  box-shadow: 0 5px 4px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--box-shadow-dark);
   position: sticky;
   z-index: 1;
   top: 0;

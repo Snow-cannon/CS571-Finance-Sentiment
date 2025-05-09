@@ -28,3 +28,43 @@
 .sankey-link {
   fill: none;
 }
+
+rect.bearish-sankey {
+  fill: var(--bearish);
+}
+
+rect.sw-bearish-sankey {
+  fill: var(--sw-bearish);
+}
+
+rect.neutral-sankey {
+  fill: var(--neutral);
+}
+
+rect.sw-bullish-sankey {
+  fill: var(--sw-bullish);
+}
+
+rect.bullish-sankey {
+  fill: var(--bullish);
+}
+
+path.bearish-sankey {
+  stroke: var(--bearish);
+}
+
+path.sw-bearish-sankey {
+  stroke: var(--sw-bearish);
+}
+
+path.neutral-sankey {
+  stroke: var(--neutral);
+}
+
+path.sw-bullish-sankey {
+  stroke: var(--sw-bullish);
+}
+
+path.bullish-sankey {
+  stroke: var(--bullish);
+}
