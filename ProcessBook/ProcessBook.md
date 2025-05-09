@@ -27,6 +27,7 @@ Below is the table of contents for the process book.
 - [Radar Chart (optional feature)](#radar-chart-optional-feature)
 - [Cash Flow / Balance Sheet / Income Statement](#cash-flow--balance-sheet--income-statement)
 - [Website Header](#website-header)
+- [Embed](#embed)
 - [Complete Page](#complete-page)
 <!-- TODO -->
 - [Evaluation](#evaluation)
@@ -582,6 +583,17 @@ Instead of relying on a grid, since we only have 7 cards in the header list, we 
 
 <center>
 <img src="./screenshots/header/header-flex.png" style="width: 90%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+### Embed
+
+We embedded the project screencast at the bottom of the project, as per the instructions. We also tried to make it fit in the project as a helpful tool for users if they need, and utilized the same CS as the company overview, with minor modifications for the new positioning.
+
+<center>
+<img src="./screenshots/screencast/screencast.png" style="width: 90%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
