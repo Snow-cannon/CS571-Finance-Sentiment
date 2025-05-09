@@ -203,7 +203,6 @@ export async function makeIntraday(containerID) {
     }));
 
     // Set new domains
-    console.log(start, end);
     xScale.domain(/* [new Date(start), new Date(end)] */ d3.extent(parsedData, (d) => d.datetime));
     xWrapper
       .transition()

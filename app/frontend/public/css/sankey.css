@@ -6,7 +6,7 @@
 #sankey-selection {
   border: 2px solid #d2b5db;
   border-radius: 5px;
-  background-color: rgb(253, 205, 255);
+  background: var(--pink-gradient);
   padding: 0px 10px;
   font-size: large;
 }

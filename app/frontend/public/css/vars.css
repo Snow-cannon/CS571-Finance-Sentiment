@@ -1,0 +1,17 @@
+:root {
+  /* Default Website Color Scheme */
+  --grid-row-height: 300px;
+  --pink: rgba(253, 205, 255, 0.85);
+  --purple: #8043a0;
+  --purple-gradient: linear-gradient(145deg, #9b4db4, var(--purple));
+  --pink-gradient: linear-gradient(135deg, rgba(255, 240, 255, 0.95), var(--pink));
+  --box-shadow-light: 0 8px 16px rgba(143, 67, 167, 0.1);
+  --box-shadow-dark: 0 5px 15px rgba(143, 67, 167, 0.3);
+
+  /* Sentiment colors */
+  --bearish: #e74c3c;
+  --sw-bearish: #e67e22;
+  --neutral: #f1c40f;
+  --sw-bullish: #2ecc71;
+  --bullish: #27ae60;
+}

@@ -2,8 +2,11 @@
   --grid-row-height: 300px;
 }
 
-body {
-  background-color: rgb(247, 229, 255);
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: rgb(247, 229, 255); /* keep your existing background */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Top-level-grid */

@@ -151,6 +151,7 @@ export async function makeSenkey(containerID, sheet) {
     .data(options)
     .enter()
     .append("option")
+    .classed("sankey-option", true)
     .attr("value", (d) => d)
     .text((d) => d);
 
@@ -299,7 +300,6 @@ export async function makeSenkey(containerID, sheet) {
 
     // Bind nodes to key data
     const node = nodeG.selectAll("g").data(sankeyData.nodes, (d) => d.name);
-    console.log(node.size());
 
     /* REMOVE OLD UNUSED NODES */
 

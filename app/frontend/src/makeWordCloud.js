@@ -55,11 +55,11 @@ export async function makeWordCloud(containerID) {
 
   //Refining color scheme
   const categories = [
-    { label: "Bearish", color: "#e74c3c" },
-    { label: "Somewhat Bearish", color: "#e67e22" },
-    { label: "Neutral", color: "#f1c40f" },
-    { label: "Somewhat Bullish", color: "#2ecc71" },
-    { label: "Bullish", color: "#27ae60" },
+    { label: "Bearish", color: "bearish-word" },
+    { label: "Somewhat Bearish", color: "sw-bearish-word" },
+    { label: "Neutral", color: "neutral-word" },
+    { label: "Somewhat Bullish", color: "sw-bullish-word" },
+    { label: "Bullish", color: "bullish-word" },
   ];
 
   // Non-uniform options
@@ -112,7 +112,8 @@ export async function makeWordCloud(containerID) {
       .duration(duration)
       .style("font-size", (d) => `${d.size}px`)
       .style("font-family", "Impact")
-      .style("fill", (d, i) => categories[d.score].color)
+      // .style("fill", (d, i) => categories[d.score].color)
+      .attr("class", (d) => categories[d.score].color)
       .attr("text-anchor", "middle")
       .text((d) => d.text);
   }

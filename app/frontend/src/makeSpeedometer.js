@@ -35,11 +35,17 @@ export async function makeSpeedometer(containerID) {
   const radius = height;
 
   const categories = [
-    { label: "Bearish", color: "#e74c3c" },
-    { label: "Somewhat Bearish", color: "#e67e22" },
-    { label: "Neutral", color: "#f1c40f" },
-    { label: "Somewhat Bullish", color: "#2ecc71" },
-    { label: "Bullish", color: "#27ae60" },
+    // { label: "Bearish", color: "#e74c3c" },
+    // { label: "Somewhat Bearish", color: "#e67e22" },
+    // { label: "Neutral", color: "#f1c40f" },
+    // { label: "Somewhat Bullish", color: "#2ecc71" },
+    // { label: "Bullish", color: "#27ae60" },
+
+    { label: "Bearish", color: "bearish-arc" },
+    { label: "Somewhat Bearish", color: "sw-bearish-arc" },
+    { label: "Neutral", color: "neutral-arc" },
+    { label: "Somewhat Bullish", color: "sw-bullish-arc" },
+    { label: "Bullish", color: "bullish-arc" },
   ];
 
   const svg = container.append("svg").attr("width", boundingWidth).attr("height", boundingHeight);
@@ -63,7 +69,7 @@ export async function makeSpeedometer(containerID) {
   sections.forEach(([start, end], i) => {
     g.append("path")
       .attr("d", arc.startAngle(angleScale(start)).endAngle(angleScale(end))())
-      .attr("fill", categories[i].color);
+      .attr("class", categories[i].color);
   });
 
   const line = g.append("line").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", 0);

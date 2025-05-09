@@ -10,3 +10,23 @@ line.needle_null {
   stroke-linecap: round;
   stroke: rgb(148, 31, 31);
 }
+
+.bearish-arc {
+  fill: var(--bearish);
+}
+
+.sw-bearish-arc {
+  fill: var(--sw-bearish);
+}
+
+.neutral-arc {
+  fill: var(--neutral);
+}
+
+.sw-bullish-arc {
+  fill: var(--sw-bullish);
+}
+
+.bullish-arc {
+  fill: var(--bullish);
+}

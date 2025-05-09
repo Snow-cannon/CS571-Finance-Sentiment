@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <head>
+  <link href="../css/vars.css" rel="stylesheet" />
   <link href="../css/root.css" rel="stylesheet" />
   <link href="../css/selection-table.css" rel="stylesheet" />
   <link href="../css/slider.css" rel="stylesheet" />
@@ -7,13 +8,19 @@
   <link href="../css/intraday.css" rel="stylesheet" />
   <link href="../css/errorMsg.css" rel="stylesheet" />
   <link href="../css/speedometer.css" rel="stylesheet" />
+  <link href="../css/wordcloud.css" rel="stylesheet" />
   <link href="../css/sankey.css" rel="stylesheet" />
   <link href="../css/hoverDiv.css" rel="stylesheet" />
+  <link href="../css/header.css" rel="stylesheet" />
 </head>
 <body>
-  <center>
-    <h3>Finance Sentiment Comparisons</h3>
-  </center>
+  <div class="description-wrapper">
+    <h3 class="description-header">Company Sentiment vs Finance Dashboard</h3>
+    <center>
+      <div class="description-container" id="description-container"></div>
+    </center>
+  </div>
+  <hr />
   <div id="grid-wrapper">
     <div id="selection_table">
       <div id="table-wrapper"></div>
