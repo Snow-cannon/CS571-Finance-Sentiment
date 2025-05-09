@@ -73,28 +73,14 @@ export async function makeWordCloud(containerID) {
     .range([20, 70]);
 
   const svg = container.append("svg").attr("width", boundingWidth).attr("height", boundingHeight);
-
   const g = svg.append("g").attr("transform", `translate(${width / 2},${height / 2})`);
-
-  // Define layout
   const layout = cloud()
     .size([width, height])
-    // .words(
-    //   data.map((d) => ({
-    //     text: d.word,
-    //     size: Math.round(xScale(d.occurrence_count)),
-    //     score: sections.findIndex(
-    //       (bin) => d.weighted_sentiment_score >= bin[0] && d.weighted_sentiment_score <= bin[1]
-    //     ),
-    //   }))
-    // )
     .padding(5)
     .rotate(0)
     .font("Impact")
-    // .fontSize((d) => d.size)
+    .fontWeight("bold")
     .on("end", draw);
-
-  // layout.start();
 
   // Draw function
   function draw(words, transition = true) {
@@ -110,10 +96,9 @@ export async function makeWordCloud(containerID) {
       .style("font-size", 0)
       .transition()
       .duration(duration)
+      .attr("class", (d) => `wc-word ${categories[d.score].color}`)
       .style("font-size", (d) => `${d.size}px`)
       .style("font-family", "Impact")
-      // .style("fill", (d, i) => categories[d.score].color)
-      .attr("class", (d) => categories[d.score].color)
       .attr("text-anchor", "middle")
       .text((d) => d.text);
   }

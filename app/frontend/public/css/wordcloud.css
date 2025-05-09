@@ -1,3 +1,7 @@
+.wc-word {
+  font-weight: bold;
+}
+
 .bearish-word {
   fill: var(--bearish);
 }
