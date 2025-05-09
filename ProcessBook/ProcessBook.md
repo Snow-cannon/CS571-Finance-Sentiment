@@ -17,6 +17,7 @@ Below is the table of contents for the process book.
 - [Bubble Chart (optional feature)](#bubble-chart-optional-feature)
 - [Radar Chart (optional feature)](#radar-chart-optional-feature)
 - [Cash Flow / Balance Sheet / Income Statement](#cash-flow--balance-sheet--income-statement)
+- [Website Header](#website-header)
 - [Complete Page](#complete-page)
 
 <!-- Page Break in PDF -->
@@ -295,6 +296,17 @@ Since we are unable to get data for some companies during specific years / quart
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
+### Color Blindness
+
+To make it more friendly to the eyes and better for color blindness, we updated the sentiment colors to a blue-red theme.
+
+<center>
+<img src="./screenshots/speedometer/speedometer-cb-friendly.png" style="width: 70%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
 ## Word Cloud
 
 This visual displays prominent keywords associated with the selected company in a cloud layout from the news articles published for each company.
@@ -325,6 +337,17 @@ We connected the word cloud to the backend database. The query gets the top 10 m
 
 <center>
 <img src="./screenshots/wordCloud/wc-connected.png" style="width: 40%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+### Color Blindness
+
+To make it more friendly to the eyes and better for color blindness, we updated the sentiment colors to a blue-red theme.
+
+<center>
+<img src="./screenshots/wordCloud/wc-cb-friendly.png" style="width: 70%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
@@ -481,6 +504,17 @@ Because the sankey graph does not have raw values labeled anywhere, we have adde
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
+## Website Header
+
+After some thought, we realized that the visuals on their own may not be understood by everyone looking at them. To correct for this, we've added a header and information cards to provide users with descriptions of each visual to help navigate the page.
+
+<center>
+<img src="./screenshots/header/header-initial.png" style="width: 100%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
 ## Complete Page
 
 This describes the process of joining the above visuals together, how we went about it, and why.
@@ -536,4 +570,15 @@ Once the sankey visuals were merged into a single layout, we were able to shrink
 
 <center>
 <img src="./screenshots/complete-webpage/complete-page-3.png" style="width: 100%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+### Header Layout
+
+Adding the headers added height to the total volume of the webpage. While this can be annoying for users to deal with, on a normal laptop they will be just a single line of information to scroll through, making it not that big of a burden.
+
+<center>
+<img src="./screenshots/complete-webpage/complete-page-4.png" style="width: 100%; height: auto;" />
 </center>
