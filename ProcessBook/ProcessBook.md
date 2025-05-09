@@ -122,9 +122,9 @@ This update uses d3 to generate a table, but does not make use of d3 axis, which
 
 ### D3 Axis
 
-This version upgrades the HTML grid layout to a D3 x-axis for an SVG. The slider is overlayed without grids and uses padding instead. This allows for a much better looking axis with a horizontal bar, as well as better control over the text within the axis.
+This version upgrades the HTML grid layout to a D3 x-axis for an SVG. The slider is overlaid without grids and uses padding instead. This allows for a much better looking axis with a horizontal bar, as well as better control over the text within the axis.
 
-This better control was also used to display the year / quarter being selected. To allow users to select both years and individual quarters, we put years as a tick, and the quarters assigned to those years follow as 4 seperate ticks. This makes it clear which quarter of the year they selected, or if they selected the entire year instead, without the need for a second selection menu or bar.
+This better control was also used to display the year / quarter being selected. To allow users to select both years and individual quarters, we put years as a tick, and the quarters assigned to those years follow as 4 separate ticks. This makes it clear which quarter of the year they selected, or if they selected the entire year instead, without the need for a second selection menu or bar.
 
 <center>
 <img src="./screenshots/slider/slider-quarters.gif" style="width: 50%; height: auto;" />
@@ -207,11 +207,11 @@ We decided to overhaul the design with CS, implementing a new complex set of rul
 
 ## Intraday Chart
 
-The intraday chart displays stock prices over a period of time. The current design is a basic line chart with tome on the x-axis and the stock price on the y-axis. While this is a common practice, that is because it is the most effective, and will allow the greatest number of people to understant the stock price over the selected time period.
+The intraday chart displays stock prices over a period of time. The current design is a basic line chart with tome on the x-axis and the stock price on the y-axis. While this is a common practice, that is because it is the most effective, and will allow the greatest number of people to understand the stock price over the selected time period.
 
 ### Initial design
 
-The colors do not entirely fit in the current color scheme, so we will need to fix that later. Additionally, there are no transitions, so we will want to add a transition to the chart for a more effective and visually helpful experience. However, the chart does fulfill the basic requirenments, and can take in any data set with a group of times and convert it into a valid line chart. As such, we can use both annual and quarterly data to display in the chart.
+The colors do not entirely fit in the current color scheme, so we will need to fix that later. Additionally, there are no transitions, so we will want to add a transition to the chart for a more effective and visually helpful experience. However, the chart does fulfill the basic requirements, and can take in any data set with a group of times and convert it into a valid line chart. As such, we can use both annual and quarterly data to display in the chart.
 
 <center>
 <img src="./screenshots/intraday-chart/intraday-chart-initial.png" style="width: 100%; height: auto;" />
@@ -223,7 +223,7 @@ We have now added transitions. The chart looks the same, but the added transitio
 
 ### Error Message
 
-We added the custom error message to the intraday chart, having it enter from the right on no data. Additionally, when there is an error, it transitions the intraday line so it goes from the previous value to 0 for a smooth error transiton.
+We added the custom error message to the intraday chart, having it enter from the right on no data. Additionally, when there is an error, it transitions the intraday line so it goes from the previous value to 0 for a smooth error transition.
 
 <center>
 <img src="./screenshots/intraday-chart/intraday-error-msg.png" style="width: 100%; height: auto;" />
@@ -287,7 +287,7 @@ In addition to the data connection, we made the speedometer take up the majority
 
 ### Errors
 
-Since we are unable to get data for some companies during specific years / quarters, we need an effective way to indicate there is no data for the current selection. We reused the custom error message from the intraday visual, and had the error message float in from the left, as the visual is on the left side of the screen. The needle will also turn a dark shade of red to indiacte that the zeroed out position represents invalid data, in addition to the error message.
+Since we are unable to get data for some companies during specific years / quarters, we need an effective way to indicate there is no data for the current selection. We reused the custom error message from the intraday visual, and had the error message float in from the left, as the visual is on the left side of the screen. The needle will also turn a dark shade of red to indicate that the zeroed out position represents invalid data, in addition to the error message.
 
 <center>
 <img src="./screenshots/speedometer/speedometer-error.png" style="width: 50%; height: auto;" />
@@ -475,7 +475,7 @@ To allow users the ability to choose which chart they want to view, we added a d
 
 ### Query Updates
 
-In previous versions, the 3 different charts had queries that returned the set of connections from node A to node B in the chart and the value id held. This allowed us to make the sankey graph directly from queried data. However, not all the data aggregation was used in the right order. We fixed the ordering which helped make the data feel complete and organized for the user as well as made it accurate. While the sankey graph does have some nodes that are larger than their inputs, the data collection only was able to collect certain portions of cash flow, income statement, and balance sheet data based on what the API gave us. The nmumbers for these charts do not line up perfectly for reasons we are investigating, but is most likely due to missing data that was not accounted for in the sheets we obtained. The image below represents our best efforts to get it to line up based on available collected data.
+In previous versions, the 3 different charts had queries that returned the set of connections from node A to node B in the chart and the value id held. This allowed us to make the sankey graph directly from queried data. However, not all the data aggregation was used in the right order. We fixed the ordering which helped make the data feel complete and organized for the user as well as made it accurate. While the sankey graph does have some nodes that are larger than their inputs, the data collection only was able to collect certain portions of cash flow, income statement, and balance sheet data based on what the API gave us. The numbers for these charts do not line up perfectly for reasons we are investigating, but is most likely due to missing data that was not accounted for in the sheets we obtained. The image below represents our best efforts to get it to line up based on available collected data.
 
 <center>
 <img src="./screenshots/mono-sankey/ms-sankey-final-income.png" style="width: 90%; height: auto;" />
@@ -499,6 +499,14 @@ Because the sankey graph does not have raw values labeled anywhere, we have adde
 
 <center>
 <img src="./screenshots/mono-sankey/ms-negative-hover-value.png" style="width: 90%; height: auto;" />
+</center>
+
+### Color Blindness
+
+We updated the income / expenses as red-blue range to account for color blindness. While it looks less standard, it is more accessible to users.
+
+<center>
+<img src="./screenshots/mono-sankey/ms-balance-cb.png" style="width: 90%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
@@ -555,7 +563,7 @@ The new design of the full webpage uses a CSS grid design:
 }
 ```
 
-This design still does not combine the 3 sankey visuals together. However, it reduces the height and combines them into 3 rows that make some semblence of sense with related information.
+This design still does not combine the 3 sankey visuals together. However, it reduces the height and combines them into 3 rows that make some semblance of sense with related information.
 
 <center>
 <img src="./screenshots/complete-webpage/complete-page-2.png" style="width: 100%; height: auto;" />
@@ -578,6 +586,17 @@ Once the sankey visuals were merged into a single layout, we were able to shrink
 ### Header Layout
 
 Adding the headers added height to the total volume of the webpage. While this can be annoying for users to deal with, on a normal laptop they will be just a single line of information to scroll through, making it not that big of a burden.
+
+<center>
+<img src="./screenshots/complete-webpage/complete-page-4.png" style="width: 100%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+### Color Blindness
+
+In order to allow color blind users to be able to understand the color-based information, we went for a color pallet that was in the blue-red form rather than the red-green form. The overall look of the website is not quite as nice, but still better for accessability.
 
 <center>
 <img src="./screenshots/complete-webpage/complete-page-4.png" style="width: 100%; height: auto;" />
