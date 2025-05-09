@@ -530,10 +530,22 @@ We updated the income / expenses as red-blue range to account for color blindnes
 
 ## Website Header
 
+The header provides the user with definitions of all the descriptions for what they show and how to use them.
+
+### Initial Design
+
 After some thought, we realized that the visuals on their own may not be understood by everyone looking at them. To correct for this, we've added a header and information cards to provide users with descriptions of each visual to help navigate the page.
 
 <center>
-<img src="./screenshots/header/header-initial.png" style="width: 100%; height: auto;" />
+<img src="./screenshots/header/header-initial.png" style="width: 90%; height: auto;" />
+</center>
+
+### Improved Layout
+
+Instead of relying on a grid, since we only have 7 cards in the header list, we wanted the boxes to look more natural with each row centered individually. This gave it a better, more cohesive and modern look. We also added a separation bar to give users a visual break between the description and the interaction portions of the site.
+
+<center>
+<img src="./screenshots/header/header-flex.png" style="width: 90%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
@@ -615,5 +627,16 @@ Adding the headers added height to the total volume of the webpage. While this c
 In order to allow color blind users to be able to understand the color-based information, we went for a color pallet that was in the blue-red form rather than the red-green form. The overall look of the website is not quite as nice, but still better for accessability.
 
 <center>
-<img src="./screenshots/complete-webpage/complete-page-4.png" style="width: 100%; height: auto;" />
+<img src="./screenshots/complete-webpage/complete-page-5.png" style="width: 100%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+### Minor Improvements
+
+Since the previous version had mostly implemented all necessary items, we wanted to address some of the small flaws. We added labels to the speedometer to address the lack of information on the meanings of the colors on screen, made the word cloud use a bold font to improve readability, Centered the header cards to give a more concise and modern look, and updated the colors of the site to be more distinct.
+
+<center>
+<img src="./screenshots/complete-webpage/complete-page-6.png" style="width: 100%; height: auto;" />
 </center>
