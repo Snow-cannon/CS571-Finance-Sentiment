@@ -171,6 +171,14 @@ Additionally, the slider now uses transitions. Rather than rebuilding the entire
 
 The color scheme is the same, but the years are in bold to make it obvious to the user if they selected a year or a quarter.
 
+### Text Size
+
+After viewing it on different computers, we realized the text size was likely too small for some users to see. To fix this, we updated the font size of all slider ticks to `17px` instead of `12px` to accommodate the issue.
+
+<center>
+<img src="./screenshots/slider/slider-tick-size.png" style="width: 90%; height: auto;" />
+</center>
+
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
@@ -197,6 +205,14 @@ And the ability to click a box and highlight the selected entry with a different
 The next iteration involved upgrading the CSS to make it feel more interactive. We added arrows to display the direction the user was sorting the companies, and by which column. We also added a darker shade of purple to show which header the user would be clicking. On top of that, we also shrunk the table to be only 200px tall, and made it scrollable. This allows us to fit more visuals on the page, while still letting users select from the entire set of provided companies.
 
 ![Selection Table CSS Upgrade](./screenshots/company-select-table/cst-css-upgrade.png)
+
+### Matching CSS to Page
+
+After updating the page with fancier CSS designs, we needed to make the table fit with the rest of the page. We updated the header to have a gradient, and hovering over a cell in the header will add a dark overlay, rather than setting the backdrop to a purple to preserve the gradient. We also updated the color pallet to a more purple-friendly pallette to fit the rest of the design.
+
+<center>
+<img src="./screenshots/company-select-table/cst-css-vars.png" style="width: 100%; height: auto;" />
+</center>
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
@@ -392,7 +408,7 @@ We connected the word cloud to the backend database. The query gets the top 10 m
 To make it more friendly to the eyes and better for color blindness, we updated the sentiment colors to a blue-red theme. This theme is also closer in color theme to the rest of the website, and feels more put together.
 
 <center>
-<img src="./screenshots/wordCloud/wc-cb-friendly.png" style="width: 70%; height: auto;" />
+<img src="./screenshots/wordCloud/wc-cb-friendly.png" style="width: 90%; height: auto;" />
 </center>
 
 ### Font Update
@@ -400,7 +416,18 @@ To make it more friendly to the eyes and better for color blindness, we updated 
 We decided that, in addition to correcting for color blindness, we would need to make the font weight bold to allow users to have an easier time distinguishing the background from the words where the colors may be hard to spot for small neutral words. With the bold font, the difference is minimized and is much easier to tell the difference.
 
 <center>
-<img src="./screenshots/wordCloud/wc-bold.png" style="width: 70%; height: auto;" />
+<img src="./screenshots/wordCloud/wc-bold.png" style="width: 90%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+### Extra Words
+
+To accommodate a standard screen size, we converted the word count to a query parameter, and increased the count to 15. While we likely will not make the word count change by the user, this makes it easier for us to decide on a good word count to keep the screen from being too busy or too empty while leaving it at 15 over 10 for now.
+
+<center>
+<img src="./screenshots/wordCloud/wc-extra-words.png" style="width: 90%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
@@ -585,6 +612,14 @@ Instead of relying on a grid, since we only have 7 cards in the header list, we 
 <img src="./screenshots/header/header-flex.png" style="width: 90%; height: auto;" />
 </center>
 
+### Better Descriptions
+
+To more accurately describe the visuals, we updated the titles and descriptions of the visuals to be more user friendly and less technical.
+
+<center>
+<img src="./screenshots/header/header-improved-text.png" style="width: 90%; height: auto;" />
+</center>
+
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
@@ -616,10 +651,11 @@ However for designing individual visuals prior to working with the entire contex
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
+<center>
+
 ### First Full Page
 
-<center>
-<img src="./screenshots/complete-webpage/complete-page-1.png" style="width: 30%; height: auto;" />
+<img src="./screenshots/complete-webpage/complete-page-1.png" style="width: 35%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
@@ -674,6 +710,8 @@ Adding the headers added height to the total volume of the webpage. While this c
 
 In order to allow color blind users to be able to understand the color-based information, we went for a color pallet that was in the blue-red form rather than the red-green form. The overall look of the website is not quite as nice, but still better for accessability.
 
+We updated the CSS files to use a set of variables, allowing us to update the sentiment score colors simultaneously for all visuals, along with several other common colors within the website. This makes updating color pallets aF lot faster and reduces human error.
+
 <center>
 <img src="./screenshots/complete-webpage/complete-page-5.png" style="width: 100%; height: auto;" />
 </center>
@@ -687,6 +725,25 @@ Since the previous version had mostly implemented all necessary items, we wanted
 
 <center>
 <img src="./screenshots/complete-webpage/complete-page-6.png" style="width: 100%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+### Screencast
+
+Since the minor fixes, we have added a project screencast, changed the neutral color to a very faded purple to prevent it from blending with the background, updated header text, and increased the size of the slider text. This complete page has the major update only of adding the screencast, which was taken before adding some of the described improvements to the website.
+
+[Screencast Page](#screencast-page)
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+<center>
+
+### Screencast Page
+
+<img src="./screenshots/complete-webpage/complete-page-7.png" style="width: 90%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
