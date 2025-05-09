@@ -22,7 +22,7 @@
   /* Sentiment colors */
   --bearish: rgb(160, 10, 25);
   --sw-bearish: rgb(193, 132, 105);
-  --neutral: #a0bfc5;
+  --neutral: #9d849e;
   --sw-bullish: rgb(129, 181, 210);
   --bullish: rgb(26, 98, 155);
 }
