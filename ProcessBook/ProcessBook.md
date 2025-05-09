@@ -298,7 +298,7 @@ Since we are unable to get data for some companies during specific years / quart
 
 ### Color Blindness
 
-To make it more friendly to the eyes and better for color blindness, we updated the sentiment colors to a blue-red theme.
+To make it more friendly to the eyes and better for color blindness, we updated the sentiment colors to a blue-red theme. This theme is also closer in color theme to the rest of the website, and feels more put together.
 
 <center>
 <img src="./screenshots/speedometer/speedometer-cb-friendly.png" style="width: 70%; height: auto;" />
@@ -344,7 +344,7 @@ We connected the word cloud to the backend database. The query gets the top 10 m
 
 ### Color Blindness
 
-To make it more friendly to the eyes and better for color blindness, we updated the sentiment colors to a blue-red theme.
+To make it more friendly to the eyes and better for color blindness, we updated the sentiment colors to a blue-red theme. This theme is also closer in color theme to the rest of the website, and feels more put together.
 
 <center>
 <img src="./screenshots/wordCloud/wc-cb-friendly.png" style="width: 70%; height: auto;" />
