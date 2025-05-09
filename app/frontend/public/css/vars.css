@@ -6,10 +6,10 @@
   --purple: #7a3a9e;
   --purple-light: #b38cc4;
   --pink-dark: #c998b3;
-  --pink-pale: #e3c6d6;
+  --pink-pale: #c9afbd;
   --pink: #f4d8e6;
   --pink-light: #fbeff4;
-  --light-purple: #e9c8e3;
+  --light-purple: #e0c0da;
 
   /* Gradients */
   --purple-gradient: linear-gradient(145deg, var(--purple-light), var(--purple));
@@ -22,7 +22,7 @@
   /* Sentiment colors */
   --bearish: rgb(160, 10, 25);
   --sw-bearish: rgb(193, 132, 105);
-  --neutral: #b2c5c9;
+  --neutral: #a0bfc5;
   --sw-bullish: rgb(129, 181, 210);
   --bullish: rgb(26, 98, 155);
 }

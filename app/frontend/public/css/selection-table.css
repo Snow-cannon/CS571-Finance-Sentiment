@@ -31,26 +31,24 @@
 }
 
 .symbol-selection-table tbody tr:nth-child(even) {
-  background-color: var(--pink-light); /* very soft background */
+  background-color: var(--pink-light);
 }
 
 .symbol-selection-table tbody tr:nth-child(odd) {
-  background-color: var(--pink); /* slightly deeper pink tint */
+  background-color: var(--pink);
 }
 
 .symbol-selection-table tbody tr.selected {
-  background-color: var(--pink-pale); /* distinct but soft selection */
+  background-color: var(--pink-pale);
 }
 
 .symbol-selection-table tbody tr:hover {
-  background-color: var(--pink-dark); /* warm, richer pink on hover */
+  background-color: var(--pink-dark);
 }
 
 .symbol-selection-table tbody tr.selected:hover {
-  background-color: var(--purple-light); /* blends selection with your purple */
+  background-color: var(--purple-light);
 }
-
-
 
 .symbol-selection-table thead {
   background: var(--purple-gradient);
