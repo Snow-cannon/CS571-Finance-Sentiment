@@ -304,6 +304,14 @@ To make it more friendly to the eyes and better for color blindness, we updated 
 <img src="./screenshots/speedometer/speedometer-cb-friendly.png" style="width: 70%; height: auto;" />
 </center>
 
+### Labels
+
+Because the colors are unconventional for the data, we added labels along each arc to show users what the value means. Since all other colors, including the sankey graphs, use the same color scheme, this allows users to have a single source of truth they can compare to throughout the website.
+
+<center>
+<img src="./screenshots/speedometer/speedometer-labels.png" style="width: 70%; height: auto;" />
+</center>
+
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
@@ -348,6 +356,14 @@ To make it more friendly to the eyes and better for color blindness, we updated 
 
 <center>
 <img src="./screenshots/wordCloud/wc-cb-friendly.png" style="width: 70%; height: auto;" />
+</center>
+
+### Font Update
+
+We decided that, in addition to correcting for color blindness, we would need to make the font weight bold to allow users to have an easier time distinguishing the background from the words where the colors may be hard to spot for small neutral words. With the bold font, the difference is minimized and is much easier to tell the difference.
+
+<center>
+<img src="./screenshots/wordCloud/wc-bold.png" style="width: 70%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
