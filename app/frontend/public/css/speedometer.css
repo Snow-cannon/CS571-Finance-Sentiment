@@ -13,20 +13,30 @@ line.needle_null {
 
 .bearish-arc {
   fill: var(--bearish);
+  stroke: var(--bearish);
 }
 
 .sw-bearish-arc {
   fill: var(--sw-bearish);
+  stroke: var(--sw-bearish);
 }
 
 .neutral-arc {
   fill: var(--neutral);
+  stroke: var(--neutral);
 }
 
 .sw-bullish-arc {
   fill: var(--sw-bullish);
+  stroke: var(--sw-bullish);
 }
 
 .bullish-arc {
   fill: var(--bullish);
+  stroke: var(--bullish);
+}
+
+.arc-label {
+  stroke: rgba(148, 31, 31, 0.288);
+  stroke-width: 1px;
 }
