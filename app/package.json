@@ -7,7 +7,7 @@
     "dev": "concurrently \"npm run dev-server\" \"npm run watch\"",
     "dev-server": "nodemon --watch backend ./backend/server.js",
     "start": "node ./backend/server.js",
-    "watch": "webpack --mode development",
+    "watch": "webpack --mode development --watch",
     "bundle": "webpack --mode production",
     "book": "npx md-to-pdf ../ProcessBook/ProcessBook.md --basedir .. --config-file ../ProcessBook/processbook-config.json"
   },
