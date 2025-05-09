@@ -1,4 +1,4 @@
-const url = "https://cs571-finance-sentiment.onrender.com/";
+// const url = "https://cs571-finance-sentiment.onrender.com/";
 
 /**
  * Takes in a string for the URL path and the set of params
@@ -11,7 +11,8 @@ const url = "https://cs571-finance-sentiment.onrender.com/";
  */
 async function queryData(path, params) {
   // Create URL for data fetching
-  const url = new URL(`${url}/data/${path}`);
+  const url = new URL(`/data/${path}`, window.location.origin);
+  
   // Make request
   return await fetch(url, {
     // Use POST if a body is included
