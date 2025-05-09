@@ -21,6 +21,7 @@ export async function makeWordCloud(containerID) {
       symbol: state.symbol,
       start: dateRange.start,
       end: dateRange.end,
+      limit_words: 15
     });
     return queryResult.result;
   };

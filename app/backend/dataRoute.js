@@ -146,8 +146,7 @@ router.post("/symbol_sentiment_speedometer", async (req, res) => {
 
 router.post("/wordcloud", async (req, res) => {
   try {
-    const { symbol, start, end } = req.body;
-    const limit_words = 10;
+    const { symbol, start, end, limit_words } = req.body;
 
     // Read the SQL query from the file
     const queryPath = path.resolve("backend/sql_queries", "wordcloud.sql");
