@@ -1,9 +1,18 @@
 # Process Book
 
+Final Project Deployment: [Render Deployment](https://cs571-finance-sentiment.onrender.com/)
+
 ## Table of Contents
 
 Below is the table of contents for the process book.
 
+<!-- TODO -->
+
+- [Overview](#overview)
+<!-- TODO -->
+- [Related Work](#related-work)
+<!-- TODO -->
+- [Questions](#questions)
 - [Data Serving](#data-serving)
 - [Global State](#global-state)
 - [Data Collection](#data-collection)
@@ -19,6 +28,29 @@ Below is the table of contents for the process book.
 - [Cash Flow / Balance Sheet / Income Statement](#cash-flow--balance-sheet--income-statement)
 - [Website Header](#website-header)
 - [Complete Page](#complete-page)
+<!-- TODO -->
+- [Evaluation](#evaluation)
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+## Overview
+
+--- Fill in with project overview
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+## Related Work
+
+--- Add link to financial website referenced during brainstorming
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+## Questions
+
+--- Reference project proposal
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
@@ -26,6 +58,10 @@ Below is the table of contents for the process book.
 ## Data Serving
 
 The backend uses a `node.js` and `express.js` backend. We went with this method due to having prior experience on the team, as well as being able to serve from SQL queries, improving the speed of data collection, aggregation, and use. We also used a compiler to allow use of ES6 and multi-file frontend for ease of development and code readability.
+
+### Production
+
+We went with Render as the deployment of our production mode. It is really slow in retrieving data from the database and as such it can cause it to feel laggy and unresponsive. This is not something we can control, and we apologize for the poor experience free tiers have forced upon us :(
 
 ## Global State
 
@@ -640,3 +676,10 @@ Since the previous version had mostly implemented all necessary items, we wanted
 <center>
 <img src="./screenshots/complete-webpage/complete-page-6.png" style="width: 100%; height: auto;" />
 </center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+## Evaluation
+
+--- Evaluate the final product. Is it what we designed? is it better? worse? ...
