@@ -12,7 +12,7 @@ export function makeSlider(containerID, minYear, maxYear) {
   const dates = 5 * (maxYear - minYear + 1);
 
   // Container
-  const container = d3.select(`#${containerID}`).append("center");
+  const container = d3.select(`#${containerID}`)/* .append("center") */;
 
   // Clear old data
   container.selectAll("input").remove();
@@ -31,7 +31,7 @@ export function makeSlider(containerID, minYear, maxYear) {
     .attr("max", dates - 1)
     .attr("step", 1)
     .attr("value", 0)
-    .style("width", `${width - 40}px`)
+    .style("width", `${width - 25}px`)
     .classed("date-selection-slider", true)
     .on("change", function (evt) {
       const value = d3.select(this).property("value");
