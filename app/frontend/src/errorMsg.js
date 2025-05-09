@@ -40,7 +40,6 @@ export class ErrorMsg {
       case ErrorMsg.Directions.TOP:
         return `translate(${(width - bbox.width) / 2}, ${-bbox.height})`;
       case ErrorMsg.Directions.BOTTOM:
-        console.log("bottom:", width, height, bbox);
         return `translate(${(width - bbox.width) / 2}, ${height * 1.5 + bbox.height})`;
       case ErrorMsg.Directions.LEFT:
         return `translate(${width + bbox.width + 10}, ${(height + bbox.height) / 2})`;
@@ -55,7 +54,6 @@ export class ErrorMsg {
     this.#_text.text(`No ${this.#_dataName} data available for ${state.symbol}`);
     const bbox = this.#_text.node().getBBox();
     const transform = this.#transform(width, height, bbox, "None");
-    console.log(transform);
 
     this.#_rect
       .attr("x", bbox.x - 5)
@@ -73,7 +71,6 @@ export class ErrorMsg {
     this.#_text.text(`No ${this.#_dataName} data available for ${state.symbol}`);
     const bbox = this.#_text.node().getBBox();
     const transform = this.#transform(width, height, bbox, this.#_direction);
-    console.log(transform);
 
     this.#_rect
       .attr("x", bbox.x - 5)

@@ -10,6 +10,7 @@ import { makeIncomeStatementSenkey } from "./makeIncomeStatementSenkey.js";
 import { makeWordCloud } from "./makeWordCloud.js";
 import { makeSpeedometer } from "./makeSpeedometer.js";
 import { makeSenkey } from "./monoSankey.js";
+import { makeWebsiteOverview } from "./websiteOverview.js";
 
 // ---------- Init ---------- //
 
@@ -45,6 +46,10 @@ makeSelectionTable("table-wrapper", queryTableData, {
   asc: false,
   selectRow: selectRow,
 });
+
+// ---------- Make Website Header Cards ---------- //
+
+makeWebsiteOverview("description-container");
 
 // ---------- Make Slider ---------- //
 

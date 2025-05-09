@@ -1,0 +1,99 @@
+/*
+<center>
+  <h3>Finance Sentiment Comparisons</h3>
+  <p>
+    <strong>Table:</strong> An interactive table listing available companies. You can sort it by clicking on column headers and select a specific company to update all visualizations accordingly.<br><br>
+    <strong>Slider:</strong> A time-based control to filter data. Selecting a <strong>bold year</strong> shows the full year's data, while <strong>Q1–Q4</strong> selects the respective quarter along with the previous year for context.<br><br>
+    <strong>Sankey Graph:</strong> A swappable flow diagram visualizing <em>Cash Flow</em>, <em>Income Statement</em>, or <em>Balance Sheet</em>, selectable via a dropdown. Flow width represents the magnitude of financial movement.<br><br>
+    <strong>Sankey Selection:</strong> Clicking a node or flow filters and highlights related data throughout the dashboard, enabling deeper financial analysis.<br><br>
+    <strong>Overview:</strong> Displays key metrics and contextual details about the selected company, offering a concise performance summary.<br><br>
+    <strong>Speedometer:</strong> A gauge showing the average sentiment score from recent news articles about the selected company.<br><br>
+    <strong>Word Cloud:</strong> Visualizes the top 10 most used words from relevant news. Font size reflects frequency, while color indicates the average sentiment score of the source articles.<br><br>
+    <strong>Line Chart:</strong> A standard stock chart with dollars on the Y-axis and time on the X-axis, showing historical performance trends.
+  </p>
+</center>
+
+make this fancier than just a list
+ChatGPT, 8 May version, OpenAI, 8 May 2025, chat.openai.com.
+*/
+
+.description-wrapper > .description-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  margin-top: 0;
+  width: 100%;
+  text-align: center;
+  padding: 18px 0;
+  background: var(--purple-gradient);
+  color: white;
+  box-shadow: 0 5px 15px rgba(143, 67, 167, 0.3);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-size: 1.4em;
+  z-index: 999;
+}
+
+.description-wrapper {
+  margin: 0 auto;
+  padding: 80px 0 20px;
+}
+
+.description-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the items in the row */
+  gap: 20px 50px; /* Control horizontal and vertical spacing */
+  margin: 0 auto;
+}
+
+.desc-card {
+  width: 260px; /* Fixed width for each card */
+  background: var(--pink-gradient);
+  border: 1px solid rgba(210, 181, 219, 0.6);
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(143, 67, 167, 0.1);
+  padding: 20px;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+
+.desc-card:hover {
+  box-shadow: 0 12px 24px rgba(143, 67, 167, 0.18);
+  transform: translateY(-3px);
+}
+
+.desc-title {
+  font-weight: bold;
+  color: #5d2d6f;
+  font-size: 1.05em;
+  margin-bottom: 10px;
+}
+
+.desc-icon {
+  font-size: 20px;
+  margin-right: 6px;
+  color: #8f43a7;
+  vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+  .desc-card {
+    width: 90%;
+  }
+
+  .description-header {
+    font-size: 16px;
+    padding: 8px 20px;
+  }
+}
+
+hr {
+  border: none;
+  height: 2px;
+  background: var(--purple-gradient);
+  margin: 10px auto 20px auto;
+  width: 80%;
+  border-radius: 2px;
+  box-shadow: 0 2px 6px rgba(143, 67, 167, 0.2);
+}

@@ -1,0 +1,23 @@
+.wc-word {
+  font-weight: bold;
+}
+
+.bearish-word {
+  fill: var(--bearish);
+}
+
+.sw-bearish-word {
+  fill: var(--sw-bearish);
+}
+
+.neutral-word {
+  fill: var(--neutral);
+}
+
+.sw-bullish-word {
+  fill: var(--sw-bullish);
+}
+
+.bullish-word {
+  fill: var(--bullish);
+}

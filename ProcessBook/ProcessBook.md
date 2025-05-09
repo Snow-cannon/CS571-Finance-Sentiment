@@ -17,6 +17,7 @@ Below is the table of contents for the process book.
 - [Bubble Chart (optional feature)](#bubble-chart-optional-feature)
 - [Radar Chart (optional feature)](#radar-chart-optional-feature)
 - [Cash Flow / Balance Sheet / Income Statement](#cash-flow--balance-sheet--income-statement)
+- [Website Header](#website-header)
 - [Complete Page](#complete-page)
 
 <!-- Page Break in PDF -->
@@ -121,9 +122,9 @@ This update uses d3 to generate a table, but does not make use of d3 axis, which
 
 ### D3 Axis
 
-This version upgrades the HTML grid layout to a D3 x-axis for an SVG. The slider is overlayed without grids and uses padding instead. This allows for a much better looking axis with a horizontal bar, as well as better control over the text within the axis.
+This version upgrades the HTML grid layout to a D3 x-axis for an SVG. The slider is overlaid without grids and uses padding instead. This allows for a much better looking axis with a horizontal bar, as well as better control over the text within the axis.
 
-This better control was also used to display the year / quarter being selected. To allow users to select both years and individual quarters, we put years as a tick, and the quarters assigned to those years follow as 4 seperate ticks. This makes it clear which quarter of the year they selected, or if they selected the entire year instead, without the need for a second selection menu or bar.
+This better control was also used to display the year / quarter being selected. To allow users to select both years and individual quarters, we put years as a tick, and the quarters assigned to those years follow as 4 separate ticks. This makes it clear which quarter of the year they selected, or if they selected the entire year instead, without the need for a second selection menu or bar.
 
 <center>
 <img src="./screenshots/slider/slider-quarters.gif" style="width: 50%; height: auto;" />
@@ -206,11 +207,11 @@ We decided to overhaul the design with CS, implementing a new complex set of rul
 
 ## Intraday Chart
 
-The intraday chart displays stock prices over a period of time. The current design is a basic line chart with tome on the x-axis and the stock price on the y-axis. While this is a common practice, that is because it is the most effective, and will allow the greatest number of people to understant the stock price over the selected time period.
+The intraday chart displays stock prices over a period of time. The current design is a basic line chart with tome on the x-axis and the stock price on the y-axis. While this is a common practice, that is because it is the most effective, and will allow the greatest number of people to understand the stock price over the selected time period.
 
 ### Initial design
 
-The colors do not entirely fit in the current color scheme, so we will need to fix that later. Additionally, there are no transitions, so we will want to add a transition to the chart for a more effective and visually helpful experience. However, the chart does fulfill the basic requirenments, and can take in any data set with a group of times and convert it into a valid line chart. As such, we can use both annual and quarterly data to display in the chart.
+The colors do not entirely fit in the current color scheme, so we will need to fix that later. Additionally, there are no transitions, so we will want to add a transition to the chart for a more effective and visually helpful experience. However, the chart does fulfill the basic requirements, and can take in any data set with a group of times and convert it into a valid line chart. As such, we can use both annual and quarterly data to display in the chart.
 
 <center>
 <img src="./screenshots/intraday-chart/intraday-chart-initial.png" style="width: 100%; height: auto;" />
@@ -222,7 +223,7 @@ We have now added transitions. The chart looks the same, but the added transitio
 
 ### Error Message
 
-We added the custom error message to the intraday chart, having it enter from the right on no data. Additionally, when there is an error, it transitions the intraday line so it goes from the previous value to 0 for a smooth error transiton.
+We added the custom error message to the intraday chart, having it enter from the right on no data. Additionally, when there is an error, it transitions the intraday line so it goes from the previous value to 0 for a smooth error transition.
 
 <center>
 <img src="./screenshots/intraday-chart/intraday-error-msg.png" style="width: 100%; height: auto;" />
@@ -286,10 +287,29 @@ In addition to the data connection, we made the speedometer take up the majority
 
 ### Errors
 
-Since we are unable to get data for some companies during specific years / quarters, we need an effective way to indicate there is no data for the current selection. We reused the custom error message from the intraday visual, and had the error message float in from the left, as the visual is on the left side of the screen. The needle will also turn a dark shade of red to indiacte that the zeroed out position represents invalid data, in addition to the error message.
+Since we are unable to get data for some companies during specific years / quarters, we need an effective way to indicate there is no data for the current selection. We reused the custom error message from the intraday visual, and had the error message float in from the left, as the visual is on the left side of the screen. The needle will also turn a dark shade of red to indicate that the zeroed out position represents invalid data, in addition to the error message.
 
 <center>
 <img src="./screenshots/speedometer/speedometer-error.png" style="width: 50%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+### Color Blindness
+
+To make it more friendly to the eyes and better for color blindness, we updated the sentiment colors to a blue-red theme. This theme is also closer in color theme to the rest of the website, and feels more put together.
+
+<center>
+<img src="./screenshots/speedometer/speedometer-cb-friendly.png" style="width: 70%; height: auto;" />
+</center>
+
+### Labels
+
+Because the colors are unconventional for the data, we added labels along each arc to show users what the value means. Since all other colors, including the sankey graphs, use the same color scheme, this allows users to have a single source of truth they can compare to throughout the website.
+
+<center>
+<img src="./screenshots/speedometer/speedometer-labels.png" style="width: 70%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
@@ -325,6 +345,25 @@ We connected the word cloud to the backend database. The query gets the top 10 m
 
 <center>
 <img src="./screenshots/wordCloud/wc-connected.png" style="width: 40%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+### Color Blindness
+
+To make it more friendly to the eyes and better for color blindness, we updated the sentiment colors to a blue-red theme. This theme is also closer in color theme to the rest of the website, and feels more put together.
+
+<center>
+<img src="./screenshots/wordCloud/wc-cb-friendly.png" style="width: 70%; height: auto;" />
+</center>
+
+### Font Update
+
+We decided that, in addition to correcting for color blindness, we would need to make the font weight bold to allow users to have an easier time distinguishing the background from the words where the colors may be hard to spot for small neutral words. With the bold font, the difference is minimized and is much easier to tell the difference.
+
+<center>
+<img src="./screenshots/wordCloud/wc-bold.png" style="width: 70%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
@@ -452,7 +491,7 @@ To allow users the ability to choose which chart they want to view, we added a d
 
 ### Query Updates
 
-In previous versions, the 3 different charts had queries that returned the set of connections from node A to node B in the chart and the value id held. This allowed us to make the sankey graph directly from queried data. However, not all the data aggregation was used in the right order. We fixed the ordering which helped make the data feel complete and organized for the user as well as made it accurate. While the sankey graph does have some nodes that are larger than their inputs, the data collection only was able to collect certain portions of cash flow, income statement, and balance sheet data based on what the API gave us. The nmumbers for these charts do not line up perfectly for reasons we are investigating, but is most likely due to missing data that was not accounted for in the sheets we obtained. The image below represents our best efforts to get it to line up based on available collected data.
+In previous versions, the 3 different charts had queries that returned the set of connections from node A to node B in the chart and the value id held. This allowed us to make the sankey graph directly from queried data. However, not all the data aggregation was used in the right order. We fixed the ordering which helped make the data feel complete and organized for the user as well as made it accurate. While the sankey graph does have some nodes that are larger than their inputs, the data collection only was able to collect certain portions of cash flow, income statement, and balance sheet data based on what the API gave us. The numbers for these charts do not line up perfectly for reasons we are investigating, but is most likely due to missing data that was not accounted for in the sheets we obtained. The image below represents our best efforts to get it to line up based on available collected data.
 
 <center>
 <img src="./screenshots/mono-sankey/ms-sankey-final-income.png" style="width: 90%; height: auto;" />
@@ -476,6 +515,37 @@ Because the sankey graph does not have raw values labeled anywhere, we have adde
 
 <center>
 <img src="./screenshots/mono-sankey/ms-negative-hover-value.png" style="width: 90%; height: auto;" />
+</center>
+
+### Color Blindness
+
+We updated the income / expenses as red-blue range to account for color blindness. While it looks less standard, it is more accessible to users.
+
+<center>
+<img src="./screenshots/mono-sankey/ms-balance-cb.png" style="width: 90%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+## Website Header
+
+The header provides the user with definitions of all the descriptions for what they show and how to use them.
+
+### Initial Design
+
+After some thought, we realized that the visuals on their own may not be understood by everyone looking at them. To correct for this, we've added a header and information cards to provide users with descriptions of each visual to help navigate the page.
+
+<center>
+<img src="./screenshots/header/header-initial.png" style="width: 90%; height: auto;" />
+</center>
+
+### Improved Layout
+
+Instead of relying on a grid, since we only have 7 cards in the header list, we wanted the boxes to look more natural with each row centered individually. This gave it a better, more cohesive and modern look. We also added a separation bar to give users a visual break between the description and the interaction portions of the site.
+
+<center>
+<img src="./screenshots/header/header-flex.png" style="width: 90%; height: auto;" />
 </center>
 
 <!-- Page Break in PDF -->
@@ -521,7 +591,7 @@ The new design of the full webpage uses a CSS grid design:
 }
 ```
 
-This design still does not combine the 3 sankey visuals together. However, it reduces the height and combines them into 3 rows that make some semblence of sense with related information.
+This design still does not combine the 3 sankey visuals together. However, it reduces the height and combines them into 3 rows that make some semblance of sense with related information.
 
 <center>
 <img src="./screenshots/complete-webpage/complete-page-2.png" style="width: 100%; height: auto;" />
@@ -536,4 +606,37 @@ Once the sankey visuals were merged into a single layout, we were able to shrink
 
 <center>
 <img src="./screenshots/complete-webpage/complete-page-3.png" style="width: 100%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+### Header Layout
+
+Adding the headers added height to the total volume of the webpage. While this can be annoying for users to deal with, on a normal laptop they will be just a single line of information to scroll through, making it not that big of a burden.
+
+<center>
+<img src="./screenshots/complete-webpage/complete-page-4.png" style="width: 100%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+### Color Blindness
+
+In order to allow color blind users to be able to understand the color-based information, we went for a color pallet that was in the blue-red form rather than the red-green form. The overall look of the website is not quite as nice, but still better for accessability.
+
+<center>
+<img src="./screenshots/complete-webpage/complete-page-5.png" style="width: 100%; height: auto;" />
+</center>
+
+<!-- Page Break in PDF -->
+<div style="page-break-before: always;"></div>
+
+### Minor Improvements
+
+Since the previous version had mostly implemented all necessary items, we wanted to address some of the small flaws. We added labels to the speedometer to address the lack of information on the meanings of the colors on screen, made the word cloud use a bold font to improve readability, Centered the header cards to give a more concise and modern look, and updated the colors of the site to be more distinct.
+
+<center>
+<img src="./screenshots/complete-webpage/complete-page-6.png" style="width: 100%; height: auto;" />
 </center>

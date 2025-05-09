@@ -10,3 +10,33 @@ line.needle_null {
   stroke-linecap: round;
   stroke: rgb(148, 31, 31);
 }
+
+.bearish-arc {
+  fill: var(--bearish);
+  /* stroke: var(--bearish); */
+}
+
+.sw-bearish-arc {
+  fill: var(--sw-bearish);
+  /* stroke: var(--sw-bearish); */
+}
+
+.neutral-arc {
+  fill: var(--neutral);
+  /* stroke: var(--neutral); */
+}
+
+.sw-bullish-arc {
+  fill: var(--sw-bullish);
+  /* stroke: var(--sw-bullish); */
+}
+
+.bullish-arc {
+  fill: var(--bullish);
+  /* stroke: var(--bullish); */
+}
+
+.arc-label {
+  font-size: large;
+  font-weight: bold;
+}

@@ -35,11 +35,11 @@ export async function makeSpeedometer(containerID) {
   const radius = height;
 
   const categories = [
-    { label: "Bearish", color: "#e74c3c" },
-    { label: "Somewhat Bearish", color: "#e67e22" },
-    { label: "Neutral", color: "#f1c40f" },
-    { label: "Somewhat Bullish", color: "#2ecc71" },
-    { label: "Bullish", color: "#27ae60" },
+    { label: "Bearish", color: "bearish-arc" },
+    { label: "Kinda Bearish", color: "sw-bearish-arc" },
+    { label: "Neutral", color: "neutral-arc" },
+    { label: "Kinda Bullish", color: "sw-bullish-arc" },
+    { label: "Bullish", color: "bullish-arc" },
   ];
 
   const svg = container.append("svg").attr("width", boundingWidth).attr("height", boundingHeight);
@@ -61,9 +61,27 @@ export async function makeSpeedometer(containerID) {
     .range([-Math.PI / 2, Math.PI / 2]);
 
   sections.forEach(([start, end], i) => {
+    // Draw the arc
     g.append("path")
       .attr("d", arc.startAngle(angleScale(start)).endAngle(angleScale(end))())
-      .attr("fill", categories[i].color);
+      .attr("class", categories[i].color);
+
+    // Add label
+    const midAngle = (angleScale(start - 0.6) + angleScale(end - 0.6)) / 2;
+    const midAngleDeg = (midAngle * 180) / Math.PI;
+    const labelRadius = radius + 15;
+
+    const x = labelRadius * Math.cos(midAngle);
+    const y = labelRadius * Math.sin(midAngle);
+
+    g.append("text")
+      .attr("x", x)
+      .attr("y", y)
+      .attr("text-anchor", "middle")
+      .attr("dominant-baseline", "middle")
+      .attr("class", (d) => `arc-label ${categories[i].color}`)
+      .attr("transform", `rotate(${midAngleDeg + 90}, ${x}, ${y})`)
+      .text(categories[i].label);
   });
 
   const line = g.append("line").attr("x1", 0).attr("y1", 0).attr("x2", 0).attr("y2", 0);
