@@ -9,9 +9,9 @@
   --box-shadow-dark: 0 5px 15px rgba(143, 67, 167, 0.3);
 
   /* Sentiment colors */
-  --bearish: #e74c3c;
-  --sw-bearish: #e67e22;
-  --neutral: #f1c40f;
-  --sw-bullish: #2ecc71;
-  --bullish: #27ae60;
+  --bearish: rgb(016, 101, 171);
+  --sw-bearish: rgb(127, 175, 199);
+  --neutral: rgb(202, 202, 202);
+  --sw-bullish: rgb(212, 141, 110);
+  --bullish: rgb(179, 021, 041);
 }
