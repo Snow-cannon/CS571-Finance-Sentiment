@@ -12,11 +12,14 @@ export function makeSlider(containerID, minYear, maxYear) {
   const dates = 5 * (maxYear - minYear + 1);
 
   // Container
-  const container = d3.select(`#${containerID}`);
+  const container = d3.select(`#${containerID}`).append("center");
 
   // Clear old data
   container.selectAll("input").remove();
   container.selectAll("svg").remove();
+
+  // Get width of parent box
+  const width = container.node().getBoundingClientRect().width;
 
   // ------ Slider ------ //
 
@@ -28,6 +31,7 @@ export function makeSlider(containerID, minYear, maxYear) {
     .attr("max", dates - 1)
     .attr("step", 1)
     .attr("value", 0)
+    .style("width", `${width - 40}px`)
     .classed("date-selection-slider", true)
     .on("change", function (evt) {
       const value = d3.select(this).property("value");
@@ -40,9 +44,6 @@ export function makeSlider(containerID, minYear, maxYear) {
     });
 
   // ------ SVG ------ //
-
-  // Get width of parent box
-  const width = container.node().getBoundingClientRect().width;
 
   // Define axis scale
   const xScale = d3.scaleLinear().domain([0, dates - 1]);
@@ -72,7 +73,7 @@ export function makeSlider(containerID, minYear, maxYear) {
   function resizeChange() {
     const updatedContainer = d3.select(`#${containerID}`);
     const updatedWidth = updatedContainer.node().getBoundingClientRect().width;
-    xScale.range([15, updatedWidth - 13]);
+    xScale.range([25, updatedWidth - 20]);
     svg.attr("width", updatedWidth);
     axisWrapper.call(xAxis);
   }
@@ -84,7 +85,7 @@ export function makeSlider(containerID, minYear, maxYear) {
     .selectAll(".tick")
     .classed("year-tick", (d) => d % 5 === 0)
     .classed("quarter-tick", (d) => d % 5 > 0)
-    .attr("font-size", "15px");
+    .attr("font-size", "17px");
 
   // Allow users to click the ticks to update the slider
   svg.selectAll(".tick").on("click", (evt, d) => {
@@ -119,10 +120,10 @@ export function makeSlider(containerID, minYear, maxYear) {
 
     // Move rect behind new tick
     transition
-      .attr("x", bbox.x - 4)
-      .attr("y", bbox.y - 2)
-      .attr("width", bbox.width + 8)
-      .attr("height", bbox.height + 4)
+      .attr("x", bbox.x - 1)
+      .attr("y", bbox.y + 1)
+      .attr("width", bbox.width + 2)
+      .attr("height", bbox.height - 2)
       .attr("transform", transform);
   }
 
