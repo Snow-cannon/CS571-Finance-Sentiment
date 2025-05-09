@@ -80,7 +80,7 @@ export async function makeSpeedometer(containerID) {
       .attr("text-anchor", "middle")
       .attr("dominant-baseline", "middle")
       .attr("class", (d) => `arc-label ${categories[i].color}`)
-      .attr("transform", `rotate(${midAngleDeg + 90}, ${x}, ${y})`) // rotate around (x, y)
+      .attr("transform", `rotate(${midAngleDeg + 90}, ${x}, ${y})`)
       .text(categories[i].label);
   });
 
