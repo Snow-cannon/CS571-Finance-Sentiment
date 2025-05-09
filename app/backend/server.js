@@ -12,12 +12,6 @@ const staticRoot = path.join("frontend", "public");
 // Allow static file serving (serves all static files in the "frontend" directory)
 app.use(express.static(staticRoot));
 
-const corsOptions = {
-  origin: "https://cs571-finance-sentiment.onrender.com",
-  methods: ["GET", "POST"],
-  credentials: true,
-};
-
 // Attach the data serving routes
 app.use("/data", dataRouter);
 
