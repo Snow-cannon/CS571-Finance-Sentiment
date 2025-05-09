@@ -40,20 +40,20 @@ ChatGPT, 8 May version, OpenAI, 8 May 2025, chat.openai.com.
 }
 
 .description-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  column-gap: 50px;
-  row-gap: 20px;
-  justify-content: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Center the items in the row */
+  gap: 20px 50px; /* Control horizontal and vertical spacing */
+  margin: 0 auto;
 }
 
 .desc-card {
+  width: 260px; /* Fixed width for each card */
   background: var(--pink-gradient);
   border: 1px solid rgba(210, 181, 219, 0.6);
   border-radius: 12px;
   box-shadow: 0 8px 16px rgba(143, 67, 167, 0.1);
   padding: 20px;
-  width: 260px;
   text-align: left;
   transition: all 0.3s ease;
 }
