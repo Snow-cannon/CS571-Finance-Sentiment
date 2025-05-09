@@ -18,33 +18,33 @@ export async function makeWebsiteOverview(containerID) {
     },
     {
       icon: "📊",
-      title: "Table",
-      text: "Select and sort companies by provided metrics. Updates all dashboard components based on selected company.",
+      title: "Company Selection",
+      text: "Select and sort companies by provided metrics using the table. Updates all dashboard components based on selected company.",
     },
     {
       icon: "🎚️",
-      title: "Slider",
-      text: "Filters data by time. Selecting a year shows annual data; Selecting Q1~Q4 will select quarterly data.",
+      title: "Date Selection",
+      text: "Filter selected data by time with the slider. Selecting a year shows annual data; Selecting Q1~Q4 will select quarterly data.",
     },
     {
       icon: "📈",
-      title: "Sankey Graph",
+      title: "Financial Statements",
       text: "Switch between Cash Flow, Income Statement, and Balance Sheet to view the companies expenditures, revenue, and debt.",
     },
     {
       icon: "📟",
-      title: "Speedometer",
+      title: "News Sentiment",
       text: "Shows average sentiment from news sources as a dynamic gauge value. Red is Bearish, Blue is Bullish",
     },
     {
       icon: "☁️",
-      title: "Word Cloud",
-      text: "Top 10 keywords from financial news. Bigger numbers are more frequent, and color average sentiment of related articles.",
+      title: "Top Word Analysis",
+      text: "View top 15 keywords from financial news. Bigger numbers are more frequent, and color represents average sentiment of related articles.",
     },
     {
       icon: "📉",
-      title: "Line Chart",
-      text: "Stock price over time with price on the Y-axis and date on X-axis. Hovering provides a more detailed view.",
+      title: "Stock Analysis",
+      text: "View company stock price over time. Hovering provides details of the specific time.",
     },
   ];
 
