@@ -83,7 +83,8 @@ export function makeSlider(containerID, minYear, maxYear) {
   svg
     .selectAll(".tick")
     .classed("year-tick", (d) => d % 5 === 0)
-    .classed("quarter-tick", (d) => d % 5 > 0);
+    .classed("quarter-tick", (d) => d % 5 > 0)
+    .attr("font-size", "15px");
 
   // Allow users to click the ticks to update the slider
   svg.selectAll(".tick").on("click", (evt, d) => {
