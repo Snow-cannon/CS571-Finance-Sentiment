@@ -37,21 +37,55 @@ Below is the table of contents for the process book.
 
 ## Overview
 
---- Fill in with project overview
+Visualizing Financial Trends & Sentiments in the Stock Market is a project we built to make financial data feel less intimidating and a lot more engaging. As students trying to understand how companies grow, fluctuate, and respond to news, we realized that traditional financial dashboards often miss the bigger picture—especially when it comes to connecting raw numbers with real-world context, like public sentiment.
+
+So, we created an interactive web dashboard that brings it all together: stock prices, company financials, and sentiment analysis from news articles. The goal was to build a tool that not only looks good but also helps users—from curious learners to budding investors—explore how companies perform over time and what people are saying about them.
+
+Behind the scenes, we gathered data for about 60 major companies using the Alpha Vantage API. We used D3.js on the frontend to bring the visuals to life.
+
+Users can interact with the dashboard in many ways: select a company to see its financial health, check how the stock price moved across different years or quarters, view a speedometer that reflects the company’s sentiment score, and explore trending keywords in news articles using a word cloud. We even created Sankey diagrams to show how money flows through a company—what’s coming in, what’s going out, and where it’s going.
+
+In short, our dashboard turns complex financial and sentiment data into a story you can explore visually. It’s a tool we would’ve loved to have when we were first trying to wrap our heads around the stock market—and now, it’s something we hope others can learn from and enjoy using too.
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
 ## Related Work
 
---- Add link to financial website referenced during brainstorming
+When we first started brainstorming this project, we looked at popular financial platforms like -
+1. Yahoo Finance: https://finance.yahoo.com/?guccounter=1 , 
+2. Alpha Vantage: https://www.alphavantage.co/ , 
+3. Polygon.io: https://polygon.io/  
+for inspiration. These tools do a great job at presenting company data, showing stock trends, and offering various financial indicators. They’re powerful—no doubt—but we found that they often feel overwhelming, especially for someone just getting started in understanding the stock market.
+
+More importantly, they tend to focus mainly on numbers: profit margins, revenue, earnings per share, and so on. While that’s essential, what’s often missing is the story behind those numbers—what the public sentiment is, how news impacts perception, and how emotion in the market plays into a company’s stock performance. Sentiment analysis is sometimes available, but rarely in a way that’s tightly integrated with financial metrics in an intuitive, visually driven experience.
+
+That’s where our project comes in. We wanted to build something more approachable, especially for people who might not have a background in finance. Instead of separating the quantitative (like financial statements) and qualitative (like public sentiment), we brought them together in one place. Our dashboard lets users interact with financial trends and news-based sentiment side by side, helping paint a fuller picture of how companies are doing and how the market is reacting to them.
+
+What makes our tool different is that we prioritize clarity and storytelling through visuals. Whether you're a beginner trying to make sense of balance sheets, or someone more experienced who wants to dive into sector-level trends and sentiment shifts over time, our platform aims to meet you where you are. It’s the kind of tool we wished existed when we were starting out—and we’re proud to have built it ourselves.
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
 
 ## Questions
 
---- Reference project proposal
+We referenced our original project proposal to guide our research and visual design, which was built around the following primary questions:
+
+1. How do financial statements (cash flow, income statements, balance sheets) correlate with stock price changes?
+
+2. Does sentiment analysis of news provide additional insight into financial trends?
+
+3. How does revenue growth impact stock price volatility?
+
+4. How do companies with similar financial profiles perform relative to each other and their sectors?
+
+Optional questions included:
+
+1. How do companies perform compared to sector trends?
+
+2. Do companies with strong financials exhibit less volatility?
+
+
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
@@ -751,4 +785,20 @@ Since the minor fixes, we have added a project screencast, changed the neutral c
 
 ## Evaluation
 
---- Evaluate the final product. Is it what we designed? is it better? worse? ...
+The final product closely reflects what we initially envisioned—and in several aspects, exceeds it.
+
+# What went well:
+
+-- We successfully implemented a fully interactive dashboard with custom D3.js visualizations and smooth global state transitions.
+
+-- Features like the sentiment speedometer, date slider, and company overview panel were well-integrated and visually polished.
+
+-- Accessibility improvements, such as color-blind friendly palettes and bold font treatments, made the dashboard more user-centric.
+
+-- Our backend handled complex API limitations via key management and retry logic, ensuring robust data collection across 60 companies.
+
+# What was challenging:
+
+1. Due to time constraints, we could not finalize the radar and bubble charts, which were listed as optional features.
+
+2. Some data inconsistencies from API limitations impacted the granularity of financial comparisons.
