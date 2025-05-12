@@ -1,16 +1,19 @@
+.screencast-container {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+
 .screencast-container > h3 {
-  position: absolute;
-  /* top: -25px; */
-  left: 50%;
-  transform: translateX(-50%);
-  text-align: center;
+  width: fit-content;
+  height: fit-content;
   margin: 0;
-  padding: 12px 30px;
+  padding: 10px 30px;
   border-radius: 25px;
   background: var(--purple-gradient);
   box-shadow: var(--box-shadow-dark);
   color: white;
-  z-index: 1;
   font-weight: 600;
   letter-spacing: 0.5px;
   min-width: 150px;
@@ -19,22 +22,37 @@
 .screencast-container > * > iframe {
   width: 600px;
   height: 400px;
-  position: absolute;
-  text-align: center;
   margin: 0;
   border-radius: 15px;
   border: none;
-  z-index: 1;
-  font-weight: 600;
-  letter-spacing: 0.5px;
-  min-width: 150px;
 }
 
 #frame-wrapper {
-  transform: translate(0, 30px);
-  padding: 12px 30px;
   height: 450px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.repo-links {
+  margin-top: 20px;
+}
+
+.github-link {
+  color: #d1d1d1;
+  text-decoration: none;
+  font-weight: bold;
+  background-color: rgb(39, 37, 37);
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin: 0px 5px;
+}
+
+.github-link i {
+  margin-right: 5px;
+}
+
+.description-title {
+  padding: 0;
+  margin: 0;
 }
