@@ -2,16 +2,14 @@
 
 Final Project Deployment: [Render Deployment](https://cs571-finance-sentiment.onrender.com/)
 
+**Important Note:** We went with Render as the deployment of our production mode, as it has free NodeJS support. It is really slow in retrieving data from the database and as such it can cause it to feel laggy and unresponsive. Additionally, the service needs to be restarted after being unused for 15 mins. This is not something we can control, and we apologize for the poor experience free tiers have forced upon us :(
+
 ## Table of Contents
 
 Below is the table of contents for the process book.
 
-<!-- TODO -->
-
 - [Overview](#overview)
-<!-- TODO -->
 - [Related Work](#related-work)
-<!-- TODO -->
 - [Questions](#questions)
 - [Data Serving](#data-serving)
 - [Global State](#global-state)
@@ -29,7 +27,6 @@ Below is the table of contents for the process book.
 - [Website Header](#website-header)
 - [Embed](#embed)
 - [Complete Page](#complete-page)
-<!-- TODO -->
 - [Evaluation](#evaluation)
 
 <!-- Page Break in PDF -->
@@ -39,7 +36,7 @@ Below is the table of contents for the process book.
 
 Visualizing Financial Trends & Sentiments in the Stock Market is a project we built to make financial data feel less intimidating and a lot more engaging. As students trying to understand how companies grow, fluctuate, and respond to news, we realized that traditional financial dashboards often miss the bigger picture—especially when it comes to connecting raw numbers with real-world context, like public sentiment.
 
-So, we created an interactive web dashboard that brings it all together: stock prices, company financials, and sentiment analysis from news articles. The goal was to build a tool that not only looks good but also helps users—from curious learners to budding investors—explore how companies perform over time and what people are saying about them.
+So, we created an interactive web dashboard that brings it all together: stock prices, company finance's, and sentiment analysis from news articles. The goal was to build a tool that not only looks good but also helps users—from curious learners to budding investors—explore how companies perform over time and what people are saying about them.
 
 Behind the scenes, we gathered data for about 60 major companies using the Alpha Vantage API. We used D3.js on the frontend to bring the visuals to life.
 
@@ -52,11 +49,13 @@ In short, our dashboard turns complex financial and sentiment data into a story 
 
 ## Related Work
 
-When we first started brainstorming this project, we looked at popular financial platforms like -
+When we first started brainstorming this project, we looked at popular financial platforms for inspiration such as:
+
 1. Yahoo Finance: https://finance.yahoo.com/?guccounter=1 , 
 2. Alpha Vantage: https://www.alphavantage.co/ , 
 3. Polygon.io: https://polygon.io/  
-for inspiration. These tools do a great job at presenting company data, showing stock trends, and offering various financial indicators. They’re powerful—no doubt—but we found that they often feel overwhelming, especially for someone just getting started in understanding the stock market.
+
+These tools do a great job at presenting company data, showing stock trends, and offering various financial indicators. While they are powerful, we found that they often feel overwhelming. Especially for someone just getting started in understanding the stock market.
 
 More importantly, they tend to focus mainly on numbers: profit margins, revenue, earnings per share, and so on. While that’s essential, what’s often missing is the story behind those numbers—what the public sentiment is, how news impacts perception, and how emotion in the market plays into a company’s stock performance. Sentiment analysis is sometimes available, but rarely in a way that’s tightly integrated with financial metrics in an intuitive, visually driven experience.
 
@@ -83,7 +82,7 @@ Optional questions included:
 
 1. How do companies perform compared to sector trends?
 
-2. Do companies with strong financials exhibit less volatility?
+2. Do companies with strong finances exhibit less volatility?
 
 
 
@@ -93,10 +92,6 @@ Optional questions included:
 ## Data Serving
 
 The backend uses a `node.js` and `express.js` backend. We went with this method due to having prior experience on the team, as well as being able to serve from SQL queries, improving the speed of data collection, aggregation, and use. We also used a compiler to allow use of ES6 and multi-file frontend for ease of development and code readability.
-
-### Production
-
-We went with Render as the deployment of our production mode. It is really slow in retrieving data from the database and as such it can cause it to feel laggy and unresponsive. This is not something we can control, and we apologize for the poor experience free tiers have forced upon us :(
 
 ## Global State
 
@@ -140,7 +135,7 @@ The steps for data collection were:
 1. For analysis and backup, we also exported our tables as csv files.
 
 Our `finance_data.db` contains tables :
-`company_overview`, `company_intraday_data`, `balance_sheet`, , `income_statement`, `cash_flow`, `news_articles`, `news_ticker_sentiment`
+`company_overview`, `company_intraday_data`, `balance_sheet`, `income_statement`, `cash_flow`, `news_articles`, `news_ticker_sentiment`
 
 ### Data Cleaning
 
@@ -151,6 +146,10 @@ Before we store the data in the database, we perform certain preprocessing on it
 - Have correct primary and foreign for our sql tables.
 
 This comprehensive dataset provides the foundation for our project, enabling the analysis across multiple features including financial performance, market sentiment, and stock price movement.
+
+### Missing Data
+
+While Alpha Vantage has much of the data we need, some data we were unable to find on the internet, partially due to companies not having those related records available. With news data, some companies were not tracked with the systems we used, and there is no data for them. While we could not solve the missing data, we added error messages to make sure the user is well aware of when data is unavailable for analysis.
 
 <!-- Page Break in PDF -->
 <div style="page-break-before: always;"></div>
