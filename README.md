@@ -2,6 +2,10 @@
 
 Final project for CS571 focused on financial statements and news sentiment of 60 companies from different sectors.
 
+Link to live site, hosted on Render: https://cs571-finance-sentiment.onrender.com/
+
+*Please note*: The site is hosted on the free tier, and must spin up if it has not been used for 15 mins. It also is very slow at serving data, so expect it to run very slow.
+
 ## Repository Structure
 
 All development and commands should run from within the `app` folder.
