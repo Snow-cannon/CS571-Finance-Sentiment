@@ -786,7 +786,7 @@ Since the minor fixes, we have added a project screencast, changed the neutral c
 
 The final product closely reflects what we initially envisioned—and in several aspects, exceeds it.
 
-# What went well:
+### What went well:
 
 -- We successfully implemented a fully interactive dashboard with custom D3.js visualizations and smooth global state transitions.
 
@@ -796,7 +796,7 @@ The final product closely reflects what we initially envisioned—and in several
 
 -- Our backend handled complex API limitations via key management and retry logic, ensuring robust data collection across 60 companies.
 
-# What was challenging:
+### What was challenging:
 
 1. Due to time constraints, we could not finalize the radar and bubble charts, which were listed as optional features.
 
